@@ -1,13 +1,25 @@
 Imports System.Net
 
-Public Module Main
-    Public MyVersion As String = "0.2"
-End Module
+Public Class LJPost
+    Public subject As String
+    Public content As String
+    Public securityValue As String
+    Public mood As String
+    Public postToJournal As String
+    Public TagList As String
+End Class
 
 Public Class LJSession
     Private m_Username As String = ""
     Private m_Password As String = ""
     Private m_Offline As Boolean = False
+    Private m_colJournals As New Collection
+
+    Public ReadOnly Property PostingJournals() As Collection
+        Get
+            Return m_colJournals
+        End Get
+    End Property
 
     Public Property Offline() As Boolean
         Get
@@ -39,6 +51,20 @@ Public Class LJSession
             If ret("Success") = "OK" Then
                 Me.m_Username = username
                 Me.m_Password = password
+                m_colJournals = New Collection
+                Me.m_colJournals.Add(m_Username) ' add user's own journal
+
+                ' save list of journals with posting ability
+                Dim sTmp As String
+                sTmp = ret("access_count")
+                ' try to load them...
+                If IsNumeric(sTmp) Then
+                    Try
+                        LoadGroups(ret)
+                    Catch ex As Exception
+                        MsgBox("Unable to load your groups/journals. Posting only to your personal journal.")
+                    End Try
+                End If
             End If
             Return ret
         Catch e As Exception
@@ -48,7 +74,19 @@ Public Class LJSession
         End Try
     End Function
 
-    Public Function Post(ByVal subject As String, ByVal content As String) As Specialized.NameValueCollection
+    Private Sub LoadGroups(ByRef items As Specialized.NameValueCollection)
+        ' load the posting access groups for this user...
+        Dim iMax As Long = items("access_count")
+        Dim idx As Long
+        Dim sTmp As String
+
+        For idx = 1 To iMax
+            sTmp = items("access_" & idx)
+            m_colJournals.Add(sTmp)
+        Next
+    End Sub
+
+    Public Function Post(ByVal thePost As LJPost) As Specialized.NameValueCollection
         ' attempts to post entry to LJ server
         ' returns: nameValueCollection
         ' it MUST contain: Success (FAIL|OK)
@@ -64,8 +102,22 @@ Public Class LJSession
             items.Add("auth_method", "clear") ' FIXME
             items.Add("user", Me.m_Username)
             items.Add("password", Me.m_Password)
-            items.Add("subject", subject)
-            items.Add("event", content)
+            items.Add("subject", thePost.subject)
+            items.Add("event", thePost.content)
+            Select Case thePost.securityValue
+                Case "Public"
+                    items.Add("security", "public")
+                Case "Private"
+                    items.Add("security", "private")
+                Case "Friends Only"
+                    items.Add("security", "usemask")
+                    items.Add("allowmask", "1")
+                Case Else
+                    items.Add("security", "public")
+            End Select
+            If thePost.postToJournal <> "" And thePost.postToJournal <> Me.m_Username Then items.Add("usejournal", thePost.postToJournal)
+            If thePost.mood.Trim <> "" Then items.Add("prop_current_mood", thePost.mood)
+            If thePost.TagList.Trim <> "" Then items.Add("prop_taglist", thePost.TagList)
             items.Add("year", DatePart(DateInterval.Year, Now()))
             items.Add("mon", DatePart(DateInterval.Month, Now()))
             items.Add("day", DatePart(DateInterval.Day, Now()))

@@ -22,6 +22,14 @@ Public Class Post
     Friend WithEvents txtSubject As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtPost As System.Windows.Forms.TextBox
+    Friend WithEvents cmbSecurity As System.Windows.Forms.ComboBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents cmbJournal As System.Windows.Forms.ComboBox
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents cmbMood As System.Windows.Forms.ComboBox
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents txtTags As System.Windows.Forms.TextBox
+    Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -46,24 +54,32 @@ Public Class Post
     Private Sub InitializeComponent()
         Me.MainMenu1 = New System.Windows.Forms.MainMenu
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
+        Me.MenuItem10 = New System.Windows.Forms.MenuItem
+        Me.MenuItem11 = New System.Windows.Forms.MenuItem
         Me.MenuItem4 = New System.Windows.Forms.MenuItem
         Me.MenuItem3 = New System.Windows.Forms.MenuItem
         Me.MenuItem2 = New System.Windows.Forms.MenuItem
         Me.MenuItem5 = New System.Windows.Forms.MenuItem
         Me.MenuItem6 = New System.Windows.Forms.MenuItem
         Me.MenuItem7 = New System.Windows.Forms.MenuItem
-        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
-        Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog
         Me.MenuItem8 = New System.Windows.Forms.MenuItem
         Me.MenuItem9 = New System.Windows.Forms.MenuItem
-        Me.MenuItem10 = New System.Windows.Forms.MenuItem
-        Me.MenuItem11 = New System.Windows.Forms.MenuItem
+        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
+        Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog
         Me.TabControl1 = New System.Windows.Forms.TabControl
         Me.TabPage1 = New System.Windows.Forms.TabPage
-        Me.TabPage2 = New System.Windows.Forms.TabPage
+        Me.cmbMood = New System.Windows.Forms.ComboBox
+        Me.Label4 = New System.Windows.Forms.Label
+        Me.cmbJournal = New System.Windows.Forms.ComboBox
+        Me.Label3 = New System.Windows.Forms.Label
+        Me.cmbSecurity = New System.Windows.Forms.ComboBox
+        Me.Label2 = New System.Windows.Forms.Label
         Me.txtSubject = New System.Windows.Forms.TextBox
         Me.Label1 = New System.Windows.Forms.Label
+        Me.TabPage2 = New System.Windows.Forms.TabPage
         Me.txtPost = New System.Windows.Forms.TextBox
+        Me.Label5 = New System.Windows.Forms.Label
+        Me.txtTags = New System.Windows.Forms.TextBox
         '
         'MainMenu1
         '
@@ -82,6 +98,14 @@ Public Class Post
         Me.MenuItem1.MenuItems.Add(Me.MenuItem8)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem9)
         Me.MenuItem1.Text = "File"
+        '
+        'MenuItem10
+        '
+        Me.MenuItem10.Text = "Login..."
+        '
+        'MenuItem11
+        '
+        Me.MenuItem11.Text = "-"
         '
         'MenuItem4
         '
@@ -107,15 +131,6 @@ Public Class Post
         '
         Me.MenuItem7.Text = "Post Entry"
         '
-        'OpenFileDialog1
-        '
-        Me.OpenFileDialog1.FileName = "OpenFileDialog1"
-        Me.OpenFileDialog1.Filter = "Text files|*.txt"
-        '
-        'SaveFileDialog1
-        '
-        Me.SaveFileDialog1.Filter = "Text files|*.txt"
-        '
         'MenuItem8
         '
         Me.MenuItem8.Text = "-"
@@ -124,13 +139,14 @@ Public Class Post
         '
         Me.MenuItem9.Text = "Exit"
         '
-        'MenuItem10
+        'OpenFileDialog1
         '
-        Me.MenuItem10.Text = "Login..."
+        Me.OpenFileDialog1.FileName = "OpenFileDialog1"
+        Me.OpenFileDialog1.Filter = "Text files|*.txt"
         '
-        'MenuItem11
+        'SaveFileDialog1
         '
-        Me.MenuItem11.Text = "-"
+        Me.SaveFileDialog1.Filter = "Text files|*.txt"
         '
         'TabControl1
         '
@@ -142,18 +158,62 @@ Public Class Post
         '
         'TabPage1
         '
+        Me.TabPage1.Controls.Add(Me.txtTags)
+        Me.TabPage1.Controls.Add(Me.Label5)
+        Me.TabPage1.Controls.Add(Me.cmbMood)
+        Me.TabPage1.Controls.Add(Me.Label4)
+        Me.TabPage1.Controls.Add(Me.cmbJournal)
+        Me.TabPage1.Controls.Add(Me.Label3)
+        Me.TabPage1.Controls.Add(Me.cmbSecurity)
+        Me.TabPage1.Controls.Add(Me.Label2)
         Me.TabPage1.Controls.Add(Me.txtSubject)
         Me.TabPage1.Controls.Add(Me.Label1)
         Me.TabPage1.Location = New System.Drawing.Point(0, 0)
         Me.TabPage1.Size = New System.Drawing.Size(240, 242)
         Me.TabPage1.Text = "Options"
         '
-        'TabPage2
+        'cmbMood
         '
-        Me.TabPage2.Controls.Add(Me.txtPost)
-        Me.TabPage2.Location = New System.Drawing.Point(0, 0)
-        Me.TabPage2.Size = New System.Drawing.Size(240, 242)
-        Me.TabPage2.Text = "Content"
+        Me.cmbMood.Items.Add("Happy")
+        Me.cmbMood.Items.Add("Funny")
+        Me.cmbMood.Items.Add("Sad")
+        Me.cmbMood.Items.Add("Morose")
+        Me.cmbMood.Items.Add("Angry")
+        Me.cmbMood.Items.Add("Flippant")
+        Me.cmbMood.Items.Add("Grinning")
+        Me.cmbMood.Location = New System.Drawing.Point(57, 89)
+        Me.cmbMood.Size = New System.Drawing.Size(180, 22)
+        '
+        'Label4
+        '
+        Me.Label4.Location = New System.Drawing.Point(3, 91)
+        Me.Label4.Size = New System.Drawing.Size(53, 20)
+        Me.Label4.Text = "Mood:"
+        '
+        'cmbJournal
+        '
+        Me.cmbJournal.Location = New System.Drawing.Point(57, 61)
+        Me.cmbJournal.Size = New System.Drawing.Size(180, 22)
+        '
+        'Label3
+        '
+        Me.Label3.Location = New System.Drawing.Point(3, 63)
+        Me.Label3.Size = New System.Drawing.Size(53, 20)
+        Me.Label3.Text = "Journal:"
+        '
+        'cmbSecurity
+        '
+        Me.cmbSecurity.Items.Add("Public")
+        Me.cmbSecurity.Items.Add("Private")
+        Me.cmbSecurity.Items.Add("Friends Only")
+        Me.cmbSecurity.Location = New System.Drawing.Point(57, 33)
+        Me.cmbSecurity.Size = New System.Drawing.Size(180, 22)
+        '
+        'Label2
+        '
+        Me.Label2.Location = New System.Drawing.Point(3, 35)
+        Me.Label2.Size = New System.Drawing.Size(53, 20)
+        Me.Label2.Text = "Security:"
         '
         'txtSubject
         '
@@ -166,11 +226,30 @@ Public Class Post
         Me.Label1.Size = New System.Drawing.Size(57, 20)
         Me.Label1.Text = "Subject:"
         '
+        'TabPage2
+        '
+        Me.TabPage2.Controls.Add(Me.txtPost)
+        Me.TabPage2.Location = New System.Drawing.Point(0, 0)
+        Me.TabPage2.Size = New System.Drawing.Size(232, 239)
+        Me.TabPage2.Text = "Content"
+        '
         'txtPost
         '
         Me.txtPost.Location = New System.Drawing.Point(4, 3)
         Me.txtPost.Multiline = True
         Me.txtPost.Size = New System.Drawing.Size(233, 236)
+        '
+        'Label5
+        '
+        Me.Label5.Location = New System.Drawing.Point(3, 118)
+        Me.Label5.Size = New System.Drawing.Size(53, 20)
+        Me.Label5.Text = "Tags:"
+        '
+        'txtTags
+        '
+        Me.txtTags.Location = New System.Drawing.Point(57, 118)
+        Me.txtTags.Multiline = True
+        Me.txtTags.Size = New System.Drawing.Size(180, 41)
         '
         'Post
         '
@@ -185,23 +264,59 @@ Public Class Post
 
     Public Sub LoadDraft()
         If Me.OpenFileDialog1.ShowDialog() <> Windows.Forms.DialogResult.OK Then Exit Sub
-        Dim tFile As IO.StreamReader
         m_DraftFilePath = Me.OpenFileDialog1.FileName
-        tFile = IO.File.OpenText(m_DraftFilePath)
-        Me.txtSubject.Text = tFile.ReadLine()
-        Me.txtPost.Text = tFile.ReadToEnd()
-        tFile.Close()
+
+        Dim xmlDoc As New Xml.XmlDocument
+        xmlDoc.Load(m_DraftFilePath)
+
+        Dim xmlElem As Xml.XmlElement
+        For Each xmlElem In xmlDoc.FirstChild.ChildNodes
+            Select Case xmlElem.Name.ToLower
+                Case "subject"
+                    Me.txtSubject.Text = xmlElem.InnerText
+                Case "security"
+                    Me.cmbSecurity.Text = xmlElem.InnerText
+                Case "journal"
+                    Me.cmbJournal.Text = xmlElem.InnerText
+                Case "mood"
+                    Me.cmbMood.Text = xmlElem.InnerText
+                Case "content"
+                    Me.txtPost.Text = xmlElem.InnerText
+            End Select
+        Next
     End Sub
 
     Private Sub SaveDraft()
         If Me.SaveFileDialog1.ShowDialog() <> Windows.Forms.DialogResult.OK Then Exit Sub
         m_DraftFilePath = Me.SaveFileDialog1.FileName
-        Dim tFile As IO.StreamWriter
-        tFile = IO.File.CreateText(m_DraftFilePath)
-        tFile.WriteLine(Me.txtSubject.Text)
-        tFile.Write(Me.txtPost.Text)
-        tFile.Close()
-        Me.Close()
+
+        Dim xmlDoc As New System.Xml.XmlDocument
+        Dim xmlElem As System.Xml.XmlElement
+
+        xmlElem = xmlDoc.CreateElement("draft")
+        xmlDoc.AppendChild(xmlElem)
+
+        xmlElem = xmlDoc.CreateElement("subject")
+        xmlElem.InnerText = Me.txtSubject.Text
+        xmlDoc.FirstChild.AppendChild(xmlElem)
+
+        xmlElem = xmlDoc.CreateElement("security")
+        xmlElem.InnerText = Me.cmbSecurity.Text
+        xmlDoc.FirstChild.AppendChild(xmlElem)
+
+        xmlElem = xmlDoc.CreateElement("journal")
+        xmlElem.InnerText = Me.cmbJournal.Text
+        xmlDoc.FirstChild.AppendChild(xmlElem)
+
+        xmlElem = xmlDoc.CreateElement("mood")
+        xmlElem.InnerText = Me.cmbMood.Text
+        xmlDoc.FirstChild.AppendChild(xmlElem)
+
+        xmlElem = xmlDoc.CreateElement("content")
+        xmlElem.InnerText = Me.txtPost.Text
+        xmlDoc.FirstChild.AppendChild(xmlElem)
+
+        xmlDoc.Save(m_DraftFilePath)
     End Sub
 
     Private Sub MenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem3.Click
@@ -237,8 +352,15 @@ Public Class Post
         If Me.txtPost.Text <> "" Then
             If MsgBox("Do you want to save this as a draft?", MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.Question) = MsgBoxResult.Yes Then Me.SaveDraft()
         End If
+        ResetForm()
+    End Sub
+
+    Private Sub ResetForm()
         Me.txtSubject.Text = ""
         Me.txtPost.Text = ""
+        Me.cmbSecurity.Text = ""
+        Me.cmbMood.Text = ""
+        Me.cmbJournal.Text = ""
     End Sub
 
     Private Sub PostEntry()
@@ -253,7 +375,15 @@ Public Class Post
         End If
 
         Me.Enabled = False
-        ret = mySession.Post(Me.txtSubject.Text, Me.txtPost.Text)
+
+        Dim newPost As New LJPost
+        newPost.subject = Me.txtSubject.Text
+        newPost.content = Me.txtPost.Text
+        newPost.securityValue = Me.cmbSecurity.Text
+        newPost.mood = Me.cmbMood.Text
+        newPost.postToJournal = Me.cmbJournal.Text
+        newPost.TagList = Me.txtTags.Text
+        ret = mySession.Post(newPost)
         If ret("Success") = "OK" Then
             ' yay!
 
@@ -266,7 +396,8 @@ Public Class Post
                     End Try
                 End If
             End If
-            Me.Close()
+            MsgBox("Posted successfully.")
+            Me.ResetForm()
         Else
             MsgBox(ret("errmsg"))
             Me.Enabled = True
@@ -292,10 +423,21 @@ Public Class Post
         Dim t As New Login
         t.mySession = Me.mySession
         t.ShowDialog()
+
+        ' okay, if we logged in, populate list of journals...
+        If Not mySession.Offline Then
+            Me.cmbJournal.Items.Clear()
+            Dim s As String
+            For Each s In mySession.PostingJournals
+                Me.cmbJournal.Items.Add(s)
+            Next
+            Me.cmbJournal.SelectedIndex = 0 ' pre-select first one (user's private journal)
+        End If
     End Sub
 
     Private Sub Post_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         ShowLogin()
+        Me.ResetForm()
     End Sub
 
     Private Sub MenuItem9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem9.Click

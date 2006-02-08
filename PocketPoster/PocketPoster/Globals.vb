@@ -1,4 +1,7 @@
 Module Globals
+
+    Public MyVersion As String = "0.4"
+
     Private m_SettingsXML As Xml.XmlDocument = Nothing
 
     Private Function ConfPath() As String
