@@ -40,6 +40,7 @@ Public Class LJSession
         Dim items As Specialized.NameValueCollection
         ' Dim challenge As String
         Dim ret As New Specialized.NameValueCollection
+
         Try
             ' now generate MD5 and send back
             items = New Specialized.NameValueCollection
@@ -66,12 +67,11 @@ Public Class LJSession
                     End Try
                 End If
             End If
-            Return ret
         Catch e As Exception
             ret.Add("Success", "FAIL")
             ret.Add("errmsg", ".Net error: " & e.Message)
-            Return ret
         End Try
+        Return ret
     End Function
 
     Private Sub LoadGroups(ByRef items As Specialized.NameValueCollection)
@@ -124,12 +124,11 @@ Public Class LJSession
             items.Add("hour", DatePart(DateInterval.Hour, Now()))
             items.Add("min", DatePart(DateInterval.Minute, Now()))
             ret = mhc.SendHTTPRequest("postevent", items)
-            Return ret
         Catch e As Exception
             ret.Add("Success", "FAIL")
             ret.Add("errmsg", ".Net error: " & e.Message)
-            Return ret
         End Try
+        Return ret
     End Function
 End Class
 
@@ -184,7 +183,7 @@ Public Class LJHTTPWebClient
         Return ret
     End Function
 
-    Public Function convertNameValueCollectionToPOSTString(ByVal items As Specialized.NameValueCollection) As String
+    Private Function convertNameValueCollectionToPOSTString(ByVal items As Specialized.NameValueCollection) As String
         Dim key As String
         Dim post As String = ""
         For Each key In items.Keys
@@ -227,7 +226,7 @@ Public Class LJHTTPWebClient
         Return ret
     End Function
 
-    Public Function SendHTTPRequest(ByVal method As String, Optional ByVal items As Specialized.NameValueCollection = Nothing) As Specialized.NameValueCollection
+    Public Function SendHTTPRequest(ByVal method As String, ByVal items As Specialized.NameValueCollection) As Specialized.NameValueCollection
         Dim tWeb As HttpWebRequest
         Dim tResp As HttpWebResponse = Nothing
         Dim tReader As IO.StreamReader = Nothing

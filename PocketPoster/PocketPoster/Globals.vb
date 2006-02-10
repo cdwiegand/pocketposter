@@ -1,6 +1,6 @@
 Module Globals
 
-    Public MyVersion As String = "0.4"
+    Public MyVersion As String = "0.5"
 
     Private m_SettingsXML As Xml.XmlDocument = Nothing
 

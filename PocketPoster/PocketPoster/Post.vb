@@ -1,5 +1,6 @@
 Public Class Post
     Inherits System.Windows.Forms.Form
+
     Public mySession As New LJSession ' yeah, I'm cheating...
     Private m_DraftFilePath As String = "" ' if we load from a draft we put the path here
 
@@ -10,15 +11,12 @@ Public Class Post
     Friend WithEvents SaveFileDialog1 As System.Windows.Forms.SaveFileDialog
     Friend WithEvents MenuItem4 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem5 As System.Windows.Forms.MenuItem
-    Friend WithEvents MenuItem6 As System.Windows.Forms.MenuItem
-    Friend WithEvents MenuItem7 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem10 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem11 As System.Windows.Forms.MenuItem
-    Friend WithEvents MenuItem8 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem9 As System.Windows.Forms.MenuItem
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
-    Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
-    Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
+    Friend WithEvents tabOptions As System.Windows.Forms.TabPage
+    Friend WithEvents tabContent As System.Windows.Forms.TabPage
     Friend WithEvents txtSubject As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtPost As System.Windows.Forms.TextBox
@@ -30,6 +28,8 @@ Public Class Post
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents txtTags As System.Windows.Forms.TextBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -60,14 +60,15 @@ Public Class Post
         Me.MenuItem3 = New System.Windows.Forms.MenuItem
         Me.MenuItem2 = New System.Windows.Forms.MenuItem
         Me.MenuItem5 = New System.Windows.Forms.MenuItem
-        Me.MenuItem6 = New System.Windows.Forms.MenuItem
-        Me.MenuItem7 = New System.Windows.Forms.MenuItem
-        Me.MenuItem8 = New System.Windows.Forms.MenuItem
         Me.MenuItem9 = New System.Windows.Forms.MenuItem
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog
         Me.TabControl1 = New System.Windows.Forms.TabControl
-        Me.TabPage1 = New System.Windows.Forms.TabPage
+        Me.tabOptions = New System.Windows.Forms.TabPage
+        Me.Button2 = New System.Windows.Forms.Button
+        Me.Button1 = New System.Windows.Forms.Button
+        Me.txtTags = New System.Windows.Forms.TextBox
+        Me.Label5 = New System.Windows.Forms.Label
         Me.cmbMood = New System.Windows.Forms.ComboBox
         Me.Label4 = New System.Windows.Forms.Label
         Me.cmbJournal = New System.Windows.Forms.ComboBox
@@ -76,10 +77,8 @@ Public Class Post
         Me.Label2 = New System.Windows.Forms.Label
         Me.txtSubject = New System.Windows.Forms.TextBox
         Me.Label1 = New System.Windows.Forms.Label
-        Me.TabPage2 = New System.Windows.Forms.TabPage
+        Me.tabContent = New System.Windows.Forms.TabPage
         Me.txtPost = New System.Windows.Forms.TextBox
-        Me.Label5 = New System.Windows.Forms.Label
-        Me.txtTags = New System.Windows.Forms.TextBox
         '
         'MainMenu1
         '
@@ -93,9 +92,6 @@ Public Class Post
         Me.MenuItem1.MenuItems.Add(Me.MenuItem3)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem2)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem5)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem6)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem7)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem8)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem9)
         Me.MenuItem1.Text = "File"
         '
@@ -123,18 +119,6 @@ Public Class Post
         '
         Me.MenuItem5.Text = "-"
         '
-        'MenuItem6
-        '
-        Me.MenuItem6.Text = "Cancel Entry"
-        '
-        'MenuItem7
-        '
-        Me.MenuItem7.Text = "Post Entry"
-        '
-        'MenuItem8
-        '
-        Me.MenuItem8.Text = "-"
-        '
         'MenuItem9
         '
         Me.MenuItem9.Text = "Exit"
@@ -150,27 +134,53 @@ Public Class Post
         '
         'TabControl1
         '
-        Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Controls.Add(Me.TabPage2)
+        Me.TabControl1.Controls.Add(Me.tabOptions)
+        Me.TabControl1.Controls.Add(Me.tabContent)
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.SelectedIndex = 0
         Me.TabControl1.Size = New System.Drawing.Size(240, 265)
         '
-        'TabPage1
+        'tabOptions
         '
-        Me.TabPage1.Controls.Add(Me.txtTags)
-        Me.TabPage1.Controls.Add(Me.Label5)
-        Me.TabPage1.Controls.Add(Me.cmbMood)
-        Me.TabPage1.Controls.Add(Me.Label4)
-        Me.TabPage1.Controls.Add(Me.cmbJournal)
-        Me.TabPage1.Controls.Add(Me.Label3)
-        Me.TabPage1.Controls.Add(Me.cmbSecurity)
-        Me.TabPage1.Controls.Add(Me.Label2)
-        Me.TabPage1.Controls.Add(Me.txtSubject)
-        Me.TabPage1.Controls.Add(Me.Label1)
-        Me.TabPage1.Location = New System.Drawing.Point(0, 0)
-        Me.TabPage1.Size = New System.Drawing.Size(240, 242)
-        Me.TabPage1.Text = "Options"
+        Me.tabOptions.Controls.Add(Me.Button2)
+        Me.tabOptions.Controls.Add(Me.Button1)
+        Me.tabOptions.Controls.Add(Me.txtTags)
+        Me.tabOptions.Controls.Add(Me.Label5)
+        Me.tabOptions.Controls.Add(Me.cmbMood)
+        Me.tabOptions.Controls.Add(Me.Label4)
+        Me.tabOptions.Controls.Add(Me.cmbJournal)
+        Me.tabOptions.Controls.Add(Me.Label3)
+        Me.tabOptions.Controls.Add(Me.cmbSecurity)
+        Me.tabOptions.Controls.Add(Me.Label2)
+        Me.tabOptions.Controls.Add(Me.txtSubject)
+        Me.tabOptions.Controls.Add(Me.Label1)
+        Me.tabOptions.Location = New System.Drawing.Point(0, 0)
+        Me.tabOptions.Size = New System.Drawing.Size(240, 242)
+        Me.tabOptions.Text = "Options"
+        '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(57, 209)
+        Me.Button2.Size = New System.Drawing.Size(86, 20)
+        Me.Button2.Text = "Reset Form"
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(149, 209)
+        Me.Button1.Size = New System.Drawing.Size(88, 20)
+        Me.Button1.Text = "Post Entry"
+        '
+        'txtTags
+        '
+        Me.txtTags.Location = New System.Drawing.Point(57, 118)
+        Me.txtTags.Multiline = True
+        Me.txtTags.Size = New System.Drawing.Size(180, 41)
+        '
+        'Label5
+        '
+        Me.Label5.Location = New System.Drawing.Point(3, 118)
+        Me.Label5.Size = New System.Drawing.Size(53, 20)
+        Me.Label5.Text = "Tags:"
         '
         'cmbMood
         '
@@ -226,30 +236,18 @@ Public Class Post
         Me.Label1.Size = New System.Drawing.Size(57, 20)
         Me.Label1.Text = "Subject:"
         '
-        'TabPage2
+        'tabContent
         '
-        Me.TabPage2.Controls.Add(Me.txtPost)
-        Me.TabPage2.Location = New System.Drawing.Point(0, 0)
-        Me.TabPage2.Size = New System.Drawing.Size(232, 239)
-        Me.TabPage2.Text = "Content"
+        Me.tabContent.Controls.Add(Me.txtPost)
+        Me.tabContent.Location = New System.Drawing.Point(0, 0)
+        Me.tabContent.Size = New System.Drawing.Size(232, 239)
+        Me.tabContent.Text = "Content"
         '
         'txtPost
         '
         Me.txtPost.Location = New System.Drawing.Point(4, 3)
         Me.txtPost.Multiline = True
         Me.txtPost.Size = New System.Drawing.Size(233, 236)
-        '
-        'Label5
-        '
-        Me.Label5.Location = New System.Drawing.Point(3, 118)
-        Me.Label5.Size = New System.Drawing.Size(53, 20)
-        Me.Label5.Text = "Tags:"
-        '
-        'txtTags
-        '
-        Me.txtTags.Location = New System.Drawing.Point(57, 118)
-        Me.txtTags.Multiline = True
-        Me.txtTags.Size = New System.Drawing.Size(180, 41)
         '
         'Post
         '
@@ -286,38 +284,44 @@ Public Class Post
         Next
     End Sub
 
-    Private Sub SaveDraft()
-        If Me.SaveFileDialog1.ShowDialog() <> Windows.Forms.DialogResult.OK Then Exit Sub
-        m_DraftFilePath = Me.SaveFileDialog1.FileName
+    Private Function SaveDraft() As Boolean
+        If Me.SaveFileDialog1.ShowDialog() <> Windows.Forms.DialogResult.OK Then Return False ' FAILED
+        Try
+            m_DraftFilePath = Me.SaveFileDialog1.FileName
 
-        Dim xmlDoc As New System.Xml.XmlDocument
-        Dim xmlElem As System.Xml.XmlElement
+            Dim xmlDoc As New System.Xml.XmlDocument
+            Dim xmlElem As System.Xml.XmlElement
 
-        xmlElem = xmlDoc.CreateElement("draft")
-        xmlDoc.AppendChild(xmlElem)
+            xmlElem = xmlDoc.CreateElement("draft")
+            xmlDoc.AppendChild(xmlElem)
 
-        xmlElem = xmlDoc.CreateElement("subject")
-        xmlElem.InnerText = Me.txtSubject.Text
-        xmlDoc.FirstChild.AppendChild(xmlElem)
+            xmlElem = xmlDoc.CreateElement("subject")
+            xmlElem.InnerText = Me.txtSubject.Text
+            xmlDoc.FirstChild.AppendChild(xmlElem)
 
-        xmlElem = xmlDoc.CreateElement("security")
-        xmlElem.InnerText = Me.cmbSecurity.Text
-        xmlDoc.FirstChild.AppendChild(xmlElem)
+            xmlElem = xmlDoc.CreateElement("security")
+            xmlElem.InnerText = Me.cmbSecurity.Text
+            xmlDoc.FirstChild.AppendChild(xmlElem)
 
-        xmlElem = xmlDoc.CreateElement("journal")
-        xmlElem.InnerText = Me.cmbJournal.Text
-        xmlDoc.FirstChild.AppendChild(xmlElem)
+            xmlElem = xmlDoc.CreateElement("journal")
+            xmlElem.InnerText = Me.cmbJournal.Text
+            xmlDoc.FirstChild.AppendChild(xmlElem)
 
-        xmlElem = xmlDoc.CreateElement("mood")
-        xmlElem.InnerText = Me.cmbMood.Text
-        xmlDoc.FirstChild.AppendChild(xmlElem)
+            xmlElem = xmlDoc.CreateElement("mood")
+            xmlElem.InnerText = Me.cmbMood.Text
+            xmlDoc.FirstChild.AppendChild(xmlElem)
 
-        xmlElem = xmlDoc.CreateElement("content")
-        xmlElem.InnerText = Me.txtPost.Text
-        xmlDoc.FirstChild.AppendChild(xmlElem)
+            xmlElem = xmlDoc.CreateElement("content")
+            xmlElem.InnerText = Me.txtPost.Text
+            xmlDoc.FirstChild.AppendChild(xmlElem)
 
-        xmlDoc.Save(m_DraftFilePath)
-    End Sub
+            xmlDoc.Save(m_DraftFilePath)
+        Catch e3 As Exception
+            MsgBox(e3.Message)
+            Return False ' FAILED
+        End Try
+        Return True
+    End Function
 
     Private Sub MenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem3.Click
         LoadDraft()
@@ -328,18 +332,10 @@ Public Class Post
     End Sub
 
     Private Sub MenuItem4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem4.Click
-        If Me.txtPost.Text <> "" Or Me.txtSubject.Text <> "" Then
-            If MsgBox("You appear to have started a post - are you sure that you want to clear?", MsgBoxStyle.YesNo + MsgBoxStyle.Question) <> MsgBoxResult.Yes Then Exit Sub
-        End If
-        Me.txtPost.Text = ""
-        Me.txtSubject.Text = ""
-    End Sub
-
-    Private Sub MenuItem6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem6.Click
         CancelEntry()
     End Sub
 
-    Private Sub MenuItem7_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem7.Click
+    Private Sub MenuItem7_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If mySession.Offline Then
             If MsgBox("You are not signed in (offline). Do you want to login now?", MsgBoxStyle.YesNo + MsgBoxStyle.Exclamation) <> MsgBoxResult.Yes Then Exit Sub
             ShowLogin()
@@ -348,12 +344,26 @@ Public Class Post
         PostEntry()
     End Sub
 
-    Private Sub CancelEntry()
-        If Me.txtPost.Text <> "" Then
-            If MsgBox("Do you want to save this as a draft?", MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.Question) = MsgBoxResult.Yes Then Me.SaveDraft()
+    Private Function CancelEntry() As Microsoft.VisualBasic.MsgBoxResult
+        If Me.txtPost.Text <> "" Or Me.txtSubject.Text <> "" Then
+            Select Case MsgBox("You appear to have started a post - do you want to save it as a draft?", MsgBoxStyle.YesNoCancel + MsgBoxStyle.Question)
+                Case MsgBoxResult.Cancel
+                    Return MsgBoxResult.Cancel
+                Case MsgBoxResult.Yes
+                    If Me.SaveDraft() Then
+                        ResetForm()
+                        Return MsgBoxResult.Yes
+                    Else
+                        Return MsgBoxResult.Cancel
+                    End If
+                Case MsgBoxResult.No
+                    ResetForm()
+                    Return MsgBoxResult.No
+            End Select
+        Else
+            Return MsgBoxResult.Ignore ' there was nothing, so return that...
         End If
-        ResetForm()
-    End Sub
+    End Function
 
     Private Sub ResetForm()
         Me.txtSubject.Text = ""
@@ -383,7 +393,9 @@ Public Class Post
         newPost.mood = Me.cmbMood.Text
         newPost.postToJournal = Me.cmbJournal.Text
         newPost.TagList = Me.txtTags.Text
+
         ret = mySession.Post(newPost)
+
         If ret("Success") = "OK" Then
             ' yay!
 
@@ -398,6 +410,7 @@ Public Class Post
             End If
             MsgBox("Posted successfully.")
             Me.ResetForm()
+            Me.Enabled = True
         Else
             MsgBox(ret("errmsg"))
             Me.Enabled = True
@@ -409,8 +422,8 @@ Public Class Post
         Me.TabControl1.Height = Me.Height
         Me.TabControl1.Width = Me.Width
 
-        Me.txtPost.Height = Me.TabPage2.Height - (Me.txtPost.Left * 2)
-        Me.txtPost.Width = Me.TabPage2.Width - (Me.txtPost.Top * 2)
+        Me.txtPost.Height = Me.tabContent.Height - (Me.txtPost.Left * 2)
+        Me.txtPost.Width = Me.tabContent.Width - (Me.txtPost.Top * 2)
 
         Me.txtSubject.Width = Me.Width - (Me.txtSubject.Left * 1.2) ' just a hack, ugly
     End Sub
@@ -441,9 +454,23 @@ Public Class Post
     End Sub
 
     Private Sub MenuItem9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem9.Click
-        If Me.txtSubject.Text <> "" Or Me.txtPost.Text <> "" Then
-            If MsgBox("Are you sure that you want to quit without saving?", MsgBoxStyle.YesNo + MsgBoxStyle.Exclamation) <> MsgBoxResult.Yes Then Exit Sub
-        End If
+        Dim tmp As Microsoft.VisualBasic.MsgBoxResult
+        tmp = Me.CancelEntry()
+        If tmp = MsgBoxResult.Cancel Then Exit Sub
         Application.Exit()
     End Sub
+
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        CancelEntry()
+    End Sub
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        If mySession.Offline Then
+            If MsgBox("You are not signed in (offline). Do you want to login now?", MsgBoxStyle.YesNo + MsgBoxStyle.Exclamation) <> MsgBoxResult.Yes Then Exit Sub
+            ShowLogin()
+            If mySession.Offline Then Exit Sub ' oooookay
+        End If
+        PostEntry()
+    End Sub
+
 End Class
