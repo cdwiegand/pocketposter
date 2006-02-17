@@ -1,6 +1,7 @@
+
 Module Globals
 
-    Public MyVersion As String = "0.7"
+    Public MyVersion As String = "0.8"
 
     Private m_SettingsXML As Xml.XmlDocument = Nothing
 
@@ -65,4 +66,5 @@ Module Globals
 
         SaveXMLDocument()
     End Sub
+
 End Module

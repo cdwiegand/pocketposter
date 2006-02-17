@@ -4,16 +4,16 @@ Public Class Post
     Public mySession As New LJSession ' yeah, I'm cheating...
     Private m_DraftFilePath As String = "" ' if we load from a draft we put the path here
 
-    Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
-    Friend WithEvents MenuItem3 As System.Windows.Forms.MenuItem
-    Friend WithEvents MenuItem2 As System.Windows.Forms.MenuItem
+    Friend WithEvents menuMenu As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuLoadDraft As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuSaveDraft As System.Windows.Forms.MenuItem
     Friend WithEvents OpenFileDialog1 As System.Windows.Forms.OpenFileDialog
     Friend WithEvents SaveFileDialog1 As System.Windows.Forms.SaveFileDialog
-    Friend WithEvents MenuItem4 As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuNewPost As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem5 As System.Windows.Forms.MenuItem
-    Friend WithEvents MenuItem10 As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuLogin As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem11 As System.Windows.Forms.MenuItem
-    Friend WithEvents MenuItem9 As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuExit As System.Windows.Forms.MenuItem
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
     Friend WithEvents tabOptions As System.Windows.Forms.TabPage
     Friend WithEvents tabContent As System.Windows.Forms.TabPage
@@ -29,8 +29,8 @@ Public Class Post
     Friend WithEvents txtTags As System.Windows.Forms.TextBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents InputPanel1 As Microsoft.WindowsCE.Forms.InputPanel
-    Friend WithEvents MenuItem6 As System.Windows.Forms.MenuItem
-    Friend WithEvents MenuItem7 As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuPostNow As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuClear As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem8 As System.Windows.Forms.MenuItem
     Friend WithEvents tabAdvanced As System.Windows.Forms.TabPage
     Friend WithEvents cmbCommentScreening As System.Windows.Forms.ComboBox
@@ -38,7 +38,7 @@ Public Class Post
     Friend WithEvents chkNoEmailComments As System.Windows.Forms.CheckBox
     Friend WithEvents chkDontAutoformat As System.Windows.Forms.CheckBox
     Friend WithEvents chkBackdate As System.Windows.Forms.CheckBox
-    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents lblPicture As System.Windows.Forms.Label
     Friend WithEvents cmbPictureKeyword As System.Windows.Forms.ComboBox
     Friend WithEvents ImageList1 As System.Windows.Forms.ImageList
     Friend WithEvents ToolBar2 As System.Windows.Forms.ToolBar
@@ -49,6 +49,7 @@ Public Class Post
     Friend WithEvents tbbLJUser As System.Windows.Forms.ToolBarButton
     Friend WithEvents tbbImage As System.Windows.Forms.ToolBarButton
     Friend WithEvents ToolBarButton1 As System.Windows.Forms.ToolBarButton
+    Friend WithEvents tbbStrike As System.Windows.Forms.ToolBarButton
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -73,23 +74,23 @@ Public Class Post
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Post))
         Me.MainMenu1 = New System.Windows.Forms.MainMenu
-        Me.MenuItem1 = New System.Windows.Forms.MenuItem
-        Me.MenuItem10 = New System.Windows.Forms.MenuItem
+        Me.menuMenu = New System.Windows.Forms.MenuItem
+        Me.mnuLogin = New System.Windows.Forms.MenuItem
         Me.MenuItem11 = New System.Windows.Forms.MenuItem
-        Me.MenuItem4 = New System.Windows.Forms.MenuItem
-        Me.MenuItem3 = New System.Windows.Forms.MenuItem
-        Me.MenuItem2 = New System.Windows.Forms.MenuItem
+        Me.mnuNewPost = New System.Windows.Forms.MenuItem
+        Me.mnuLoadDraft = New System.Windows.Forms.MenuItem
+        Me.mnuSaveDraft = New System.Windows.Forms.MenuItem
         Me.MenuItem5 = New System.Windows.Forms.MenuItem
-        Me.MenuItem6 = New System.Windows.Forms.MenuItem
-        Me.MenuItem7 = New System.Windows.Forms.MenuItem
+        Me.mnuPostNow = New System.Windows.Forms.MenuItem
+        Me.mnuClear = New System.Windows.Forms.MenuItem
         Me.MenuItem8 = New System.Windows.Forms.MenuItem
-        Me.MenuItem9 = New System.Windows.Forms.MenuItem
+        Me.mnuExit = New System.Windows.Forms.MenuItem
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog
         Me.TabControl1 = New System.Windows.Forms.TabControl
         Me.tabOptions = New System.Windows.Forms.TabPage
         Me.cmbPictureKeyword = New System.Windows.Forms.ComboBox
-        Me.Label7 = New System.Windows.Forms.Label
+        Me.lblPicture = New System.Windows.Forms.Label
         Me.txtTags = New System.Windows.Forms.TextBox
         Me.Label5 = New System.Windows.Forms.Label
         Me.cmbMood = New System.Windows.Forms.ComboBox
@@ -118,64 +119,65 @@ Public Class Post
         Me.tbbLink = New System.Windows.Forms.ToolBarButton
         Me.tbbLJUser = New System.Windows.Forms.ToolBarButton
         Me.tbbImage = New System.Windows.Forms.ToolBarButton
+        Me.tbbStrike = New System.Windows.Forms.ToolBarButton
         '
         'MainMenu1
         '
-        Me.MainMenu1.MenuItems.Add(Me.MenuItem1)
+        Me.MainMenu1.MenuItems.Add(Me.menuMenu)
         '
-        'MenuItem1
+        'menuMenu
         '
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem10)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem11)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem4)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem3)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem2)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem5)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem6)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem7)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem8)
-        Me.MenuItem1.MenuItems.Add(Me.MenuItem9)
-        Me.MenuItem1.Text = "Menu"
+        Me.menuMenu.MenuItems.Add(Me.mnuLogin)
+        Me.menuMenu.MenuItems.Add(Me.MenuItem11)
+        Me.menuMenu.MenuItems.Add(Me.mnuNewPost)
+        Me.menuMenu.MenuItems.Add(Me.mnuLoadDraft)
+        Me.menuMenu.MenuItems.Add(Me.mnuSaveDraft)
+        Me.menuMenu.MenuItems.Add(Me.MenuItem5)
+        Me.menuMenu.MenuItems.Add(Me.mnuPostNow)
+        Me.menuMenu.MenuItems.Add(Me.mnuClear)
+        Me.menuMenu.MenuItems.Add(Me.MenuItem8)
+        Me.menuMenu.MenuItems.Add(Me.mnuExit)
+        Me.menuMenu.Text = "Menu"
         '
-        'MenuItem10
+        'mnuLogin
         '
-        Me.MenuItem10.Text = "Login..."
+        Me.mnuLogin.Text = "Login..."
         '
         'MenuItem11
         '
         Me.MenuItem11.Text = "-"
         '
-        'MenuItem4
+        'mnuNewPost
         '
-        Me.MenuItem4.Text = "New Post"
+        Me.mnuNewPost.Text = "New Post"
         '
-        'MenuItem3
+        'mnuLoadDraft
         '
-        Me.MenuItem3.Text = "Load Draft..."
+        Me.mnuLoadDraft.Text = "Load Draft..."
         '
-        'MenuItem2
+        'mnuSaveDraft
         '
-        Me.MenuItem2.Text = "Save Draft..."
+        Me.mnuSaveDraft.Text = "Save Draft..."
         '
         'MenuItem5
         '
         Me.MenuItem5.Text = "-"
         '
-        'MenuItem6
+        'mnuPostNow
         '
-        Me.MenuItem6.Text = "Post Now"
+        Me.mnuPostNow.Text = "Post Now"
         '
-        'MenuItem7
+        'mnuClear
         '
-        Me.MenuItem7.Text = "Clear Post"
+        Me.mnuClear.Text = "Clear Post"
         '
         'MenuItem8
         '
         Me.MenuItem8.Text = "-"
         '
-        'MenuItem9
+        'mnuExit
         '
-        Me.MenuItem9.Text = "Exit"
+        Me.mnuExit.Text = "Exit"
         '
         'OpenFileDialog1
         '
@@ -198,7 +200,7 @@ Public Class Post
         'tabOptions
         '
         Me.tabOptions.Controls.Add(Me.cmbPictureKeyword)
-        Me.tabOptions.Controls.Add(Me.Label7)
+        Me.tabOptions.Controls.Add(Me.lblPicture)
         Me.tabOptions.Controls.Add(Me.txtTags)
         Me.tabOptions.Controls.Add(Me.Label5)
         Me.tabOptions.Controls.Add(Me.cmbMood)
@@ -218,11 +220,11 @@ Public Class Post
         Me.cmbPictureKeyword.Location = New System.Drawing.Point(57, 158)
         Me.cmbPictureKeyword.Size = New System.Drawing.Size(180, 22)
         '
-        'Label7
+        'lblPicture
         '
-        Me.Label7.Location = New System.Drawing.Point(4, 160)
-        Me.Label7.Size = New System.Drawing.Size(100, 20)
-        Me.Label7.Text = "Picture:"
+        Me.lblPicture.Location = New System.Drawing.Point(4, 160)
+        Me.lblPicture.Size = New System.Drawing.Size(100, 20)
+        Me.lblPicture.Text = "Picture:"
         '
         'txtTags
         '
@@ -357,6 +359,7 @@ Public Class Post
         Me.ImageList1.Images.Add(CType(resources.GetObject("resource3"), System.Drawing.Image))
         Me.ImageList1.Images.Add(CType(resources.GetObject("resource4"), System.Drawing.Image))
         Me.ImageList1.Images.Add(CType(resources.GetObject("resource5"), System.Drawing.Image))
+        Me.ImageList1.Images.Add(CType(resources.GetObject("resource6"), System.Drawing.Image))
         '
         'ToolBar2
         '
@@ -364,6 +367,7 @@ Public Class Post
         Me.ToolBar2.Buttons.Add(Me.tbbBold)
         Me.ToolBar2.Buttons.Add(Me.tbbItalic)
         Me.ToolBar2.Buttons.Add(Me.tbbUnderline)
+        Me.ToolBar2.Buttons.Add(Me.tbbStrike)
         Me.ToolBar2.Buttons.Add(Me.tbbLink)
         Me.ToolBar2.Buttons.Add(Me.tbbLJUser)
         Me.ToolBar2.Buttons.Add(Me.tbbImage)
@@ -396,6 +400,10 @@ Public Class Post
         'tbbImage
         '
         Me.tbbImage.ImageIndex = 5
+        '
+        'tbbStrike
+        '
+        Me.tbbStrike.ImageIndex = 6
         '
         'Post
         '
@@ -502,15 +510,15 @@ Public Class Post
         Return True
     End Function
 
-    Private Sub MenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem3.Click
+    Private Sub MenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuLoadDraft.Click
         LoadDraft()
     End Sub
 
-    Private Sub MenuItem2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem2.Click
+    Private Sub MenuItem2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSaveDraft.Click
         SaveDraft()
     End Sub
 
-    Private Sub MenuItem4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem4.Click
+    Private Sub MenuItem4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuNewPost.Click
         CancelEntry()
     End Sub
 
@@ -630,7 +638,7 @@ Public Class Post
         MyResize()
     End Sub
 
-    Private Sub MenuItem10_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem10.Click
+    Private Sub MenuItem10_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuLogin.Click
         ShowLogin()
     End Sub
 
@@ -698,7 +706,7 @@ Public Class Post
         Me.ResetForm()
     End Sub
 
-    Private Sub MenuItem9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem9.Click
+    Private Sub MenuItem9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuExit.Click
         Dim tmp As Microsoft.VisualBasic.MsgBoxResult
         tmp = Me.CancelEntry()
         If tmp = MsgBoxResult.Cancel Then Exit Sub
@@ -713,11 +721,11 @@ Public Class Post
         PostEntry()
     End Sub
 
-    Private Sub MenuItem7_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem7.Click
+    Private Sub MenuItem7_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuClear.Click
         CancelEntry()
     End Sub
 
-    Private Sub MenuItem6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem6.Click
+    Private Sub MenuItem6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuPostNow.Click
         PostEntry()
     End Sub
 
@@ -754,6 +762,15 @@ Public Class Post
             Me.txtPost.Text = sTmp
             ' reselect appropriate area
             Me.txtPost.Select(selStart, selLength + 3 + 4) ' <u> </u>
+        ElseIf e.Button.Equals(Me.tbbStrike) Then
+            sTmp = Me.txtPost.Text.Substring(0, Me.txtPost.SelectionStart)
+            sTmp += "<strike>"
+            sTmp += Me.txtPost.SelectedText
+            sTmp += "</strike>"
+            sTmp += Me.txtPost.Text.Substring(Me.txtPost.SelectionStart + Me.txtPost.SelectionLength)
+            Me.txtPost.Text = sTmp
+            ' reselect appropriate area
+            Me.txtPost.Select(selStart, selLength + 8 + 9) ' <strike> </strike>
         ElseIf e.Button.Equals(Me.tbbLink) Then
             sTmp2 = InputBox("Please enter/paste the URL.")
             If sTmp2 = "" Then Exit Sub ' cancelled

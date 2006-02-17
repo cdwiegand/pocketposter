@@ -89,6 +89,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ChangeLog.txt" />
     <Content Include="Credits.txt" />
     <Content Include="Icon1.ico" />
     <Content Include="License.txt" />
