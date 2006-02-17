@@ -14,6 +14,9 @@ Public Class Login
     Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem2 As System.Windows.Forms.MenuItem
     Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents MenuItem3 As System.Windows.Forms.MenuItem
+    Friend WithEvents MenuItem4 As System.Windows.Forms.MenuItem
+    Friend WithEvents MenuItem5 As System.Windows.Forms.MenuItem
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -49,6 +52,9 @@ Public Class Login
         Me.chkRemember = New System.Windows.Forms.CheckBox
         Me.Label4 = New System.Windows.Forms.Label
         Me.Button2 = New System.Windows.Forms.Button
+        Me.MenuItem3 = New System.Windows.Forms.MenuItem
+        Me.MenuItem4 = New System.Windows.Forms.MenuItem
+        Me.MenuItem5 = New System.Windows.Forms.MenuItem
         '
         'MainMenu1
         '
@@ -56,8 +62,11 @@ Public Class Login
         '
         'MenuItem1
         '
+        Me.MenuItem1.MenuItems.Add(Me.MenuItem3)
+        Me.MenuItem1.MenuItems.Add(Me.MenuItem4)
+        Me.MenuItem1.MenuItems.Add(Me.MenuItem5)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem2)
-        Me.MenuItem1.Text = "File"
+        Me.MenuItem1.Text = "Menu"
         '
         'MenuItem2
         '
@@ -66,58 +75,70 @@ Public Class Login
         'lblTitle
         '
         Me.lblTitle.Font = New System.Drawing.Font("Tahoma", 16.0!, System.Drawing.FontStyle.Regular)
-        Me.lblTitle.Location = New System.Drawing.Point(18, 15)
+        Me.lblTitle.Location = New System.Drawing.Point(17, 0)
         Me.lblTitle.Size = New System.Drawing.Size(201, 32)
         Me.lblTitle.Text = "PocketPoster v0.2"
         Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(18, 70)
+        Me.Label2.Location = New System.Drawing.Point(17, 55)
         Me.Label2.Size = New System.Drawing.Size(75, 20)
         Me.Label2.Text = "Username:"
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(18, 94)
+        Me.Label3.Location = New System.Drawing.Point(17, 79)
         Me.Label3.Size = New System.Drawing.Size(75, 20)
         Me.Label3.Text = "Password:"
         '
         'txtUsername
         '
-        Me.txtUsername.Location = New System.Drawing.Point(100, 70)
+        Me.txtUsername.Location = New System.Drawing.Point(99, 55)
         Me.txtUsername.Size = New System.Drawing.Size(119, 21)
         '
         'txtPassword
         '
-        Me.txtPassword.Location = New System.Drawing.Point(100, 94)
+        Me.txtPassword.Location = New System.Drawing.Point(99, 79)
         Me.txtPassword.PasswordChar = Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(119, 21)
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(100, 148)
-        Me.Button1.Size = New System.Drawing.Size(119, 20)
+        Me.Button1.Location = New System.Drawing.Point(142, 133)
+        Me.Button1.Size = New System.Drawing.Size(76, 20)
         Me.Button1.Text = "Login"
         '
         'chkRemember
         '
-        Me.chkRemember.Location = New System.Drawing.Point(100, 122)
+        Me.chkRemember.Location = New System.Drawing.Point(99, 107)
         Me.chkRemember.Size = New System.Drawing.Size(119, 20)
         Me.chkRemember.Text = "Remember Me"
         '
         'Label4
         '
-        Me.Label4.Location = New System.Drawing.Point(0, 47)
+        Me.Label4.Location = New System.Drawing.Point(-1, 32)
         Me.Label4.Size = New System.Drawing.Size(240, 20)
         Me.Label4.Text = "Copyright 2006 by Chris Wiegand"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(100, 174)
-        Me.Button2.Size = New System.Drawing.Size(119, 20)
+        Me.Button2.Location = New System.Drawing.Point(47, 133)
+        Me.Button2.Size = New System.Drawing.Size(89, 20)
         Me.Button2.Text = "Skip Login"
+        '
+        'MenuItem3
+        '
+        Me.MenuItem3.Text = "Login"
+        '
+        'MenuItem4
+        '
+        Me.MenuItem4.Text = "Skip Login"
+        '
+        'MenuItem5
+        '
+        Me.MenuItem5.Text = "-"
         '
         'Login
         '
@@ -140,13 +161,17 @@ Public Class Login
 #End Region
 
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
-        ' should we remember?
-        ' FIXME
+        Me.LoginNow()
+    End Sub
 
+    Private Sub LoginNow()
         Dim ret As Specialized.NameValueCollection
         Me.Enabled = False
 
+        Cursor.Current = Cursors.WaitCursor
         ret = mySession.Login(Me.txtUsername.Text, Me.txtPassword.Text)
+        Cursor.Current = Cursors.Default
+
         If ret("Success") = "OK" Then
             ' yay!
             mySession.Offline = False
@@ -186,5 +211,14 @@ Public Class Login
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
         mySession.Offline = True
         Me.Close()
+    End Sub
+
+    Private Sub MenuItem4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem4.Click
+        mySession.Offline = True
+        Me.Close()
+    End Sub
+
+    Private Sub MenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem3.Click
+        LoginNow()
     End Sub
 End Class

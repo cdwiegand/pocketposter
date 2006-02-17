@@ -1,11 +1,11 @@
 Module Globals
 
-    Public MyVersion As String = "0.5"
+    Public MyVersion As String = "0.7"
 
     Private m_SettingsXML As Xml.XmlDocument = Nothing
 
     Private Function ConfPath() As String
-        Return "\pocketposter_conf.xml"
+        Return System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase + ".config"
     End Function
 
     Public Function ReadSetting(ByVal Key As String) As String
@@ -24,6 +24,13 @@ Module Globals
     End Function
 
     Private Sub LoadXMLDocument()
+        ' quick check for old settings file...
+        ' probably safe to remove by 1 July 2006
+        If IO.File.Exists("\pocketposter_conf.xml") Then
+            IO.File.Move("\pocketposter_conf.xml", ConfPath())
+        End If
+        ' end quick check
+
         If m_SettingsXML Is Nothing Then
             m_SettingsXML = New Xml.XmlDocument
             If IO.File.Exists(ConfPath()) Then

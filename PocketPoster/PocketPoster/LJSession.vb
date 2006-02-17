@@ -1,12 +1,24 @@
 Imports System.Net
 
 Public Class LJPost
-    Public subject As String
-    Public content As String
-    Public securityValue As String
-    Public mood As String
-    Public postToJournal As String
-    Public TagList As String
+    Public subject As String = ""
+    Public content As String = ""
+    Public securityValue As String = ""
+    Public mood As String = ""
+    Public postToJournal As String = ""
+    Public TagList As String = ""
+    Public dontAutoformatToHTML As Boolean = False
+    Public dontEmailComments As Boolean = False
+    Public backDate As Boolean = False
+    Public screenComments As CommentScreeningType = Nothing ' unspecified
+    Public pictureKeyword As String = ""
+
+    Public Enum CommentScreeningType
+        ScreenNone = 0 ' no one is blocked
+        ScreenAnonymous = 1 ' anonymous is blocked
+        ScreenNonFriends = 2 ' non-friends are blocked
+        ScreenEveryone = 3 ' everyone is blocked
+    End Enum
 End Class
 
 Public Class LJSession
@@ -14,10 +26,17 @@ Public Class LJSession
     Private m_Password As String = ""
     Private m_Offline As Boolean = False
     Private m_colJournals As New Collection
+    Private m_colPictureKeywords As New Collection
 
     Public ReadOnly Property PostingJournals() As Collection
         Get
             Return m_colJournals
+        End Get
+    End Property
+
+    Public ReadOnly Property PictureKeywords() As Collection
+        Get
+            Return m_colPictureKeywords
         End Get
     End Property
 
@@ -48,6 +67,7 @@ Public Class LJSession
             items.Add("user", username)
             items.Add("password", password)
             items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
+            items.Add("getpickws", "1") ' get picture keywords now
             ret = mhc.SendHTTPRequest("login", items)
             If ret("Success") = "OK" Then
                 Me.m_Username = username
@@ -64,6 +84,17 @@ Public Class LJSession
                         LoadGroups(ret)
                     Catch ex As Exception
                         MsgBox("Unable to load your groups/journals. Posting only to your personal journal.")
+                    End Try
+                End If
+
+                ' save list of picture keywords
+                sTmp = ret("pickw_count")
+                ' try to load them...
+                If IsNumeric(sTmp) Then
+                    Try
+                        LoadPictureKeywords(ret)
+                    Catch ex As Exception
+                        ' hmm... notify user ?? think about it. --cdw
                     End Try
                 End If
             End If
@@ -83,6 +114,18 @@ Public Class LJSession
         For idx = 1 To iMax
             sTmp = items("access_" & idx)
             m_colJournals.Add(sTmp)
+        Next
+    End Sub
+
+    Private Sub LoadPictureKeywords(ByRef items As Specialized.NameValueCollection)
+        ' load the posting access groups for this user...
+        Dim iMax As Long = items("pickw_count")
+        Dim idx As Long
+        Dim sTmp As String
+
+        For idx = 1 To iMax
+            sTmp = items("pickw_" & idx)
+            m_colPictureKeywords.Add(sTmp)
         Next
     End Sub
 
@@ -117,7 +160,22 @@ Public Class LJSession
             End Select
             If thePost.postToJournal <> "" And thePost.postToJournal <> Me.m_Username Then items.Add("usejournal", thePost.postToJournal)
             If thePost.mood.Trim <> "" Then items.Add("prop_current_mood", thePost.mood)
+            If thePost.dontAutoformatToHTML = True Then items.Add("prop_opt_preformatted", "1")
+            If thePost.dontEmailComments = True Then items.Add("prop_opt_noemail", "1")
             If thePost.TagList.Trim <> "" Then items.Add("prop_taglist", thePost.TagList)
+            If thePost.pictureKeyword <> "" Then items.Add("prop_picture_keyword", thePost.pictureKeyword)
+            If thePost.backDate = True Then items.Add("prop_opt_backdated", "1")
+            Select Case thePost.screenComments
+                Case LJPost.CommentScreeningType.ScreenNonFriends
+                    items.Add("prop_opt_screening", "F")
+                Case LJPost.CommentScreeningType.ScreenAnonymous
+                    items.Add("prop_opt_screening", "R")
+                Case LJPost.CommentScreeningType.ScreenEveryone
+                    items.Add("prop_opt_screening", "A")
+                    items.Add("prop_opt_nocomments", "1")
+                Case LJPost.CommentScreeningType.ScreenNone
+                    items.Add("prop_opt_screening", "N")
+            End Select
             items.Add("year", DatePart(DateInterval.Year, Now()))
             items.Add("mon", DatePart(DateInterval.Month, Now()))
             items.Add("day", DatePart(DateInterval.Day, Now()))
