@@ -3,15 +3,24 @@ Imports System.Net
 Public Class LJPost
     Public subject As String = ""
     Public content As String = ""
-    Public securityValue As String = ""
+    Public securityValue As ViewSecurityType = ViewSecurityType.AllowAll
     Public mood As String = ""
     Public postToJournal As String = ""
     Public TagList As String = ""
     Public dontAutoformatToHTML As Boolean = False
     Public dontEmailComments As Boolean = False
     Public backDate As Boolean = False
-    Public screenComments As CommentScreeningType = Nothing ' unspecified
+    Public screenComments As CommentScreeningType = CommentScreeningType.ScreenNone
     Public pictureKeyword As String = ""
+    Public friendGroupsAllowed As New Collection
+    ' put names into friendGroupsAllowed to allow them to see IF Security == FriendGroupsOnly
+
+    Public Enum ViewSecurityType
+        AllowNone = 0 ' Private
+        AllowAll = 1 ' Public
+        AllowFriends = 2 ' Friends
+        FriendGroupsOnly = 3 ' Friend group specified in friendGroupsAllowed
+    End Enum
 
     Public Enum CommentScreeningType
         ScreenNone = 0 ' no one is blocked
@@ -24,9 +33,23 @@ End Class
 Public Class LJSession
     Private m_Username As String = ""
     Private m_Password As String = ""
-    Private m_Offline As Boolean = False
+    Private m_Offline As Boolean = True ' default until we log in
     Private m_colJournals As New Collection
     Private m_colPictureKeywords As New Collection
+    Private m_colFriends As New Data.DataTable
+    Private m_colFriendGroups As New Specialized.NameValueCollection
+
+    Public ReadOnly Property Friends() As Data.DataTable
+        Get
+            Return m_colFriends
+        End Get
+    End Property
+
+    Public ReadOnly Property FriendGroups() As Specialized.NameValueCollection
+        Get
+            Return m_colFriendGroups
+        End Get
+    End Property
 
     Public ReadOnly Property PostingJournals() As Collection
         Get
@@ -97,7 +120,25 @@ Public Class LJSession
                         ' hmm... notify user ?? think about it. --cdw
                     End Try
                 End If
+
+                ' load friends
+                Me.GetFriends()
+
+                ' load friend groups
+                sTmp = ret("frgrp_maxnum")
+                ' try to load them...
+                ' NOTE: maxnum is the MAXIMUM, not the count!! might be missing holes!!
+                If IsNumeric(sTmp) Then
+                    Try
+                        LoadFriendGroups(ret)
+                    Catch ex As Exception
+                        ' hmm... notify user ?? think about it. --cdw
+                    End Try
+                End If
             End If
+
+            ' hey, save this to the configuration, in case we're offline next time...
+            SaveToConfigFile()
         Catch e As Exception
             ret.Add("Success", "FAIL")
             ret.Add("errmsg", ".Net error: " & e.Message)
@@ -105,8 +146,98 @@ Public Class LJSession
         Return ret
     End Function
 
+    Public Sub LoadFromConfigFile()
+        ' load some offline-useful stuff to the config file...
+        Dim dr As Data.DataRow
+        Dim xmlBranch As Xml.XmlElement
+        Dim xmlLeaf As Xml.XmlElement
+
+        LoadXMLDocument()
+
+        ' journals we can post to...
+        Me.m_colJournals = New Collection
+        xmlBranch = Globals.GetXMLBranch("journals")
+        For Each xmlLeaf In xmlBranch.GetElementsByTagName("journal")
+            Me.m_colJournals.Add(xmlLeaf.InnerText)
+        Next
+
+        ' friends we have
+        InitializeFriendsTable()
+        xmlBranch = Globals.GetXMLBranch("friends")
+        For Each xmlLeaf In xmlBranch.GetElementsByTagName("friend")
+            dr = Me.m_colFriends.NewRow
+            dr("UserName") = xmlLeaf.GetAttribute("UserName")
+            dr("FullName") = xmlLeaf.InnerText
+            Me.m_colFriends.Rows.Add(dr)
+        Next
+
+        ' friend groups we have
+        Me.m_colFriendGroups = New Specialized.NameValueCollection
+        xmlBranch = Globals.GetXMLBranch("friendgroups")
+        For Each xmlLeaf In xmlBranch.GetElementsByTagName("friendgroup")
+            Me.m_colFriendGroups.Add(xmlLeaf.GetAttribute("id"), xmlLeaf.InnerText)
+        Next
+
+        ' picture keywords we have
+        Me.m_colPictureKeywords = New Collection
+        xmlBranch = Globals.GetXMLBranch("picturekeywords")
+        For Each xmlLeaf In xmlBranch.GetElementsByTagName("picturekeyword")
+            Me.m_colPictureKeywords.Add(xmlLeaf.InnerText)
+        Next
+    End Sub
+
+    Public Sub SaveToConfigFile()
+        ' save some offline-useful stuff to the config file...
+        Dim s As String
+        Dim dr As Data.DataRow
+        Dim xmlBranch As Xml.XmlElement
+        Dim xmlLeaf As Xml.XmlElement
+
+        LoadXMLDocument()
+
+        ' journals we can post to...
+        xmlBranch = Globals.GetXMLBranch("journals")
+        xmlBranch.RemoveAll() ' clean out
+        For Each s In Me.m_colJournals
+            xmlLeaf = xmlBranch.OwnerDocument.CreateElement("journal")
+            xmlLeaf.InnerText = s
+            xmlBranch.AppendChild(xmlLeaf)
+        Next
+
+        ' friends we have
+        xmlBranch = Globals.GetXMLBranch("friends")
+        xmlBranch.RemoveAll() ' clean out
+        For Each dr In Me.m_colFriends.Rows
+            xmlLeaf = xmlBranch.OwnerDocument.CreateElement("friend")
+            xmlLeaf.InnerText = dr("FullName")
+            xmlLeaf.SetAttribute("UserName", dr("UserName"))
+            xmlBranch.AppendChild(xmlLeaf)
+        Next
+
+        ' friend groups we have defined
+        xmlBranch = Globals.GetXMLBranch("friendgroups")
+        xmlBranch.RemoveAll() ' clean out
+        For Each s In Me.m_colFriendGroups
+            xmlLeaf = xmlBranch.OwnerDocument.CreateElement("friendgroup")
+            xmlLeaf.InnerText = Me.m_colFriendGroups(s) ' Name
+            xmlLeaf.SetAttribute("id", s) ' LJ ID
+            xmlBranch.AppendChild(xmlLeaf)
+        Next
+
+        ' picture keywords
+        xmlBranch = Globals.GetXMLBranch("picturekeywords")
+        xmlBranch.RemoveAll() ' clean out
+        For Each s In Me.m_colPictureKeywords
+            xmlLeaf = xmlBranch.OwnerDocument.CreateElement("picturekeyword")
+            xmlLeaf.InnerText = s
+            xmlBranch.AppendChild(xmlLeaf)
+        Next
+
+        Globals.SaveXMLDocument()
+    End Sub
+
     Private Sub LoadGroups(ByRef items As Specialized.NameValueCollection)
-        ' load the posting access groups for this user...
+        ' load the groups for this user...
         Dim iMax As Long = items("access_count")
         Dim idx As Long
         Dim sTmp As String
@@ -118,7 +249,7 @@ Public Class LJSession
     End Sub
 
     Private Sub LoadPictureKeywords(ByRef items As Specialized.NameValueCollection)
-        ' load the posting access groups for this user...
+        ' load the keywords for this user...
         Dim iMax As Long = items("pickw_count")
         Dim idx As Long
         Dim sTmp As String
@@ -126,6 +257,18 @@ Public Class LJSession
         For idx = 1 To iMax
             sTmp = items("pickw_" & idx)
             m_colPictureKeywords.Add(sTmp)
+        Next
+    End Sub
+
+    Private Sub LoadFriendGroups(ByRef items As Specialized.NameValueCollection)
+        ' load the friend groups for this user...
+        Dim iMax As Long = items("frgrp_maxnum") ' MAX, not count!!
+        Dim idx As Long
+        Dim sTmp As String
+
+        For idx = 1 To iMax
+            sTmp = items("frgrp_" & idx & "_name")
+            If sTmp <> "" Then m_colFriendGroups.Add(idx, sTmp)
         Next
     End Sub
 
@@ -148,13 +291,17 @@ Public Class LJSession
             items.Add("subject", thePost.subject)
             items.Add("event", thePost.content)
             Select Case thePost.securityValue
-                Case "Public"
+                Case LJPost.ViewSecurityType.AllowAll
                     items.Add("security", "public")
-                Case "Private"
+                Case LJPost.ViewSecurityType.AllowNone
                     items.Add("security", "private")
-                Case "Friends Only"
+                Case LJPost.ViewSecurityType.AllowFriends
                     items.Add("security", "usemask")
                     items.Add("allowmask", "1")
+                Case LJPost.ViewSecurityType.FriendGroupsOnly
+                    ' okay, some work ahead of us...
+                    items.Add("security", "usemask")
+                    items.Add("allowmask", GetBitsForAllowedFriendGroups(thePost.friendGroupsAllowed))
                 Case Else
                     items.Add("security", "public")
             End Select
@@ -188,6 +335,86 @@ Public Class LJSession
         End Try
         Return ret
     End Function
+
+    Private Function GetBitsForAllowedFriendGroups(ByRef colAllowedGroups As Collection) As String
+        ' returns a "bit" string for each allowed group based on the LJ GetFriendsGroup list and functionality
+        ' (also see PostEvent)
+        ' quick way to generate 32 0s
+        Dim ret As String = Space(32).Replace(Space(1), "0")
+        Dim sFriendGroupID As String
+        Dim sAllowedFriendGroupName As String
+        Dim bThisOneAllowed As Boolean
+        For Each sFriendGroupID In Me.m_colFriendGroups.Keys
+            bThisOneAllowed = False
+            For Each sAllowedFriendGroupName In colAllowedGroups
+                If sAllowedFriendGroupName = Me.m_colFriendGroups(sFriendGroupID) Then bThisOneAllowed = True
+            Next
+            'ret = ret.Substring(0, sFriendGroupID - 1) & IIf(bThisOneAllowed, "1", "0") & ret.Substring(sFriendGroupID + 1)
+            ret = SetCharInString(ret, sFriendGroupID, IIf(bThisOneAllowed, "1", "0"))
+        Next
+        Return ret
+    End Function
+
+    Private Shared Function SetCharInString(ByVal origString As String, ByVal index As Integer, ByVal replaceWithChar As String) As String
+        ' index is zero based
+        Dim ret As String = ""
+        If index > 0 Then ret = origString.Substring(0, index)
+        ret = ret & replaceWithChar
+        If index < origString.Length - 1 Then ret = ret & origString.Substring(index)
+        Return ret
+    End Function
+
+    Private Function GetFriends() As Specialized.NameValueCollection
+        ' attempts to get friends from the LJ server
+        ' returns: nameValueCollection - see CSP from LiveJournal for details
+        ' it MUST contain: Success (FAIL|OK)
+        ' it MAY contain: Friends list
+
+        Dim mhc As New LJHTTPWebClient
+        Dim items As Specialized.NameValueCollection
+        ' Dim challenge As String
+        Dim ret As New Specialized.NameValueCollection
+        Dim friendCount As Long
+        Dim idx As Long
+        Dim dr As DataRow
+
+        Try
+            ' now generate MD5 and send back
+            items = New Specialized.NameValueCollection
+            items.Add("auth_method", "clear") ' FIXME
+            items.Add("user", Me.m_Username)
+            items.Add("password", Me.m_Password)
+            items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
+            ret = mhc.SendHTTPRequest("getfriends", items)
+
+            friendCount = ret("friend_count")
+            If friendCount > 0 Then
+                For idx = 1 To friendCount
+                    dr = Me.m_colFriends.NewRow
+                    Me.m_colFriends.Rows.Add(dr)
+                    dr("LJ_Tmp_Number") = idx
+                    dr("UserName") = ret("friend_" & idx & "_user")
+                    dr("FullName") = ret("friend_" & idx & "_name")
+                Next
+            End If
+        Catch e As Exception
+            ret.Add("Success", "FAIL")
+            ret.Add("errmsg", ".Net error: " & e.Message)
+        End Try
+        Return ret
+    End Function
+
+    Private Sub InitializeFriendsTable()
+        m_colFriends = New Data.DataTable
+        m_colFriends.Columns.Add("LJ_Tmp_Number", Type.GetType("System.String")) ' used in the friend_X_name where this field is X
+        m_colFriends.Columns.Add("UserName", Type.GetType("System.String"))
+        m_colFriends.Columns.Add("FullName", Type.GetType("System.String"))
+    End Sub
+
+    Public Sub New()
+        ' initialize m_colFriends
+        InitializeFriendsTable()
+    End Sub
 End Class
 
 Public Class LJHTTPWebClient

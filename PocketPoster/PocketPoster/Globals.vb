@@ -3,10 +3,33 @@ Module Globals
 
     Public MyVersion As String = "0.8"
 
+    Public mySession As New LJSession ' yeah, I'm cheating...
     Private m_SettingsXML As Xml.XmlDocument = Nothing
 
     Private Function ConfPath() As String
         Return System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase + ".config"
+    End Function
+
+    Public Function GetAppPath() As String
+        Dim s As String = System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase
+        s = s.Substring(0, s.LastIndexOf("\"))
+        Return s
+    End Function
+
+    Public Function GetXMLBranch(ByVal key As String) As Xml.XmlElement
+        Dim oNodes As Xml.XmlNodeList
+        Dim oTag As Xml.XmlElement
+
+        LoadXMLDocument()
+
+        oNodes = m_SettingsXML.GetElementsByTagName(key)
+        If oNodes.Count >= 1 Then
+            Return oNodes(0)
+        Else
+            oTag = m_SettingsXML.CreateElement(key)
+            m_SettingsXML.FirstChild.AppendChild(oTag)
+            Return oTag
+        End If
     End Function
 
     Public Function ReadSetting(ByVal Key As String) As String
@@ -24,7 +47,7 @@ Module Globals
         Return ""
     End Function
 
-    Private Sub LoadXMLDocument()
+    Public Sub LoadXMLDocument()
         ' quick check for old settings file...
         ' probably safe to remove by 1 July 2006
         If IO.File.Exists("\pocketposter_conf.xml") Then
@@ -43,7 +66,7 @@ Module Globals
         End If
     End Sub
 
-    Private Sub SaveXMLDocument()
+    Public Sub SaveXMLDocument()
         m_SettingsXML.Save(ConfPath())
     End Sub
 

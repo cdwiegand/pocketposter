@@ -1,8 +1,6 @@
 Public Class Login
     Inherits System.Windows.Forms.Form
 
-    Public mySession As LJSession ' yeah, I'm cheating
-
     Friend WithEvents lblTitle As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
@@ -42,6 +40,9 @@ Public Class Login
     Private Sub InitializeComponent()
         Me.MainMenu1 = New System.Windows.Forms.MainMenu
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
+        Me.MenuItem3 = New System.Windows.Forms.MenuItem
+        Me.MenuItem4 = New System.Windows.Forms.MenuItem
+        Me.MenuItem5 = New System.Windows.Forms.MenuItem
         Me.MenuItem2 = New System.Windows.Forms.MenuItem
         Me.lblTitle = New System.Windows.Forms.Label
         Me.Label2 = New System.Windows.Forms.Label
@@ -52,9 +53,6 @@ Public Class Login
         Me.chkRemember = New System.Windows.Forms.CheckBox
         Me.Label4 = New System.Windows.Forms.Label
         Me.Button2 = New System.Windows.Forms.Button
-        Me.MenuItem3 = New System.Windows.Forms.MenuItem
-        Me.MenuItem4 = New System.Windows.Forms.MenuItem
-        Me.MenuItem5 = New System.Windows.Forms.MenuItem
         '
         'MainMenu1
         '
@@ -67,6 +65,18 @@ Public Class Login
         Me.MenuItem1.MenuItems.Add(Me.MenuItem5)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem2)
         Me.MenuItem1.Text = "Menu"
+        '
+        'MenuItem3
+        '
+        Me.MenuItem3.Text = "Login"
+        '
+        'MenuItem4
+        '
+        Me.MenuItem4.Text = "Skip Login"
+        '
+        'MenuItem5
+        '
+        Me.MenuItem5.Text = "-"
         '
         'MenuItem2
         '
@@ -111,9 +121,9 @@ Public Class Login
         '
         'chkRemember
         '
-        Me.chkRemember.Location = New System.Drawing.Point(99, 107)
-        Me.chkRemember.Size = New System.Drawing.Size(119, 20)
-        Me.chkRemember.Text = "Remember Me"
+        Me.chkRemember.Location = New System.Drawing.Point(79, 107)
+        Me.chkRemember.Size = New System.Drawing.Size(139, 20)
+        Me.chkRemember.Text = "Remember Details"
         '
         'Label4
         '
@@ -127,18 +137,6 @@ Public Class Login
         Me.Button2.Location = New System.Drawing.Point(47, 133)
         Me.Button2.Size = New System.Drawing.Size(89, 20)
         Me.Button2.Text = "Skip Login"
-        '
-        'MenuItem3
-        '
-        Me.MenuItem3.Text = "Login"
-        '
-        'MenuItem4
-        '
-        Me.MenuItem4.Text = "Skip Login"
-        '
-        'MenuItem5
-        '
-        Me.MenuItem5.Text = "-"
         '
         'Login
         '
@@ -177,6 +175,7 @@ Public Class Login
             mySession.Offline = False
             ' if message, show first
             If Me.chkRemember.Checked Then
+                mySession.SaveToConfigFile() ' for future offline use
                 Globals.SaveSetting("username", Me.txtUsername.Text)
                 Globals.SaveSetting("password", Me.txtPassword.Text)
             End If
@@ -209,12 +208,20 @@ Public Class Login
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
-        mySession.Offline = True
+        If Not mySession.Offline Then
+            ' already logged in, leave it alone
+        Else
+            mySession.LoadFromConfigFile()
+        End If
         Me.Close()
     End Sub
 
     Private Sub MenuItem4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem4.Click
-        mySession.Offline = True
+        If Not mySession.Offline Then
+            ' already logged in, leave it alone
+        Else
+            mySession.LoadFromConfigFile()
+        End If
         Me.Close()
     End Sub
 

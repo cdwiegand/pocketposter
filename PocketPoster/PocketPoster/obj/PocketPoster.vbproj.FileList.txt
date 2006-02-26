@@ -17,3 +17,5 @@ obj\Release\PocketPoster.vbproj.GenerateResource.Cache
 obj\Release\PocketPoster.exe
 obj\Release\PocketPoster.pdb
 obj\Release\PocketPoster.Login.resources
+obj\Release\PocketPoster.LJUser.resources
+obj\Release\PocketPoster.FriendsGroups.resources

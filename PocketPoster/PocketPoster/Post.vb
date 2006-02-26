@@ -1,8 +1,8 @@
 Public Class Post
     Inherits System.Windows.Forms.Form
 
-    Public mySession As New LJSession ' yeah, I'm cheating...
     Private m_DraftFilePath As String = "" ' if we load from a draft we put the path here
+    Private m_AllowedGroups As New Collection
 
     Friend WithEvents menuMenu As System.Windows.Forms.MenuItem
     Friend WithEvents mnuLoadDraft As System.Windows.Forms.MenuItem
@@ -50,6 +50,7 @@ Public Class Post
     Friend WithEvents tbbImage As System.Windows.Forms.ToolBarButton
     Friend WithEvents ToolBarButton1 As System.Windows.Forms.ToolBarButton
     Friend WithEvents tbbStrike As System.Windows.Forms.ToolBarButton
+    Friend WithEvents timAutoSave As System.Windows.Forms.Timer
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -109,17 +110,18 @@ Public Class Post
         Me.Label6 = New System.Windows.Forms.Label
         Me.chkNoEmailComments = New System.Windows.Forms.CheckBox
         Me.chkDontAutoformat = New System.Windows.Forms.CheckBox
-        Me.InputPanel1 = New Microsoft.WindowsCE.Forms.InputPanel
         Me.ImageList1 = New System.Windows.Forms.ImageList
+        Me.InputPanel1 = New Microsoft.WindowsCE.Forms.InputPanel
         Me.ToolBar2 = New System.Windows.Forms.ToolBar
         Me.ToolBarButton1 = New System.Windows.Forms.ToolBarButton
         Me.tbbBold = New System.Windows.Forms.ToolBarButton
         Me.tbbItalic = New System.Windows.Forms.ToolBarButton
         Me.tbbUnderline = New System.Windows.Forms.ToolBarButton
+        Me.tbbStrike = New System.Windows.Forms.ToolBarButton
         Me.tbbLink = New System.Windows.Forms.ToolBarButton
         Me.tbbLJUser = New System.Windows.Forms.ToolBarButton
         Me.tbbImage = New System.Windows.Forms.ToolBarButton
-        Me.tbbStrike = New System.Windows.Forms.ToolBarButton
+        Me.timAutoSave = New System.Windows.Forms.Timer
         '
         'MainMenu1
         '
@@ -217,24 +219,24 @@ Public Class Post
         '
         'cmbPictureKeyword
         '
-        Me.cmbPictureKeyword.Location = New System.Drawing.Point(57, 158)
+        Me.cmbPictureKeyword.Location = New System.Drawing.Point(57, 141)
         Me.cmbPictureKeyword.Size = New System.Drawing.Size(180, 22)
         '
         'lblPicture
         '
-        Me.lblPicture.Location = New System.Drawing.Point(4, 160)
+        Me.lblPicture.Location = New System.Drawing.Point(4, 141)
         Me.lblPicture.Size = New System.Drawing.Size(100, 20)
         Me.lblPicture.Text = "Picture:"
         '
         'txtTags
         '
-        Me.txtTags.Location = New System.Drawing.Point(57, 118)
+        Me.txtTags.Location = New System.Drawing.Point(57, 115)
         Me.txtTags.Multiline = True
-        Me.txtTags.Size = New System.Drawing.Size(180, 36)
+        Me.txtTags.Size = New System.Drawing.Size(180, 20)
         '
         'Label5
         '
-        Me.Label5.Location = New System.Drawing.Point(3, 118)
+        Me.Label5.Location = New System.Drawing.Point(3, 115)
         Me.Label5.Size = New System.Drawing.Size(53, 20)
         Me.Label5.Text = "Tags:"
         '
@@ -247,23 +249,23 @@ Public Class Post
         Me.cmbMood.Items.Add("Angry")
         Me.cmbMood.Items.Add("Flippant")
         Me.cmbMood.Items.Add("Grinning")
-        Me.cmbMood.Location = New System.Drawing.Point(57, 89)
+        Me.cmbMood.Location = New System.Drawing.Point(57, 86)
         Me.cmbMood.Size = New System.Drawing.Size(180, 22)
         '
         'Label4
         '
-        Me.Label4.Location = New System.Drawing.Point(3, 91)
+        Me.Label4.Location = New System.Drawing.Point(3, 88)
         Me.Label4.Size = New System.Drawing.Size(53, 20)
         Me.Label4.Text = "Mood:"
         '
         'cmbJournal
         '
-        Me.cmbJournal.Location = New System.Drawing.Point(57, 61)
+        Me.cmbJournal.Location = New System.Drawing.Point(57, 58)
         Me.cmbJournal.Size = New System.Drawing.Size(180, 22)
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(3, 63)
+        Me.Label3.Location = New System.Drawing.Point(3, 60)
         Me.Label3.Size = New System.Drawing.Size(53, 20)
         Me.Label3.Text = "Journal:"
         '
@@ -272,23 +274,24 @@ Public Class Post
         Me.cmbSecurity.Items.Add("Public")
         Me.cmbSecurity.Items.Add("Private")
         Me.cmbSecurity.Items.Add("Friends Only")
-        Me.cmbSecurity.Location = New System.Drawing.Point(57, 33)
+        Me.cmbSecurity.Items.Add("Friend Groups...")
+        Me.cmbSecurity.Location = New System.Drawing.Point(57, 30)
         Me.cmbSecurity.Size = New System.Drawing.Size(180, 22)
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(3, 35)
+        Me.Label2.Location = New System.Drawing.Point(3, 32)
         Me.Label2.Size = New System.Drawing.Size(53, 20)
         Me.Label2.Text = "Security:"
         '
         'txtSubject
         '
-        Me.txtSubject.Location = New System.Drawing.Point(57, 6)
+        Me.txtSubject.Location = New System.Drawing.Point(57, 3)
         Me.txtSubject.Size = New System.Drawing.Size(180, 21)
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(4, 7)
+        Me.Label1.Location = New System.Drawing.Point(4, 4)
         Me.Label1.Size = New System.Drawing.Size(57, 20)
         Me.Label1.Text = "Subject:"
         '
@@ -296,7 +299,7 @@ Public Class Post
         '
         Me.tabContent.Controls.Add(Me.txtPost)
         Me.tabContent.Location = New System.Drawing.Point(0, 0)
-        Me.tabContent.Size = New System.Drawing.Size(232, 239)
+        Me.tabContent.Size = New System.Drawing.Size(240, 242)
         Me.tabContent.Text = "Content"
         '
         'txtPost
@@ -313,12 +316,12 @@ Public Class Post
         Me.tabAdvanced.Controls.Add(Me.chkNoEmailComments)
         Me.tabAdvanced.Controls.Add(Me.chkDontAutoformat)
         Me.tabAdvanced.Location = New System.Drawing.Point(0, 0)
-        Me.tabAdvanced.Size = New System.Drawing.Size(232, 239)
+        Me.tabAdvanced.Size = New System.Drawing.Size(240, 242)
         Me.tabAdvanced.Text = "Advanced"
         '
         'chkBackdate
         '
-        Me.chkBackdate.Location = New System.Drawing.Point(3, 108)
+        Me.chkBackdate.Location = New System.Drawing.Point(3, 103)
         Me.chkBackdate.Size = New System.Drawing.Size(234, 20)
         Me.chkBackdate.Text = "Mark entry as backdated"
         '
@@ -329,13 +332,13 @@ Public Class Post
         Me.cmbCommentScreening.Items.Add("Block Anonymous Comments")
         Me.cmbCommentScreening.Items.Add("Block Non-Friend's Comments")
         Me.cmbCommentScreening.Items.Add("Block Everyone's Comments")
-        Me.cmbCommentScreening.Location = New System.Drawing.Point(3, 80)
-        Me.cmbCommentScreening.Size = New System.Drawing.Size(234, 22)
+        Me.cmbCommentScreening.Location = New System.Drawing.Point(7, 75)
+        Me.cmbCommentScreening.Size = New System.Drawing.Size(230, 22)
         '
         'Label6
         '
-        Me.Label6.Location = New System.Drawing.Point(4, 56)
-        Me.Label6.Size = New System.Drawing.Size(233, 20)
+        Me.Label6.Location = New System.Drawing.Point(7, 52)
+        Me.Label6.Size = New System.Drawing.Size(230, 20)
         Me.Label6.Text = "Comment screening:"
         '
         'chkNoEmailComments
@@ -349,9 +352,6 @@ Public Class Post
         Me.chkDontAutoformat.Location = New System.Drawing.Point(3, 3)
         Me.chkDontAutoformat.Size = New System.Drawing.Size(234, 20)
         Me.chkDontAutoformat.Text = "Don't autoformat to HTML"
-        '
-        'InputPanel1
-        '
         Me.ImageList1.Images.Clear()
         Me.ImageList1.Images.Add(CType(resources.GetObject("resource"), System.Drawing.Image))
         Me.ImageList1.Images.Add(CType(resources.GetObject("resource1"), System.Drawing.Image))
@@ -360,6 +360,9 @@ Public Class Post
         Me.ImageList1.Images.Add(CType(resources.GetObject("resource4"), System.Drawing.Image))
         Me.ImageList1.Images.Add(CType(resources.GetObject("resource5"), System.Drawing.Image))
         Me.ImageList1.Images.Add(CType(resources.GetObject("resource6"), System.Drawing.Image))
+        '
+        'InputPanel1
+        '
         '
         'ToolBar2
         '
@@ -389,6 +392,10 @@ Public Class Post
         '
         Me.tbbUnderline.ImageIndex = 1
         '
+        'tbbStrike
+        '
+        Me.tbbStrike.ImageIndex = 6
+        '
         'tbbLink
         '
         Me.tbbLink.ImageIndex = 4
@@ -401,9 +408,10 @@ Public Class Post
         '
         Me.tbbImage.ImageIndex = 5
         '
-        'tbbStrike
+        'timAutoSave
         '
-        Me.tbbStrike.ImageIndex = 6
+        Me.timAutoSave.Enabled = True
+        Me.timAutoSave.Interval = 30000
         '
         'Post
         '
@@ -451,10 +459,14 @@ Public Class Post
         Next
     End Sub
 
-    Private Function SaveDraft() As Boolean
-        If Me.SaveFileDialog1.ShowDialog() <> Windows.Forms.DialogResult.OK Then Return False ' FAILED
+    Private Function SaveDraft(Optional ByVal isAutoSave As Boolean = False) As Boolean
+        If isAutoSave Then
+            m_DraftFilePath = IO.Path.Combine(Globals.GetAppPath(), "autosave_draft.txt")
+        Else
+            If Me.SaveFileDialog1.ShowDialog() <> Windows.Forms.DialogResult.OK Then Return False ' FAILED
+            m_DraftFilePath = Me.SaveFileDialog1.FileName ' mark as saving draft...
+        End If
         Try
-            m_DraftFilePath = Me.SaveFileDialog1.FileName
 
             Dim xmlDoc As New System.Xml.XmlDocument
             Dim xmlElem As System.Xml.XmlElement
@@ -504,7 +516,7 @@ Public Class Post
 
             xmlDoc.Save(m_DraftFilePath)
         Catch e3 As Exception
-            MsgBox(e3.Message)
+            If Not isAutoSave Then MsgBox(e3.Message)
             Return False ' FAILED
         End Try
         Return True
@@ -590,7 +602,17 @@ Public Class Post
         Dim newPost As New LJPost
         newPost.subject = Me.txtSubject.Text
         newPost.content = Me.txtPost.Text
-        newPost.securityValue = Me.cmbSecurity.Text
+        Select Case Me.cmbSecurity.Text
+            Case "Private"
+                newPost.securityValue = LJPost.ViewSecurityType.AllowNone
+            Case "Public"
+                newPost.securityValue = LJPost.ViewSecurityType.AllowAll
+            Case "Friends Only"
+                newPost.securityValue = LJPost.ViewSecurityType.AllowFriends
+            Case "Friend Groups..."
+                newPost.securityValue = LJPost.ViewSecurityType.FriendGroupsOnly
+                newPost.friendGroupsAllowed = Me.m_AllowedGroups
+        End Select
         newPost.mood = Me.cmbMood.Text
         newPost.postToJournal = Me.cmbJournal.Text
         newPost.TagList = Me.txtTags.Text
@@ -680,25 +702,26 @@ Public Class Post
     Private Sub ShowLogin()
         Dim t As New Login
         Dim s As String
-        t.mySession = Me.mySession
+        Dim lvi As ListViewItem
+        Dim dr As DataRow
         t.ShowDialog()
 
-        If Not mySession.Offline Then
-            ' okay, if we logged in, populate list of journals...
-            Me.cmbJournal.Items.Clear()
-            For Each s In mySession.PostingJournals
-                Me.cmbJournal.Items.Add(s)
-            Next
-            Me.cmbJournal.SelectedIndex = 0 ' pre-select first one (user's private journal)
+        ' If Not mySession.Offline Then
+        '' okay, if we logged in, populate list of journals...
+        Me.cmbJournal.Items.Clear()
+        For Each s In mySession.PostingJournals
+            Me.cmbJournal.Items.Add(s)
+        Next
+        If Me.cmbJournal.Items.Count > 0 Then Me.cmbJournal.SelectedIndex = 0 ' pre-select first one (user's private journal)
 
-            ' okay, if we logged in, populate list of userpics...
-            Me.cmbPictureKeyword.Items.Clear()
-            Me.cmbPictureKeyword.Items.Add("") ' for "default"
-            For Each s In mySession.PictureKeywords
-                Me.cmbPictureKeyword.Items.Add(s)
-            Next
-            Me.cmbPictureKeyword.SelectedIndex = 0 ' clear and use the default for the user
-        End If
+        ' okay, if we logged in, populate list of userpics...
+        Me.cmbPictureKeyword.Items.Clear()
+        Me.cmbPictureKeyword.Items.Add("") ' for "default"
+        For Each s In mySession.PictureKeywords
+            Me.cmbPictureKeyword.Items.Add(s)
+        Next
+        Me.cmbPictureKeyword.SelectedIndex = 0 ' clear and use the default for the user
+        ' End If
     End Sub
 
     Private Sub Post_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
@@ -784,7 +807,10 @@ Public Class Post
             ' reselect appropriate area
             Me.txtPost.Select(selStart, selLength + sTmp2.Length + 4) ' <a href="..."> </a>
         ElseIf e.Button.Equals(Me.tbbLJUser) Then
-            sTmp2 = InputBox("Please enter/paste the LJ username.")
+            Dim tLJUser As New LJUser
+            tLJUser.ShowDialog()
+            sTmp2 = tLJUser.LJUser
+            ' sTmp2 = InputBox("Please enter/paste the LJ username.")
             If sTmp2 = "" Then Exit Sub ' cancelled
             sTmp2 = "<lj user=""" & sTmp2 & """>"
             sTmp = Me.txtPost.Text.Substring(0, Me.txtPost.SelectionStart)
@@ -809,4 +835,18 @@ Public Class Post
         End If
     End Sub
 
+    Private Sub timAutoSave_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles timAutoSave.Tick
+        ' Autosave the current draft
+        SaveDraft(True) ' marks it as an autosave
+    End Sub
+
+    Private Sub cmbSecurity_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbSecurity.SelectedIndexChanged
+        If Me.cmbSecurity.Text = "Friend Groups..." Then
+            ' FIXME: throw up dialog
+            Dim t As New FriendsGroups
+            t.AllowedGroups = m_AllowedGroups
+            t.ShowDialog()
+            m_AllowedGroups = t.AllowedGroups
+        End If
+    End Sub
 End Class
