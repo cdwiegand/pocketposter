@@ -45,6 +45,12 @@
         "Entry"
         {
         "MsmKey" = "8:_59F33F66D44CE82C15A4B1F8D5C1FAAB"
+        "OwnerKey" = "8:_FCF2BEF26F8DDBD9EE6F46C1AC9CCA63"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_59F33F66D44CE82C15A4B1F8D5C1FAAB"
         "OwnerKey" = "8:_FF6B6DBC7842FBDC6A77B85BE7026E23"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -99,6 +105,12 @@
         "Entry"
         {
         "MsmKey" = "8:_8AA88F9B235CC9BFF908664F34DEB831"
+        "OwnerKey" = "8:_FCF2BEF26F8DDBD9EE6F46C1AC9CCA63"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8AA88F9B235CC9BFF908664F34DEB831"
         "OwnerKey" = "8:_FF6B6DBC7842FBDC6A77B85BE7026E23"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -123,6 +135,12 @@
         "Entry"
         {
         "MsmKey" = "8:_AD11069D5E5008BFC542DAB007F8F279"
+        "OwnerKey" = "8:_FCF2BEF26F8DDBD9EE6F46C1AC9CCA63"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AD11069D5E5008BFC542DAB007F8F279"
         "OwnerKey" = "8:_FF6B6DBC7842FBDC6A77B85BE7026E23"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -136,6 +154,12 @@
         {
         "MsmKey" = "8:_CC8BF5937AD34957AA0D92B64F1E4F96"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FCF2BEF26F8DDBD9EE6F46C1AC9CCA63"
+        "OwnerKey" = "8:_CC8BF5937AD34957AA0D92B64F1E4F96"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -350,6 +374,34 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_FCF2BEF26F8DDBD9EE6F46C1AC9CCA63"
+            {
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.WindowsCE.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=969db8053d3322ac"
+                "ScatterAssemblies"
+                {
+                    "_FCF2BEF26F8DDBD9EE6F46C1AC9CCA63"
+                    {
+                    "Name" = "8:Microsoft.WindowsCE.Forms.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.WindowsCE.Forms.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_2DBCBE94D2DA4E28AF3C87306B8D46E6"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_FF6B6DBC7842FBDC6A77B85BE7026E23"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -418,7 +470,7 @@
         "OSVersionMin" = "8:4.0"
         "OSVersionMax" = "8:5.99"
         "NoUninstall" = "11:FALSE"
-        "Compress" = "11:FALSE"
+        "Compress" = "11:TRUE"
         "CESetupDLL" = "8:"
         }
         "ProjectOutput"

@@ -1,0 +1,37 @@
+0.8: 4 March 2006
+Added strikethrough to toolbar. Added list of friends to the
+LJ User toolbar button. Added offline user information (list
+of friends, journals, picture keywords and friend groups).
+Added non-working ability to restrict posting to friend group
+visibility (ACLs, basically).
+
+0.7: 16 Feb 2006
+Added advanced tab with options like "Mark entry as backdated", 
+"Don't email comments", "Don't autoformat to HTML", and 
+"Screen comments". Also added grabbing and using the list of 
+picture keywords (although at this time I'm not able to load the 
+pictures themselves). Also, a basic toolbar with bold, italic, 
+underline, link, image and LJUser buttons were added. Resize 
+according to the input panel.
+
+0.6: Skipped
+
+0.5: 9 Feb 2006
+Fixed the bug where posting would disable the form permanently 
+(until the program was forcibly quit'ed). Fixed the bug where 
+hitting cancel on the save draft file dialog would still clear 
+the screen.
+
+0.4: 7 Feb 2006
+Added support for moods. Added support for tags.
+Added (theoretical) support for posting to alternate/group journals.
+Changed draft format to XML (was plain text).
+
+0.3: Skipped
+
+0.2: 7 Feb 2006
+Initial release on SourceForge. Cleaned up UI and code, ability to 
+login as someone other than initial programmer added.
+
+0.1: 2 Feb 2006
+Initial version.

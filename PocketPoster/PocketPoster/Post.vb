@@ -1,5 +1,6 @@
 Public Class Post
     Inherits System.Windows.Forms.Form
+    Implements LJCommunicationWatcher
 
     Private m_DraftFilePath As String = "" ' if we load from a draft we put the path here
     Private m_AllowedGroups As New Collection
@@ -51,6 +52,10 @@ Public Class Post
     Friend WithEvents ToolBarButton1 As System.Windows.Forms.ToolBarButton
     Friend WithEvents tbbStrike As System.Windows.Forms.ToolBarButton
     Friend WithEvents timAutoSave As System.Windows.Forms.Timer
+    Friend WithEvents StatusBar1 As System.Windows.Forms.StatusBar
+    Friend WithEvents MenuItem2 As System.Windows.Forms.MenuItem
+    Friend WithEvents ContextMenu1 As System.Windows.Forms.ContextMenu
+    Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -84,6 +89,7 @@ Public Class Post
         Me.MenuItem5 = New System.Windows.Forms.MenuItem
         Me.mnuPostNow = New System.Windows.Forms.MenuItem
         Me.mnuClear = New System.Windows.Forms.MenuItem
+        Me.MenuItem2 = New System.Windows.Forms.MenuItem
         Me.MenuItem8 = New System.Windows.Forms.MenuItem
         Me.mnuExit = New System.Windows.Forms.MenuItem
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
@@ -122,6 +128,9 @@ Public Class Post
         Me.tbbLJUser = New System.Windows.Forms.ToolBarButton
         Me.tbbImage = New System.Windows.Forms.ToolBarButton
         Me.timAutoSave = New System.Windows.Forms.Timer
+        Me.StatusBar1 = New System.Windows.Forms.StatusBar
+        Me.ContextMenu1 = New System.Windows.Forms.ContextMenu
+        Me.MenuItem1 = New System.Windows.Forms.MenuItem
         '
         'MainMenu1
         '
@@ -137,6 +146,7 @@ Public Class Post
         Me.menuMenu.MenuItems.Add(Me.MenuItem5)
         Me.menuMenu.MenuItems.Add(Me.mnuPostNow)
         Me.menuMenu.MenuItems.Add(Me.mnuClear)
+        Me.menuMenu.MenuItems.Add(Me.MenuItem2)
         Me.menuMenu.MenuItems.Add(Me.MenuItem8)
         Me.menuMenu.MenuItems.Add(Me.mnuExit)
         Me.menuMenu.Text = "Menu"
@@ -173,6 +183,10 @@ Public Class Post
         '
         Me.mnuClear.Text = "Clear Post"
         '
+        'MenuItem2
+        '
+        Me.MenuItem2.Text = "Refresh Entries"
+        '
         'MenuItem8
         '
         Me.MenuItem8.Text = "-"
@@ -197,7 +211,7 @@ Public Class Post
         Me.TabControl1.Controls.Add(Me.tabAdvanced)
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(240, 265)
+        Me.TabControl1.Size = New System.Drawing.Size(240, 249)
         '
         'tabOptions
         '
@@ -214,7 +228,7 @@ Public Class Post
         Me.tabOptions.Controls.Add(Me.txtSubject)
         Me.tabOptions.Controls.Add(Me.Label1)
         Me.tabOptions.Location = New System.Drawing.Point(0, 0)
-        Me.tabOptions.Size = New System.Drawing.Size(240, 242)
+        Me.tabOptions.Size = New System.Drawing.Size(240, 226)
         Me.tabOptions.Text = "Options"
         '
         'cmbPictureKeyword
@@ -299,7 +313,7 @@ Public Class Post
         '
         Me.tabContent.Controls.Add(Me.txtPost)
         Me.tabContent.Location = New System.Drawing.Point(0, 0)
-        Me.tabContent.Size = New System.Drawing.Size(240, 242)
+        Me.tabContent.Size = New System.Drawing.Size(232, 223)
         Me.tabContent.Text = "Content"
         '
         'txtPost
@@ -316,7 +330,7 @@ Public Class Post
         Me.tabAdvanced.Controls.Add(Me.chkNoEmailComments)
         Me.tabAdvanced.Controls.Add(Me.chkDontAutoformat)
         Me.tabAdvanced.Location = New System.Drawing.Point(0, 0)
-        Me.tabAdvanced.Size = New System.Drawing.Size(240, 242)
+        Me.tabAdvanced.Size = New System.Drawing.Size(232, 223)
         Me.tabAdvanced.Text = "Advanced"
         '
         'chkBackdate
@@ -413,9 +427,24 @@ Public Class Post
         Me.timAutoSave.Enabled = True
         Me.timAutoSave.Interval = 30000
         '
+        'StatusBar1
+        '
+        Me.StatusBar1.Location = New System.Drawing.Point(0, 246)
+        Me.StatusBar1.Size = New System.Drawing.Size(240, 22)
+        Me.StatusBar1.Visible = False
+        '
+        'ContextMenu1
+        '
+        Me.ContextMenu1.MenuItems.Add(Me.MenuItem1)
+        '
+        'MenuItem1
+        '
+        Me.MenuItem1.Text = "Edit"
+        '
         'Post
         '
         Me.ClientSize = New System.Drawing.Size(240, 268)
+        Me.Controls.Add(Me.StatusBar1)
         Me.Controls.Add(Me.ToolBar2)
         Me.Controls.Add(Me.TabControl1)
         Me.Menu = Me.MainMenu1
@@ -569,15 +598,17 @@ Public Class Post
 
         Me.txtSubject.Text = ""
         Me.txtPost.Text = ""
-        Me.cmbSecurity.Text = ""
+        Me.cmbSecurity.SelectedIndex = 0
         Me.cmbMood.Text = ""
-        Me.cmbJournal.Text = ""
+        Me.cmbJournal.SelectedIndex = 0
         Me.cmbPictureKeyword.SelectedIndex = 0
 
         Me.chkDontAutoformat.Checked = False
         Me.chkNoEmailComments.Checked = False
         Me.cmbCommentScreening.SelectedIndex = 0 ' use default one
         Me.chkBackdate.Checked = False
+
+
     End Sub
 
     Private Sub PostEntry()
@@ -631,7 +662,7 @@ Public Class Post
                 newPost.screenComments = LJPost.CommentScreeningType.ScreenEveryone
         End Select
 
-        ret = mySession.Post(newPost)
+        ret = mySession.Post(newPost, Me)
 
         If ret("Success") = "OK" Then
             ' yay!
@@ -842,11 +873,22 @@ Public Class Post
 
     Private Sub cmbSecurity_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbSecurity.SelectedIndexChanged
         If Me.cmbSecurity.Text = "Friend Groups..." Then
-            ' FIXME: throw up dialog
+            MsgBox("Sorry, this functionality isn't quite working right at this time.")
+            Exit Sub
+
             Dim t As New FriendsGroups
             t.AllowedGroups = m_AllowedGroups
             t.ShowDialog()
             m_AllowedGroups = t.AllowedGroups
         End If
+    End Sub
+
+    Public Sub StatusUpdate(ByVal status As String) Implements LJCommunicationWatcher.StatusUpdate
+        Me.StatusBar1.Text = status
+        Me.StatusBar1.Visible = IIf(status <> "", True, False)
+    End Sub
+
+    Private Sub MenuItem2_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem2.Click
+
     End Sub
 End Class

@@ -1,6 +1,7 @@
 Imports System.Net
 
 Public Class LJPost
+    Public postID As Long = -1 ' indicates new post
     Public subject As String = ""
     Public content As String = ""
     Public securityValue As ViewSecurityType = ViewSecurityType.AllowAll
@@ -29,6 +30,10 @@ Public Class LJPost
         ScreenEveryone = 3 ' everyone is blocked
     End Enum
 End Class
+
+Public Interface LJCommunicationWatcher
+    Sub StatusUpdate(ByVal status As String)
+End Interface
 
 Public Class LJSession
     Private m_Username As String = ""
@@ -72,7 +77,7 @@ Public Class LJSession
         End Set
     End Property
 
-    Public Function Login(ByVal username As String, ByVal password As String) As Specialized.NameValueCollection
+    Public Function Login(ByVal username As String, ByVal password As String, Optional ByRef commWatcher As LJCommunicationWatcher = Nothing) As Specialized.NameValueCollection
         ' attempts to login to LJ server
         ' returns: nameValueCollection
         ' it MUST contain: Success (FAIL|OK)
@@ -82,6 +87,7 @@ Public Class LJSession
         Dim items As Specialized.NameValueCollection
         ' Dim challenge As String
         Dim ret As New Specialized.NameValueCollection
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
 
         Try
             ' now generate MD5 and send back
@@ -91,8 +97,11 @@ Public Class LJSession
             items.Add("password", password)
             items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
             items.Add("getpickws", "1") ' get picture keywords now
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
             ret = mhc.SendHTTPRequest("login", items)
             If ret("Success") = "OK" Then
+                If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response...")
+
                 Me.m_Username = username
                 Me.m_Password = password
                 m_colJournals = New Collection
@@ -104,6 +113,7 @@ Public Class LJSession
                 ' try to load them...
                 If IsNumeric(sTmp) Then
                     Try
+                        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (groups)...")
                         LoadGroups(ret)
                     Catch ex As Exception
                         MsgBox("Unable to load your groups/journals. Posting only to your personal journal.")
@@ -115,6 +125,7 @@ Public Class LJSession
                 ' try to load them...
                 If IsNumeric(sTmp) Then
                     Try
+                        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (pictures)...")
                         LoadPictureKeywords(ret)
                     Catch ex As Exception
                         ' hmm... notify user ?? think about it. --cdw
@@ -122,6 +133,7 @@ Public Class LJSession
                 End If
 
                 ' load friends
+                If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (friends)...")
                 Me.GetFriends()
 
                 ' load friend groups
@@ -130,6 +142,7 @@ Public Class LJSession
                 ' NOTE: maxnum is the MAXIMUM, not the count!! might be missing holes!!
                 If IsNumeric(sTmp) Then
                     Try
+                        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (friend groups)...")
                         LoadFriendGroups(ret)
                     Catch ex As Exception
                         ' hmm... notify user ?? think about it. --cdw
@@ -138,11 +151,14 @@ Public Class LJSession
             End If
 
             ' hey, save this to the configuration, in case we're offline next time...
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Saving offline information...")
             SaveToConfigFile()
         Catch e As Exception
             ret.Add("Success", "FAIL")
             ret.Add("errmsg", ".Net error: " & e.Message)
         End Try
+
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("")
         Return ret
     End Function
 
@@ -272,7 +288,7 @@ Public Class LJSession
         Next
     End Sub
 
-    Public Function Post(ByVal thePost As LJPost) As Specialized.NameValueCollection
+    Public Function Post(ByVal thePost As LJPost, Optional ByRef commWatcher As LJCommunicationWatcher = Nothing) As Specialized.NameValueCollection
         ' attempts to post entry to LJ server
         ' returns: nameValueCollection
         ' it MUST contain: Success (FAIL|OK)
@@ -283,9 +299,10 @@ Public Class LJSession
         ' Dim challenge As String
         Dim ret As New Specialized.NameValueCollection
 
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
         Try
             items = New Specialized.NameValueCollection
-            items.Add("auth_method", "clear") ' FIXME
+            items.Add("auth_method", "clear")
             items.Add("user", Me.m_Username)
             items.Add("password", Me.m_Password)
             items.Add("subject", thePost.subject)
@@ -328,12 +345,84 @@ Public Class LJSession
             items.Add("day", DatePart(DateInterval.Day, Now()))
             items.Add("hour", DatePart(DateInterval.Hour, Now()))
             items.Add("min", DatePart(DateInterval.Minute, Now()))
+
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
             ret = mhc.SendHTTPRequest("postevent", items)
         Catch e As Exception
             ret.Add("Success", "FAIL")
             ret.Add("errmsg", ".Net error: " & e.Message)
         End Try
+
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("")
         Return ret
+    End Function
+
+    Public Function GetPostList(Optional ByVal journalToUse As String = "", Optional ByRef commWatcher As LJCommunicationWatcher = Nothing) As Collection
+        ' attempts to get a list of recent posts
+        ' returns: nameValueCollection
+        ' it MUST contain: Success (FAIL|OK)
+
+        Dim mhc As New LJHTTPWebClient
+        Dim items As Specialized.NameValueCollection
+        Dim ret2 As New Collection
+        Dim ret As New Specialized.NameValueCollection
+        Dim sTmp As String
+        Dim sTmp2 As String
+        Dim sTmp3 As String
+
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
+        Try
+            ' now generate MD5 and send back
+            items = New Specialized.NameValueCollection
+            items.Add("auth_method", "getevents")
+            items.Add("user", Me.m_Username)
+            items.Add("password", Me.m_Password)
+            items.Add("selecttype", "lastn")
+            items.Add("howmany", 20)
+            items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
+            If journalToUse <> "" Then items.Add("usejournal", journalToUse) ' journal to edit
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
+            ret = mhc.SendHTTPRequest("login", items)
+            If ret("Success") = "OK" Then
+                If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response...")
+                ' load list
+                sTmp = ret("events_count")
+                ' try to load them...
+                If IsNumeric(sTmp) Then
+                    Dim idx As Long
+                    For idx = 1 To CInt(sTmp)
+                        Dim tPost As New LJPost
+                        ret2.Add(tPost)
+                        tPost.postID = ret("events_" & idx & "_itemid")
+                        tPost.content = ret("events_" & idx & "_event")
+                        tPost.postToJournal = ret("events_" & idx & "_poster")
+                        tPost.subject = ret("events_" & idx & "_subject")
+                        ' tpost.friendGroupsAllowed FIXME
+                        'events_n_allowmask()
+                        ' tpost.securityValue
+                        'events_n_security()
+                        ' tpost.???
+                        'events_n_eventtime()
+
+                        For Each sTmp2 In ret.AllKeys ' key
+                            sTmp3 = "prop_" & idx & "_value" ' for getting value
+                            If sTmp2 = "prop_" & idx & "_name" Then
+                                If ret(sTmp2) = "current_mood" Then tPost.mood = ret(sTmp3)
+                                If ret(sTmp2) = "picture_keyword" Then tPost.pictureKeyword = ret(sTmp3)
+                            End If
+                        Next
+                    Next
+                End If
+
+
+            End If
+        Catch e As Exception
+            ret.Add("Success", "FAIL")
+            ret.Add("errmsg", ".Net error: " & e.Message)
+        End Try
+
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("")
+        Return ret2
     End Function
 
     Private Function GetBitsForAllowedFriendGroups(ByRef colAllowedGroups As Collection) As String
@@ -360,11 +449,11 @@ Public Class LJSession
         Dim ret As String = ""
         If index > 0 Then ret = origString.Substring(0, index)
         ret = ret & replaceWithChar
-        If index < origString.Length - 1 Then ret = ret & origString.Substring(index)
+        If index < origString.Length - 1 Then ret = ret & origString.Substring(index + 1)
         Return ret
     End Function
 
-    Private Function GetFriends() As Specialized.NameValueCollection
+    Private Function GetFriends(Optional ByRef commWatcher As LJCommunicationWatcher = Nothing) As Specialized.NameValueCollection
         ' attempts to get friends from the LJ server
         ' returns: nameValueCollection - see CSP from LiveJournal for details
         ' it MUST contain: Success (FAIL|OK)
@@ -378,6 +467,7 @@ Public Class LJSession
         Dim idx As Long
         Dim dr As DataRow
 
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
         Try
             ' now generate MD5 and send back
             items = New Specialized.NameValueCollection
@@ -385,7 +475,9 @@ Public Class LJSession
             items.Add("user", Me.m_Username)
             items.Add("password", Me.m_Password)
             items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
             ret = mhc.SendHTTPRequest("getfriends", items)
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response...")
 
             friendCount = ret("friend_count")
             If friendCount > 0 Then
@@ -401,6 +493,8 @@ Public Class LJSession
             ret.Add("Success", "FAIL")
             ret.Add("errmsg", ".Net error: " & e.Message)
         End Try
+
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("")
         Return ret
     End Function
 

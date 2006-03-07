@@ -1,5 +1,6 @@
 Public Class Login
     Inherits System.Windows.Forms.Form
+    Implements LJCommunicationWatcher
 
     Friend WithEvents lblTitle As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
@@ -15,6 +16,7 @@ Public Class Login
     Friend WithEvents MenuItem3 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem4 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem5 As System.Windows.Forms.MenuItem
+    Friend WithEvents StatusBar1 As System.Windows.Forms.StatusBar
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -53,6 +55,7 @@ Public Class Login
         Me.chkRemember = New System.Windows.Forms.CheckBox
         Me.Label4 = New System.Windows.Forms.Label
         Me.Button2 = New System.Windows.Forms.Button
+        Me.StatusBar1 = New System.Windows.Forms.StatusBar
         '
         'MainMenu1
         '
@@ -138,10 +141,17 @@ Public Class Login
         Me.Button2.Size = New System.Drawing.Size(89, 20)
         Me.Button2.Text = "Skip Login"
         '
+        'StatusBar1
+        '
+        Me.StatusBar1.Location = New System.Drawing.Point(0, 246)
+        Me.StatusBar1.Size = New System.Drawing.Size(240, 22)
+        Me.StatusBar1.Visible = False
+        '
         'Login
         '
         Me.ClientSize = New System.Drawing.Size(240, 268)
         Me.ControlBox = False
+        Me.Controls.Add(Me.StatusBar1)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.chkRemember)
@@ -167,7 +177,7 @@ Public Class Login
         Me.Enabled = False
 
         Cursor.Current = Cursors.WaitCursor
-        ret = mySession.Login(Me.txtUsername.Text, Me.txtPassword.Text)
+        ret = mySession.Login(Me.txtUsername.Text, Me.txtPassword.Text, Me)
         Cursor.Current = Cursors.Default
 
         If ret("Success") = "OK" Then
@@ -227,5 +237,10 @@ Public Class Login
 
     Private Sub MenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem3.Click
         LoginNow()
+    End Sub
+
+    Public Sub StatusUpdate(ByVal status As String) Implements LJCommunicationWatcher.StatusUpdate
+        Me.StatusBar1.Text = status
+        Me.StatusBar1.Visible = IIf(status <> "", True, False)
     End Sub
 End Class

@@ -1,7 +1,7 @@
 
 Module Globals
 
-    Public MyVersion As String = "0.8"
+    Public MyVersion As String = "0.8a"
 
     Public mySession As New LJSession ' yeah, I'm cheating...
     Private m_SettingsXML As Xml.XmlDocument = Nothing
