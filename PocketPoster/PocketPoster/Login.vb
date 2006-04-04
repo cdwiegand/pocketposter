@@ -1,6 +1,5 @@
 Public Class Login
     Inherits System.Windows.Forms.Form
-    Implements LJCommunicationWatcher
 
     Friend WithEvents lblTitle As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
@@ -174,11 +173,15 @@ Public Class Login
 
     Private Sub LoginNow()
         Dim ret As Specialized.NameValueCollection
-        Me.Enabled = False
+        Dim frmComm As New Communications ' Form
+        frmComm.Show()
+        '       Me.Enabled = False
 
-        Cursor.Current = Cursors.WaitCursor
-        ret = mySession.Login(Me.txtUsername.Text, Me.txtPassword.Text, Me)
-        Cursor.Current = Cursors.Default
+        '        Cursor.Current = Cursors.WaitCursor
+        ret = mySession.Login(Me.txtUsername.Text, Me.txtPassword.Text, frmComm)
+        '      Cursor.Current = Cursors.Default
+        frmComm.Hide()
+        frmComm = Nothing ' get rid of it!
 
         If ret("Success") = "OK" Then
             ' yay!
@@ -237,10 +240,5 @@ Public Class Login
 
     Private Sub MenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem3.Click
         LoginNow()
-    End Sub
-
-    Public Sub StatusUpdate(ByVal status As String) Implements LJCommunicationWatcher.StatusUpdate
-        Me.StatusBar1.Text = status
-        Me.StatusBar1.Visible = IIf(status <> "", True, False)
     End Sub
 End Class

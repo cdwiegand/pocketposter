@@ -44,6 +44,12 @@ Public Class LJSession
     Private m_colFriends As New Data.DataTable
     Private m_colFriendGroups As New Specialized.NameValueCollection
 
+    Public ReadOnly Property Username() As String
+        Get
+            Return m_Username
+        End Get
+    End Property
+
     Public ReadOnly Property Friends() As Data.DataTable
         Get
             Return m_colFriends
@@ -104,8 +110,6 @@ Public Class LJSession
 
                 Me.m_Username = username
                 Me.m_Password = password
-                m_colJournals = New Collection
-                Me.m_colJournals.Add(m_Username) ' add user's own journal
 
                 ' save list of journals with posting ability
                 Dim sTmp As String
@@ -148,11 +152,11 @@ Public Class LJSession
                         ' hmm... notify user ?? think about it. --cdw
                     End Try
                 End If
-            End If
 
-            ' hey, save this to the configuration, in case we're offline next time...
-            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Saving offline information...")
-            SaveToConfigFile()
+                ' hey, save this to the configuration, in case we're offline next time...
+                If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Saving offline information...")
+                SaveToConfigFile()
+            End If
         Catch e As Exception
             ret.Add("Success", "FAIL")
             ret.Add("errmsg", ".Net error: " & e.Message)
@@ -163,7 +167,7 @@ Public Class LJSession
     End Function
 
     Public Sub LoadFromConfigFile()
-        ' load some offline-useful stuff to the config file...
+        ' load some offline-useful stuff from the config file...
         Dim dr As Data.DataRow
         Dim xmlBranch As Xml.XmlElement
         Dim xmlLeaf As Xml.XmlElement
@@ -258,6 +262,10 @@ Public Class LJSession
         Dim idx As Long
         Dim sTmp As String
 
+        ' clear existing ones
+        m_colJournals = New Collection
+        Me.m_colJournals.Add(m_Username) ' add user's own journal
+
         For idx = 1 To iMax
             sTmp = items("access_" & idx)
             m_colJournals.Add(sTmp)
@@ -270,6 +278,8 @@ Public Class LJSession
         Dim idx As Long
         Dim sTmp As String
 
+        ' clear existing ones!!
+        m_colPictureKeywords = New Collection
         For idx = 1 To iMax
             sTmp = items("pickw_" & idx)
             m_colPictureKeywords.Add(sTmp)
@@ -282,6 +292,8 @@ Public Class LJSession
         Dim idx As Long
         Dim sTmp As String
 
+        ' clear existing ones!
+        m_colFriendGroups = New Specialized.NameValueCollection
         For idx = 1 To iMax
             sTmp = items("frgrp_" & idx & "_name")
             If sTmp <> "" Then m_colFriendGroups.Add(idx, sTmp)
@@ -467,6 +479,7 @@ Public Class LJSession
         Dim idx As Long
         Dim dr As DataRow
 
+        Me.InitializeFriendsTable()
         If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
         Try
             ' now generate MD5 and send back

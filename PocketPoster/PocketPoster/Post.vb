@@ -1,6 +1,5 @@
 Public Class Post
     Inherits System.Windows.Forms.Form
-    Implements LJCommunicationWatcher
 
     Private m_DraftFilePath As String = "" ' if we load from a draft we put the path here
     Private m_AllowedGroups As New Collection
@@ -56,6 +55,7 @@ Public Class Post
     Friend WithEvents MenuItem2 As System.Windows.Forms.MenuItem
     Friend WithEvents ContextMenu1 As System.Windows.Forms.ContextMenu
     Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
+    Friend WithEvents MenuItem3 As System.Windows.Forms.MenuItem
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -131,6 +131,7 @@ Public Class Post
         Me.StatusBar1 = New System.Windows.Forms.StatusBar
         Me.ContextMenu1 = New System.Windows.Forms.ContextMenu
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
+        Me.MenuItem3 = New System.Windows.Forms.MenuItem
         '
         'MainMenu1
         '
@@ -143,6 +144,7 @@ Public Class Post
         Me.menuMenu.MenuItems.Add(Me.mnuNewPost)
         Me.menuMenu.MenuItems.Add(Me.mnuLoadDraft)
         Me.menuMenu.MenuItems.Add(Me.mnuSaveDraft)
+        Me.menuMenu.MenuItems.Add(Me.MenuItem3)
         Me.menuMenu.MenuItems.Add(Me.MenuItem5)
         Me.menuMenu.MenuItems.Add(Me.mnuPostNow)
         Me.menuMenu.MenuItems.Add(Me.mnuClear)
@@ -198,11 +200,11 @@ Public Class Post
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
-        Me.OpenFileDialog1.Filter = "Text files|*.txt"
+        Me.OpenFileDialog1.Filter = "Journal saves|*.jrnl|Text files|*.txt|All files|*.*"
         '
         'SaveFileDialog1
         '
-        Me.SaveFileDialog1.Filter = "Text files|*.txt"
+        Me.SaveFileDialog1.Filter = "Journal saves|*.jrnl"
         '
         'TabControl1
         '
@@ -441,6 +443,10 @@ Public Class Post
         '
         Me.MenuItem1.Text = "Edit"
         '
+        'MenuItem3
+        '
+        Me.MenuItem3.Text = "Save As Default"
+        '
         'Post
         '
         Me.ClientSize = New System.Drawing.Size(240, 268)
@@ -454,47 +460,67 @@ Public Class Post
 
 #End Region
 
-    Public Sub LoadDraft()
-        If Me.OpenFileDialog1.ShowDialog() <> Windows.Forms.DialogResult.OK Then Exit Sub
-        m_DraftFilePath = Me.OpenFileDialog1.FileName
+    Public Sub LoadDraft(ByVal requestedLoadType As SaveType)
+        Select Case requestedLoadType
+            Case SaveType.autoSave
+                m_DraftFilePath = IO.Path.Combine(Globals.GetAppPath(), "autosave.jrnl")
+            Case SaveType.defaultSave
+                m_DraftFilePath = IO.Path.Combine(Globals.GetAppPath(), "default.jrnl")
+            Case SaveType.userSave
+                If Me.OpenFileDialog1.ShowDialog() <> Windows.Forms.DialogResult.OK Then Exit Sub
+                m_DraftFilePath = Me.OpenFileDialog1.FileName
+        End Select
 
         Dim xmlDoc As New Xml.XmlDocument
-        xmlDoc.Load(m_DraftFilePath)
+        Try
+            xmlDoc.Load(m_DraftFilePath)
 
-        Dim xmlElem As Xml.XmlElement
-        For Each xmlElem In xmlDoc.FirstChild.ChildNodes
-            Select Case xmlElem.Name.ToLower
-                Case "subject"
-                    Me.txtSubject.Text = xmlElem.InnerText
-                Case "security"
-                    Me.cmbSecurity.Text = xmlElem.InnerText
-                Case "journal"
-                    Me.cmbJournal.Text = xmlElem.InnerText
-                Case "mood"
-                    Me.cmbMood.Text = xmlElem.InnerText
-                Case "content"
-                    Me.txtPost.Text = xmlElem.InnerText
-                Case "picturekw"
-                    Me.cmbPictureKeyword.Text = xmlElem.InnerText
-                Case "commentscreening"
-                    Me.cmbCommentScreening.Text = xmlElem.InnerText
-                Case "noemailcomments"
-                    Me.chkNoEmailComments.Checked = IIf(xmlElem.InnerText.Trim.ToLower = "true", True, False)
-                Case "noautoformat"
-                    Me.chkDontAutoformat.Checked = IIf(xmlElem.InnerText.Trim.ToLower = "true", True, False)
-                Case "backdate"
-                    Me.chkBackdate.Checked = IIf(xmlElem.InnerText.Trim.ToLower = "true", True, False)
-            End Select
-        Next
+            Dim xmlElem As Xml.XmlElement
+            For Each xmlElem In xmlDoc.FirstChild.ChildNodes
+                Select Case xmlElem.Name.ToLower
+                    Case "subject"
+                        Me.txtSubject.Text = xmlElem.InnerText
+                    Case "security"
+                        Me.cmbSecurity.Text = xmlElem.InnerText
+                    Case "journal"
+                        Me.cmbJournal.Text = xmlElem.InnerText
+                    Case "mood"
+                        Me.cmbMood.Text = xmlElem.InnerText
+                    Case "content"
+                        Me.txtPost.Text = xmlElem.InnerText
+                    Case "picturekw"
+                        Me.cmbPictureKeyword.Text = xmlElem.InnerText
+                    Case "commentscreening"
+                        Me.cmbCommentScreening.Text = xmlElem.InnerText
+                    Case "noemailcomments"
+                        Me.chkNoEmailComments.Checked = IIf(xmlElem.InnerText.Trim.ToLower = "true", True, False)
+                    Case "noautoformat"
+                        Me.chkDontAutoformat.Checked = IIf(xmlElem.InnerText.Trim.ToLower = "true", True, False)
+                    Case "backdate"
+                        Me.chkBackdate.Checked = IIf(xmlElem.InnerText.Trim.ToLower = "true", True, False)
+                End Select
+            Next
+        Catch e3 As Exception
+            If requestedLoadType = SaveType.userSave Then MsgBox(e3.Message)
+        End Try
     End Sub
 
-    Private Function SaveDraft(Optional ByVal isAutoSave As Boolean = False) As Boolean
-        If isAutoSave Then
-            m_DraftFilePath = IO.Path.Combine(Globals.GetAppPath(), "autosave_draft.txt")
-        Else
-            If Me.SaveFileDialog1.ShowDialog() <> Windows.Forms.DialogResult.OK Then Return False ' FAILED
-            m_DraftFilePath = Me.SaveFileDialog1.FileName ' mark as saving draft...
-        End If
+    Public Enum SaveType
+        autoSave = 1
+        defaultSave = 2
+        userSave = 3
+    End Enum
+
+    Private Function SaveDraft(ByVal requestedSaveType As SaveType) As Boolean
+        Select Case requestedSaveType
+            Case SaveType.autoSave
+                m_DraftFilePath = IO.Path.Combine(Globals.GetAppPath(), "autosave.jrnl")
+            Case SaveType.defaultSave
+                m_DraftFilePath = IO.Path.Combine(Globals.GetAppPath(), "default.jrnl")
+            Case SaveType.userSave
+                If Me.SaveFileDialog1.ShowDialog() <> Windows.Forms.DialogResult.OK Then Return False ' FAILED
+                m_DraftFilePath = Me.SaveFileDialog1.FileName ' mark as saving draft...
+        End Select
         Try
 
             Dim xmlDoc As New System.Xml.XmlDocument
@@ -545,18 +571,18 @@ Public Class Post
 
             xmlDoc.Save(m_DraftFilePath)
         Catch e3 As Exception
-            If Not isAutoSave Then MsgBox(e3.Message)
+            If requestedSaveType = SaveType.userSave Then MsgBox(e3.Message)
             Return False ' FAILED
         End Try
         Return True
     End Function
 
     Private Sub MenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuLoadDraft.Click
-        LoadDraft()
+        LoadDraft(SaveType.userSave)
     End Sub
 
     Private Sub MenuItem2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSaveDraft.Click
-        SaveDraft()
+        SaveDraft(SaveType.userSave)
     End Sub
 
     Private Sub MenuItem4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuNewPost.Click
@@ -573,24 +599,24 @@ Public Class Post
     End Sub
 
     Private Function CancelEntry() As Microsoft.VisualBasic.MsgBoxResult
-        If Me.txtPost.Text <> "" Or Me.txtSubject.Text <> "" Then
-            Select Case MsgBox("You appear to have started a post - do you want to save it as a draft?", MsgBoxStyle.YesNoCancel + MsgBoxStyle.Question)
-                Case MsgBoxResult.Cancel
-                    Return MsgBoxResult.Cancel
-                Case MsgBoxResult.Yes
-                    If Me.SaveDraft() Then
-                        ResetForm()
-                        Return MsgBoxResult.Yes
-                    Else
-                        Return MsgBoxResult.Cancel
-                    End If
-                Case MsgBoxResult.No
+        ' If Me.txtPost.Text <> "" Or Me.txtSubject.Text <> "" Then
+        Select Case MsgBox("You may have started a post - do you want to save it as a draft?", MsgBoxStyle.YesNoCancel + MsgBoxStyle.Question)
+            Case MsgBoxResult.Cancel
+                Return MsgBoxResult.Cancel
+            Case MsgBoxResult.Yes
+                If Me.SaveDraft(SaveType.userSave) Then
                     ResetForm()
-                    Return MsgBoxResult.No
-            End Select
-        Else
-            Return MsgBoxResult.Ignore ' there was nothing, so return that...
-        End If
+                    Return MsgBoxResult.Yes
+                Else
+                    Return MsgBoxResult.Cancel
+                End If
+            Case MsgBoxResult.No
+                ResetForm()
+                Return MsgBoxResult.No
+        End Select
+        ' Else
+        ' Return MsgBoxResult.Ignore ' there was nothing, so return that...
+        ' End If
     End Function
 
     Private Sub ResetForm()
@@ -608,6 +634,7 @@ Public Class Post
         Me.cmbCommentScreening.SelectedIndex = 0 ' use default one
         Me.chkBackdate.Checked = False
 
+        Me.LoadDraft(SaveType.defaultSave) ' load defaults from there, if possible/saved
 
     End Sub
 
@@ -662,7 +689,11 @@ Public Class Post
                 newPost.screenComments = LJPost.CommentScreeningType.ScreenEveryone
         End Select
 
-        ret = mySession.Post(newPost, Me)
+        Dim frmComm As New Communications
+        frmComm.Show()
+        ret = mySession.Post(newPost, frmComm)
+        frmComm.Hide()
+        frmComm = Nothing ' get rid of it!
 
         If ret("Success") = "OK" Then
             ' yay!
@@ -733,8 +764,6 @@ Public Class Post
     Private Sub ShowLogin()
         Dim t As New Login
         Dim s As String
-        Dim lvi As ListViewItem
-        Dim dr As DataRow
         t.ShowDialog()
 
         ' If Not mySession.Offline Then
@@ -868,7 +897,7 @@ Public Class Post
 
     Private Sub timAutoSave_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles timAutoSave.Tick
         ' Autosave the current draft
-        SaveDraft(True) ' marks it as an autosave
+        SaveDraft(SaveType.autoSave) ' marks it as an autosave
     End Sub
 
     Private Sub cmbSecurity_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbSecurity.SelectedIndexChanged
@@ -883,12 +912,7 @@ Public Class Post
         End If
     End Sub
 
-    Public Sub StatusUpdate(ByVal status As String) Implements LJCommunicationWatcher.StatusUpdate
-        Me.StatusBar1.Text = status
-        Me.StatusBar1.Visible = IIf(status <> "", True, False)
-    End Sub
-
-    Private Sub MenuItem2_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem2.Click
-
+    Private Sub MenuItem3_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem3.Click
+        Me.SaveDraft(SaveType.defaultSave)
     End Sub
 End Class

@@ -19,3 +19,4 @@ obj\Release\PocketPoster.pdb
 obj\Release\PocketPoster.Login.resources
 obj\Release\PocketPoster.LJUser.resources
 obj\Release\PocketPoster.FriendsGroups.resources
+obj\Release\PocketPoster.Communications.resources

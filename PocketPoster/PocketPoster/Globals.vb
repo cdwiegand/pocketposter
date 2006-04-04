@@ -1,7 +1,7 @@
 
 Module Globals
 
-    Public MyVersion As String = "0.8a"
+    Public MyVersion As String = "0.8"
 
     Public mySession As New LJSession ' yeah, I'm cheating...
     Private m_SettingsXML As Xml.XmlDocument = Nothing
@@ -15,6 +15,44 @@ Module Globals
         s = s.Substring(0, s.LastIndexOf("\"))
         Return s
     End Function
+
+    Public Sub ReportError(ByRef e As Exception)
+        ' save exception and all relevant data to a file to send...
+        Dim xmlDoc As New Xml.XmlDocument
+        Dim sGUID As String = New Guid().ToString
+
+        ' initialize document and root element <error />
+        xmlDoc.AppendChild(xmlDoc.CreateAttribute("error"))
+
+        QuickXMLAddTag(xmlDoc.FirstChild, "dateTime", Now.ToUniversalTime.ToString)
+
+        ' report exception
+        AddErrorToReport(e, xmlDoc.FirstChild)
+
+        xmlDoc.Save(sGUID & ".error")
+
+        MsgBox("An error has occured. " & e.Message & vbCrLf & "Please find the file " & sGUID & ".error.")
+    End Sub
+
+    Private Function QuickXMLAddTag(ByRef xmlParentTag As Xml.XmlElement, ByVal Name As String, Optional ByVal Value As String = Nothing) As Xml.XmlElement
+        Dim xmlTag As Xml.XmlElement
+        Dim xmlDoc As Xml.XmlDocument = xmlParentTag.OwnerDocument
+        xmlTag = xmlDoc.CreateElement(Name)
+        If Not Value Is Nothing Then xmlTag.InnerText = Value
+        xmlParentTag.AppendChild(xmlTag)
+        Return xmlTag ' for further manipulation, if desired
+    End Function
+
+    Private Sub AddErrorToReport(ByRef e As Exception, ByRef xmlParentTag As Xml.XmlElement)
+        Dim xmlException As Xml.XmlElement
+
+        xmlException = QuickXMLAddTag(xmlParentTag, "exception")
+
+        QuickXMLAddTag(xmlException, "message", e.Message)
+
+        ' recurse, if necessary
+        If Not e.InnerException Is Nothing Then AddErrorToReport(e.InnerException, xmlParentTag)
+    End Sub
 
     Public Function GetXMLBranch(ByVal key As String) As Xml.XmlElement
         Dim oNodes As Xml.XmlNodeList
