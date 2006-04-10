@@ -1,5 +1,7 @@
 0.9: 
-Added an auto-updater.
+Added an auto-updater. Also added Friends Page menu link.
+Also added prefs pane to set if update on login check should
+occur, as well as allowing users to change server URL.
 
 0.8: 3 April 2006
 Added strikethrough to toolbar. Added list of friends to the

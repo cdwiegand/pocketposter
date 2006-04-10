@@ -44,6 +44,7 @@ Public Class Login
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
         Me.MenuItem3 = New System.Windows.Forms.MenuItem
         Me.MenuItem4 = New System.Windows.Forms.MenuItem
+        Me.MenuItem6 = New System.Windows.Forms.MenuItem
         Me.MenuItem5 = New System.Windows.Forms.MenuItem
         Me.MenuItem2 = New System.Windows.Forms.MenuItem
         Me.lblTitle = New System.Windows.Forms.Label
@@ -56,7 +57,6 @@ Public Class Login
         Me.Label4 = New System.Windows.Forms.Label
         Me.Button2 = New System.Windows.Forms.Button
         Me.StatusBar1 = New System.Windows.Forms.StatusBar
-        Me.MenuItem6 = New System.Windows.Forms.MenuItem
         '
         'MainMenu1
         '
@@ -78,6 +78,10 @@ Public Class Login
         'MenuItem4
         '
         Me.MenuItem4.Text = "Skip Login"
+        '
+        'MenuItem6
+        '
+        Me.MenuItem6.Text = "Update..."
         '
         'MenuItem5
         '
@@ -149,10 +153,6 @@ Public Class Login
         Me.StatusBar1.Size = New System.Drawing.Size(240, 22)
         Me.StatusBar1.Visible = False
         '
-        'MenuItem6
-        '
-        Me.MenuItem6.Text = "Update..."
-        '
         'Login
         '
         Me.ClientSize = New System.Drawing.Size(240, 268)
@@ -182,11 +182,21 @@ Public Class Login
         Dim ret As Specialized.NameValueCollection
         Dim frmComm As New Communications ' Form
         frmComm.Show()
-        '       Me.Enabled = False
 
-        '        Cursor.Current = Cursors.WaitCursor
+        If Globals.GetSetting("UpdateCheckOnLogin") = "true" Then
+            Dim tUpdater As New UpdaterForm
+            frmComm.StatusUpdate("Checking for update...")
+            'tUpdater.Show()
+            ' hide it unless we actually download something
+            ' and it shows itself in that case
+            If tUpdater.Run() = True Then
+                ' updater IS running, can't continue
+                frmComm.Hide()
+                Exit Sub
+            End If
+        End If
         ret = mySession.Login(Me.txtUsername.Text, Me.txtPassword.Text, frmComm)
-        '      Cursor.Current = Cursors.Default
+
         frmComm.Hide()
         frmComm = Nothing ' get rid of it!
 
@@ -196,8 +206,8 @@ Public Class Login
             ' if message, show first
             If Me.chkRemember.Checked Then
                 mySession.SaveToConfigFile() ' for future offline use
-                Globals.SaveSetting("username", Me.txtUsername.Text)
-                Globals.SaveSetting("password", Me.txtPassword.Text)
+                Globals.SetSetting("username", Me.txtUsername.Text)
+                Globals.SetSetting("password", Me.txtPassword.Text)
             End If
             If ret("Message") <> "" Then MsgBox(ret("Message"))
             Me.Close() ' return to our parent...
@@ -214,13 +224,13 @@ Public Class Login
     Private Sub Splash_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         ' remember me?
         Dim s As String
-        s = Globals.ReadSetting("username")
+        s = Globals.GetSetting("username")
         If s <> "" Then
             Me.txtUsername.Text = s
             Me.chkRemember.Checked = True
         End If
 
-        s = Globals.ReadSetting("password")
+        s = Globals.GetSetting("password")
         If s <> "" Then
             Me.txtPassword.Text = s
             Me.chkRemember.Checked = True
@@ -252,5 +262,6 @@ Public Class Login
     Private Sub MenuItem6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem6.Click
         Dim t As New UpdaterForm
         t.Show()
+        If t.Run() = False Then MsgBox("You are up-to-date.")
     End Sub
 End Class

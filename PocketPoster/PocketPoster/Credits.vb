@@ -34,7 +34,8 @@ Public Class Credits
         Me.TextBox1.Location = New System.Drawing.Point(0, 23)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Size = New System.Drawing.Size(240, 144)
-        Me.TextBox1.Text = "Written by Christopher Donald Wiegand of Aurora, CO, USA" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10)
+        Me.TextBox1.Text = "Written by Christopher Donald Wiegand of Aurora, CO, USA" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & "OpenNetCF framework f" & _
+            "rom www.opennetcf.org/sdf/" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10)
         '
         'lblRevision
         '

@@ -22,3 +22,5 @@ obj\Release\PocketPoster.FriendsGroups.resources
 obj\Release\PocketPoster.Communications.resources
 obj\Release\PocketPoster.Credits.resources
 obj\Release\PocketPoster.UpdaterForm.resources
+bin\Release\OpenNETCF.dll
+obj\Release\PocketPoster.Prefs.resources

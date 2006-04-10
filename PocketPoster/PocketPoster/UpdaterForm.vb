@@ -57,25 +57,43 @@ Public Class UpdaterForm
 #End Region
 
     Private Sub UpdaterForm_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Me.Refresh() ' make sure that we're showing...
+    End Sub
+
+    Public Function Run() As Boolean
+        Dim bDone As Boolean = False
         Dim s As TriState = m_myUpdater.CheckForUpdates(Me)
         Select Case s
             Case TriState.False
-
-                MsgBox("You are up to date.")
-                Me.Visible = False
-                Me.Close()
+                bDone = True
             Case TriState.True
                 ' download update...
-                m_myUpdater.GetUpdate(Me)
+                If MsgBox("PocketPoster " & m_myUpdater.UpdatedVersion & " is available. Do you want to download the update?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                    ' verify that we ARE showing.
+                    ' we hide ourselves when we're doing the "update-during-login" check
+                    Me.Show()
+                    Me.Refresh()
+                    m_myUpdater.GetUpdate(Me)
+                Else
+                    bDone = True
+                End If
             Case TriState.UseDefault
                 ' error, we already complained to them...
-                Me.Visible = False
-                Me.Close()
+                bDone = True
         End Select
 
-    End Sub
+        If bDone = True Then
+            Me.Visible = False
+            Me.Close()
+            Return False ' didn't run, ok to continue
+        Else
+            Return True ' we're running, not ok to continue
+        End If
+        ' otherwise we're running the async part!
+    End Function
 
     Private Sub m_myUpdater_UpdateComplete() Handles m_myUpdater.UpdateComplete
+        m_myUpdater.LaunchUpdate()
         Me.Visible = False
         Me.Close()
     End Sub
@@ -86,5 +104,6 @@ Public Class UpdaterForm
 
     Public Sub StatusUpdate(ByVal status As String) Implements LJCommunicationWatcher.StatusUpdate
         Me.Label1.Text = status
+        Me.Refresh()
     End Sub
 End Class

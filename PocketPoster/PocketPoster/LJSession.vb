@@ -172,7 +172,7 @@ Public Class LJSession
         Dim xmlBranch As Xml.XmlElement
         Dim xmlLeaf As Xml.XmlElement
 
-        LoadXMLDocument()
+        Globals.LoadConfig()
 
         ' journals we can post to...
         Me.m_colJournals = New Collection
@@ -213,7 +213,7 @@ Public Class LJSession
         Dim xmlBranch As Xml.XmlElement
         Dim xmlLeaf As Xml.XmlElement
 
-        LoadXMLDocument()
+        Globals.LoadConfig()
 
         ' journals we can post to...
         xmlBranch = Globals.GetXMLBranch("journals")
@@ -253,7 +253,7 @@ Public Class LJSession
             xmlBranch.AppendChild(xmlLeaf)
         Next
 
-        Globals.SaveXMLDocument()
+        Globals.saveconfig()
     End Sub
 
     Private Sub LoadGroups(ByRef items As Specialized.NameValueCollection)
@@ -626,7 +626,7 @@ Public Class LJHTTPWebClient
         Dim rawResp As String
         Dim ret As Specialized.NameValueCollection
 
-        tWeb = HttpWebRequest.Create("http://www.livejournal.com/interface/flat")
+        tWeb = HttpWebRequest.Create("http://" & Globals.GetSetting("LiveJournalServerURL") & "/interface/flat")
         tWeb.UserAgent = "PocketPoster/" + MyVersion
 
         If items Is Nothing Then items = New Specialized.NameValueCollection

@@ -2,8 +2,8 @@ Imports System.net
 
 Module Globals
 
-    Public MyVersion As String = "0.8"
-    Public MyRevision As Long = 80
+    Public MyVersion As String = "0.9"
+    Public MyRevision As Long = 92
 
     Public mySession As New LJSession ' yeah, I'm cheating...
     Private m_SettingsXML As Xml.XmlDocument = Nothing
@@ -60,7 +60,7 @@ Module Globals
         Dim oNodes As Xml.XmlNodeList
         Dim oTag As Xml.XmlElement
 
-        LoadXMLDocument()
+        LoadConfig()
 
         oNodes = m_SettingsXML.GetElementsByTagName(key)
         If oNodes.Count >= 1 Then
@@ -72,11 +72,11 @@ Module Globals
         End If
     End Function
 
-    Public Function ReadSetting(ByVal Key As String) As String
+    Public Function GetSetting(ByVal Key As String) As String
         Dim oNodes As Xml.XmlNodeList
         Dim oTag As Xml.XmlElement
 
-        LoadXMLDocument()
+        LoadConfig()
 
         oNodes = m_SettingsXML.GetElementsByTagName(Key)
         If oNodes.Count >= 1 Then
@@ -87,7 +87,9 @@ Module Globals
         Return ""
     End Function
 
-    Public Sub LoadXMLDocument()
+    Public Sub LoadConfig()
+        Dim s As String
+
         ' quick check for old settings file...
         ' probably safe to remove by 1 July 2006
         If IO.File.Exists("\pocketposter_conf.xml") Then
@@ -96,6 +98,7 @@ Module Globals
         ' end quick check
 
         If m_SettingsXML Is Nothing Then
+            ' if not yet loaded, load/create
             m_SettingsXML = New Xml.XmlDocument
             If IO.File.Exists(ConfPath()) Then
                 m_SettingsXML.Load(ConfPath())
@@ -103,18 +106,24 @@ Module Globals
                 m_SettingsXML.AppendChild(m_SettingsXML.CreateElement("root"))
                 ' create initial xml layout
             End If
+
+            ' set defaults if necessary
+            s = Globals.GetSetting("LiveJournalServerURL")
+            If s = "" Then Globals.SetSetting("LiveJournalServerURL", "www.livejournal.com")
+            s = Globals.GetSetting("UpdateCheckOnLogin")
+            If s = "" Then Globals.SetSetting("UpdateCheckOnLogin", "true")
         End If
     End Sub
 
-    Public Sub SaveXMLDocument()
+    Public Sub SaveConfig()
         m_SettingsXML.Save(ConfPath())
     End Sub
 
-    Public Sub SaveSetting(ByVal key As String, ByVal value As String)
+    Public Sub SetSetting(ByVal key As String, ByVal value As String)
         Dim oNodes As Xml.XmlNodeList
         Dim oTag As Xml.XmlElement
 
-        LoadXMLDocument()
+        LoadConfig()
 
         oNodes = m_SettingsXML.GetElementsByTagName(key)
         If oNodes.Count >= 1 Then
@@ -127,7 +136,7 @@ Module Globals
             m_SettingsXML.FirstChild.AppendChild(oTag)
         End If
 
-        SaveXMLDocument()
+        Globals.SaveConfig()
     End Sub
 
 End Module

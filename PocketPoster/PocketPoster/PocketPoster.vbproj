@@ -51,6 +51,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.WindowsCE.Forms" />
+    <Reference Include="OpenNETCF, Version=1.4.50804.0, Culture=neutral, PublicKeyToken=30c767b29d52d6e6">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SDF14Assemblies\OpenNETCF.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -88,6 +92,9 @@
     <Compile Include="Login.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Prefs.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Updater.vb" />
     <Compile Include="UpdaterForm.vb">
       <SubType>Form</SubType>
@@ -118,6 +125,10 @@
     <EmbeddedResource Include="Login.resx">
       <SubType>Designer</SubType>
       <DependentUpon>Login.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Prefs.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Prefs.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdaterForm.resx">
       <SubType>Designer</SubType>

@@ -56,6 +56,7 @@ Public Class Post
     Friend WithEvents ContextMenu1 As System.Windows.Forms.ContextMenu
     Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem3 As System.Windows.Forms.MenuItem
+    Friend WithEvents MenuItem4 As System.Windows.Forms.MenuItem
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -86,6 +87,7 @@ Public Class Post
         Me.mnuNewPost = New System.Windows.Forms.MenuItem
         Me.mnuLoadDraft = New System.Windows.Forms.MenuItem
         Me.mnuSaveDraft = New System.Windows.Forms.MenuItem
+        Me.MenuItem3 = New System.Windows.Forms.MenuItem
         Me.MenuItem5 = New System.Windows.Forms.MenuItem
         Me.mnuPostNow = New System.Windows.Forms.MenuItem
         Me.mnuClear = New System.Windows.Forms.MenuItem
@@ -131,7 +133,7 @@ Public Class Post
         Me.StatusBar1 = New System.Windows.Forms.StatusBar
         Me.ContextMenu1 = New System.Windows.Forms.ContextMenu
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
-        Me.MenuItem3 = New System.Windows.Forms.MenuItem
+        Me.MenuItem4 = New System.Windows.Forms.MenuItem
         '
         'MainMenu1
         '
@@ -149,6 +151,7 @@ Public Class Post
         Me.menuMenu.MenuItems.Add(Me.mnuPostNow)
         Me.menuMenu.MenuItems.Add(Me.mnuClear)
         Me.menuMenu.MenuItems.Add(Me.MenuItem2)
+        Me.menuMenu.MenuItems.Add(Me.MenuItem4)
         Me.menuMenu.MenuItems.Add(Me.MenuItem8)
         Me.menuMenu.MenuItems.Add(Me.mnuExit)
         Me.menuMenu.Text = "Menu"
@@ -173,6 +176,10 @@ Public Class Post
         '
         Me.mnuSaveDraft.Text = "Save Draft..."
         '
+        'MenuItem3
+        '
+        Me.MenuItem3.Text = "Save As Default"
+        '
         'MenuItem5
         '
         Me.MenuItem5.Text = "-"
@@ -187,7 +194,7 @@ Public Class Post
         '
         'MenuItem2
         '
-        Me.MenuItem2.Text = "Refresh Entries"
+        Me.MenuItem2.Text = "Friends Page"
         '
         'MenuItem8
         '
@@ -315,7 +322,7 @@ Public Class Post
         '
         Me.tabContent.Controls.Add(Me.txtPost)
         Me.tabContent.Location = New System.Drawing.Point(0, 0)
-        Me.tabContent.Size = New System.Drawing.Size(232, 223)
+        Me.tabContent.Size = New System.Drawing.Size(240, 226)
         Me.tabContent.Text = "Content"
         '
         'txtPost
@@ -332,7 +339,7 @@ Public Class Post
         Me.tabAdvanced.Controls.Add(Me.chkNoEmailComments)
         Me.tabAdvanced.Controls.Add(Me.chkDontAutoformat)
         Me.tabAdvanced.Location = New System.Drawing.Point(0, 0)
-        Me.tabAdvanced.Size = New System.Drawing.Size(232, 223)
+        Me.tabAdvanced.Size = New System.Drawing.Size(240, 226)
         Me.tabAdvanced.Text = "Advanced"
         '
         'chkBackdate
@@ -426,7 +433,6 @@ Public Class Post
         '
         'timAutoSave
         '
-        Me.timAutoSave.Enabled = True
         Me.timAutoSave.Interval = 30000
         '
         'StatusBar1
@@ -443,9 +449,9 @@ Public Class Post
         '
         Me.MenuItem1.Text = "Edit"
         '
-        'MenuItem3
+        'MenuItem4
         '
-        Me.MenuItem3.Text = "Save As Default"
+        Me.MenuItem4.Text = "Preferences"
         '
         'Post
         '
@@ -620,22 +626,24 @@ Public Class Post
     End Function
 
     Private Sub ResetForm()
+        Me.timAutoSave.Enabled = True ' enable it, we may be just initializing the form for the first actual user user
+
         Me.TabControl1.SelectedIndex = 0
+        Try
+            Me.txtSubject.Text = ""
+            Me.txtPost.Text = ""
+            Me.cmbSecurity.SelectedIndex = 0
+            Me.cmbMood.Text = ""
+            Me.cmbJournal.SelectedIndex = 0
+            Me.cmbPictureKeyword.SelectedIndex = 0
 
-        Me.txtSubject.Text = ""
-        Me.txtPost.Text = ""
-        Me.cmbSecurity.SelectedIndex = 0
-        Me.cmbMood.Text = ""
-        Me.cmbJournal.SelectedIndex = 0
-        Me.cmbPictureKeyword.SelectedIndex = 0
-
-        Me.chkDontAutoformat.Checked = False
-        Me.chkNoEmailComments.Checked = False
-        Me.cmbCommentScreening.SelectedIndex = 0 ' use default one
-        Me.chkBackdate.Checked = False
-
-        Me.LoadDraft(SaveType.defaultSave) ' load defaults from there, if possible/saved
-
+            Me.chkDontAutoformat.Checked = False
+            Me.chkNoEmailComments.Checked = False
+            Me.cmbCommentScreening.SelectedIndex = 0 ' use default one
+            Me.chkBackdate.Checked = False
+        Finally
+            Me.LoadDraft(SaveType.defaultSave) ' load defaults from there, if possible/saved
+        End Try
     End Sub
 
     Private Sub PostEntry()
@@ -785,7 +793,9 @@ Public Class Post
     End Sub
 
     Private Sub Post_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        ' timAutoSave is still disabled
         ShowLogin()
+        ' resetForm enables timAutoSave
         Me.ResetForm()
     End Sub
 
@@ -902,8 +912,8 @@ Public Class Post
 
     Private Sub cmbSecurity_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbSecurity.SelectedIndexChanged
         If Me.cmbSecurity.Text = "Friend Groups..." Then
-            MsgBox("Sorry, this functionality isn't quite working right at this time.")
-            Exit Sub
+            'MsgBox("Sorry, this functionality isn't quite working right at this time.")
+            'Exit Sub
 
             Dim t As New FriendsGroups
             t.AllowedGroups = m_AllowedGroups
@@ -914,5 +924,14 @@ Public Class Post
 
     Private Sub MenuItem3_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem3.Click
         Me.SaveDraft(SaveType.defaultSave)
+    End Sub
+
+    Private Sub MenuItem2_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem2.Click
+        OpenNETCF.Diagnostics.Process.Start("iexplore", Globals.GetSetting("LiveJournalServerURL") & "/~" & mySession.Username & "/friends")
+    End Sub
+
+    Private Sub MenuItem4_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem4.Click
+        Dim t As New Prefs
+        t.ShowDialog()
     End Sub
 End Class

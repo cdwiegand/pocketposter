@@ -1,38 +1,7 @@
 Imports System.net
 Imports System.Runtime.InteropServices
 Imports System.Text
-
-Class SHELLEXECUTEEX
-    Public cbSize As UInt32
-    Public fMask As UInt32
-    Public hwnd As IntPtr
-    Public lpVerb As IntPtr
-    Public lpFile As IntPtr
-    Public lpParameters As IntPtr
-    Public lpDirectory As IntPtr
-
-    Public nShow As Integer
-    Public hInstApp As IntPtr
-    ' Optional members
-    Public lpIDList As IntPtr
-    Public lpClass As IntPtr
-    Public hkeyClass As IntPtr
-    Public dwHotKey As UInt32
-    Public hIcon As IntPtr
-    Public hProcess As IntPtr
-
-    <DllImport("coredll")> Public Shared Function LocalAlloc(ByVal flags As Integer, ByVal size As Integer) As IntPtr
-
-    End Function
-    <DllImport("coredll")> Public Shared Function ShellExecuteEx(ByVal ex As SHELLEXECUTEEX) As Integer
-
-    End Function
-    <DllImport("coredll")> Public Shared Sub LocalFree(ByVal ptr As IntPtr)
-
-    End Sub
-
-End Class 'SHELLEXECUTEEX
-
+Imports OpenNETCF.Diagnostics
 
 Public Class Updater
     Dim m_req As HttpWebRequest
@@ -42,7 +11,14 @@ Public Class Updater
     Private m_maxFileSize As Long = 0
     Private m_dataBufferArrayExample As New Byte ' don't use me, just array.create after me
     Private m_dataBuffer As Byte()
-    Private m_blockSize As Integer = 1024 ' bytes, 1K
+    Private m_blockSize As Integer = 4096 ' bytes, 4K
+    Private m_updatedVersion As String = ""
+
+    Public ReadOnly Property UpdatedVersion() As String
+        Get
+            Return m_updatedVersion
+        End Get
+    End Property
 
     Public Event UpdateDownloading(ByVal progressPercent As Long)
     Public Event UpdateComplete()
@@ -62,6 +38,7 @@ Public Class Updater
             ' update available?
             If CLng(webRevision) > Globals.MyRevision Then
                 m_URL = xmlDoc.GetElementsByTagName("url")(0).InnerText
+                m_updatedVersion = xmlDoc.GetElementsByTagName("version")(0).InnerText
                 Return TriState.True
             End If
         Catch e As Exception
@@ -86,11 +63,12 @@ Public Class Updater
             RaiseEvent UpdateComplete() ' not really, but anyways
             Exit Sub
         End Try
+        RaiseEvent UpdateDownloading(0) ' just starting
         ' setup buffer
         m_maxFileSize = m_resp.ContentLength
         m_dataBuffer = System.Array.CreateInstance(m_dataBufferArrayExample.GetType, m_blockSize)
         ' open file
-        m_file = IO.File.OpenWrite(GetUpdate_LocalFileName())
+        m_file = IO.File.Create(GetUpdate_LocalFileName())
         ' get first data
         m_resp.GetResponseStream().BeginRead(m_dataBuffer, 0, m_blockSize, New AsyncCallback(AddressOf GetUpdate_InProgress), Nothing)
     End Sub
@@ -124,29 +102,12 @@ Public Class Updater
     End Sub
 
     Public Sub LaunchUpdate()
-        Dim docname As String = GetUpdate_LocalFileName()
-        Dim nSize As Integer = docname.Length * 2 + 2
-        Dim pData As IntPtr = SHELLEXECUTEEX.LocalAlloc(&H40, nSize)
-        Marshal.Copy(Encoding.Unicode.GetBytes(docname), 0, pData, nSize - 2)
-
-        Dim see As New SHELLEXECUTEEX()
-        see.cbSize = Convert.ToUInt32(60)
-        see.dwHotKey = Convert.ToUInt32(0)
-        see.fMask = Convert.ToUInt32(0)
-        see.hIcon = IntPtr.Zero
-        see.hInstApp = IntPtr.Zero
-        see.hProcess = IntPtr.Zero
-        see.lpClass = IntPtr.Zero
-        see.lpDirectory = IntPtr.Zero
-        see.lpIDList = IntPtr.Zero
-        see.lpParameters = IntPtr.Zero
-        see.lpVerb = IntPtr.Zero
-        see.nShow = 0
-        see.lpFile = pData
-
-        SHELLEXECUTEEX.ShellExecuteEx(see)
-
-        SHELLEXECUTEEX.LocalFree(pData)
+        Dim psi As New ProcessStartInfo
+        'psi.FileName = "wceload"
+        'psi.Arguments = GetUpdate_LocalFileName()
+        psi.FileName = GetUpdate_LocalFileName()
+        Dim p As Process = Process.Start(psi)
+        Process.GetCurrentProcess.Kill() ' die die die!
 
         Application.Exit() ' die die die
     End Sub
