@@ -20,3 +20,5 @@ obj\Release\PocketPoster.Login.resources
 obj\Release\PocketPoster.LJUser.resources
 obj\Release\PocketPoster.FriendsGroups.resources
 obj\Release\PocketPoster.Communications.resources
+obj\Release\PocketPoster.Credits.resources
+obj\Release\PocketPoster.UpdaterForm.resources

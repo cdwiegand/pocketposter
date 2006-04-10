@@ -16,6 +16,7 @@ Public Class Login
     Friend WithEvents MenuItem4 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem5 As System.Windows.Forms.MenuItem
     Friend WithEvents StatusBar1 As System.Windows.Forms.StatusBar
+    Friend WithEvents MenuItem6 As System.Windows.Forms.MenuItem
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -55,6 +56,7 @@ Public Class Login
         Me.Label4 = New System.Windows.Forms.Label
         Me.Button2 = New System.Windows.Forms.Button
         Me.StatusBar1 = New System.Windows.Forms.StatusBar
+        Me.MenuItem6 = New System.Windows.Forms.MenuItem
         '
         'MainMenu1
         '
@@ -64,6 +66,7 @@ Public Class Login
         '
         Me.MenuItem1.MenuItems.Add(Me.MenuItem3)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem4)
+        Me.MenuItem1.MenuItems.Add(Me.MenuItem6)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem5)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem2)
         Me.MenuItem1.Text = "Menu"
@@ -145,6 +148,10 @@ Public Class Login
         Me.StatusBar1.Location = New System.Drawing.Point(0, 246)
         Me.StatusBar1.Size = New System.Drawing.Size(240, 22)
         Me.StatusBar1.Visible = False
+        '
+        'MenuItem6
+        '
+        Me.MenuItem6.Text = "Update..."
         '
         'Login
         '
@@ -240,5 +247,10 @@ Public Class Login
 
     Private Sub MenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem3.Click
         LoginNow()
+    End Sub
+
+    Private Sub MenuItem6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem6.Click
+        Dim t As New UpdaterForm
+        t.Show()
     End Sub
 End Class

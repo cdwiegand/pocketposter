@@ -70,6 +70,9 @@
     <Compile Include="Communications.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Credits.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FriendsGroups.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -85,9 +88,17 @@
     <Compile Include="Login.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Updater.vb" />
+    <Compile Include="UpdaterForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Communications.resx">
       <SubType>Designer</SubType>
       <DependentUpon>Communications.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Credits.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FriendsGroups.resx">
       <SubType>Designer</SubType>
@@ -108,10 +119,13 @@
       <SubType>Designer</SubType>
       <DependentUpon>Login.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UpdaterForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>UpdaterForm.vb</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ChangeLog.txt" />
-    <Content Include="Credits.txt" />
     <Content Include="Icon1.ico" />
     <Content Include="License.txt" />
   </ItemGroup>

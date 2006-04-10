@@ -1,3 +1,6 @@
+0.9: 
+Added an auto-updater.
+
 0.8: 3 April 2006
 Added strikethrough to toolbar. Added list of friends to the
 LJ User toolbar button. Added offline user information (list
