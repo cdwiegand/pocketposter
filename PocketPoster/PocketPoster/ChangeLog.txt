@@ -1,3 +1,6 @@
+current:
+Added current location to the post form and the LJPost class.
+
 0.9: 
 Added an auto-updater. Also added Friends Page menu link.
 Also added prefs pane to set if update on login check should

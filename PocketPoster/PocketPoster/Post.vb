@@ -57,6 +57,8 @@ Public Class Post
     Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem3 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem4 As System.Windows.Forms.MenuItem
+    Friend WithEvents txtLocation As System.Windows.Forms.TextBox
+    Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -92,6 +94,7 @@ Public Class Post
         Me.mnuPostNow = New System.Windows.Forms.MenuItem
         Me.mnuClear = New System.Windows.Forms.MenuItem
         Me.MenuItem2 = New System.Windows.Forms.MenuItem
+        Me.MenuItem4 = New System.Windows.Forms.MenuItem
         Me.MenuItem8 = New System.Windows.Forms.MenuItem
         Me.mnuExit = New System.Windows.Forms.MenuItem
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
@@ -133,7 +136,8 @@ Public Class Post
         Me.StatusBar1 = New System.Windows.Forms.StatusBar
         Me.ContextMenu1 = New System.Windows.Forms.ContextMenu
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
-        Me.MenuItem4 = New System.Windows.Forms.MenuItem
+        Me.Label7 = New System.Windows.Forms.Label
+        Me.txtLocation = New System.Windows.Forms.TextBox
         '
         'MainMenu1
         '
@@ -196,6 +200,10 @@ Public Class Post
         '
         Me.MenuItem2.Text = "Friends Page"
         '
+        'MenuItem4
+        '
+        Me.MenuItem4.Text = "Preferences"
+        '
         'MenuItem8
         '
         Me.MenuItem8.Text = "-"
@@ -224,6 +232,8 @@ Public Class Post
         '
         'tabOptions
         '
+        Me.tabOptions.Controls.Add(Me.txtLocation)
+        Me.tabOptions.Controls.Add(Me.Label7)
         Me.tabOptions.Controls.Add(Me.cmbPictureKeyword)
         Me.tabOptions.Controls.Add(Me.lblPicture)
         Me.tabOptions.Controls.Add(Me.txtTags)
@@ -449,9 +459,16 @@ Public Class Post
         '
         Me.MenuItem1.Text = "Edit"
         '
-        'MenuItem4
+        'Label7
         '
-        Me.MenuItem4.Text = "Preferences"
+        Me.Label7.Location = New System.Drawing.Point(4, 169)
+        Me.Label7.Size = New System.Drawing.Size(100, 20)
+        Me.Label7.Text = "Location:"
+        '
+        'txtLocation
+        '
+        Me.txtLocation.Location = New System.Drawing.Point(57, 169)
+        Me.txtLocation.Size = New System.Drawing.Size(180, 21)
         '
         'Post
         '
@@ -494,6 +511,8 @@ Public Class Post
                         Me.cmbMood.Text = xmlElem.InnerText
                     Case "content"
                         Me.txtPost.Text = xmlElem.InnerText
+                    Case "currentLocation"
+                        Me.txtLocation.Text = xmlElem.InnerText
                     Case "picturekw"
                         Me.cmbPictureKeyword.Text = xmlElem.InnerText
                     Case "commentscreening"
@@ -549,6 +568,10 @@ Public Class Post
 
             xmlElem = xmlDoc.CreateElement("mood")
             xmlElem.InnerText = Me.cmbMood.Text
+            xmlDoc.FirstChild.AppendChild(xmlElem)
+
+            xmlElem = xmlDoc.CreateElement("currentLocation")
+            xmlElem.InnerText = Me.txtLocation.Text
             xmlDoc.FirstChild.AppendChild(xmlElem)
 
             xmlElem = xmlDoc.CreateElement("content")
@@ -634,6 +657,7 @@ Public Class Post
             Me.txtPost.Text = ""
             Me.cmbSecurity.SelectedIndex = 0
             Me.cmbMood.Text = ""
+            Me.txtLocation.Text = ""
             Me.cmbJournal.SelectedIndex = 0
             Me.cmbPictureKeyword.SelectedIndex = 0
 
@@ -685,6 +709,7 @@ Public Class Post
         newPost.dontAutoformatToHTML = Me.chkDontAutoformat.Checked
         newPost.dontEmailComments = Me.chkNoEmailComments.Checked
         newPost.backDate = Me.chkBackdate.Checked
+        newPost.currentLocation = Me.txtLocation.Text
         newPost.pictureKeyword = Me.cmbPictureKeyword.Text
         Select Case Me.cmbCommentScreening.Text
             Case "Block None"

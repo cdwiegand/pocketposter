@@ -13,6 +13,7 @@ Public Class LJPost
     Public backDate As Boolean = False
     Public screenComments As CommentScreeningType = CommentScreeningType.ScreenNone
     Public pictureKeyword As String = ""
+    Public currentLocation As String = ""
     Public friendGroupsAllowed As New Collection
     ' put names into friendGroupsAllowed to allow them to see IF Security == FriendGroupsOnly
 
@@ -340,6 +341,7 @@ Public Class LJSession
             If thePost.dontEmailComments = True Then items.Add("prop_opt_noemail", "1")
             If thePost.TagList.Trim <> "" Then items.Add("prop_taglist", thePost.TagList)
             If thePost.pictureKeyword <> "" Then items.Add("prop_picture_keyword", thePost.pictureKeyword)
+            If thePost.currentLocation <> "" Then items.Add("prop_current_location", thePost.currentLocation)
             If thePost.backDate = True Then items.Add("prop_opt_backdated", "1")
             Select Case thePost.screenComments
                 Case LJPost.CommentScreeningType.ScreenNonFriends
