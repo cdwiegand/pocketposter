@@ -1,7 +1,6 @@
 Imports System.net
 Imports System.Runtime.InteropServices
 Imports System.Text
-Imports OpenNETCF.Diagnostics
 
 Public Class Updater
     Dim m_req As HttpWebRequest

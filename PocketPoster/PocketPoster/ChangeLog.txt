@@ -1,5 +1,6 @@
-current:
+0.93:
 Added current location to the post form and the LJPost class.
+Upgraded to .Net 2.0 to remove the dependancy on OpenNetCF.
 
 0.9: 
 Added an auto-updater. Also added Friends Page menu link.

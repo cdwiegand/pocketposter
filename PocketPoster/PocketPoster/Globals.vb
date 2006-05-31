@@ -2,8 +2,8 @@ Imports System.net
 
 Module Globals
 
-    Public MyVersion As String = "0.9"
-    Public MyRevision As Long = 92
+    Public MyVersion As String = "0.93"
+    Public MyRevision As Long = 93
 
     Public mySession As New LJSession ' yeah, I'm cheating...
     Private m_SettingsXML As Xml.XmlDocument = Nothing

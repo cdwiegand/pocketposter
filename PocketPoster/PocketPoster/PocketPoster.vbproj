@@ -15,8 +15,8 @@
     <PlatformID>3C41C503-53EF-4c2a-8DD4-A8217CAD115E</PlatformID>
     <OSVersion>4.20</OSVersion>
     <DeployDirSuffix>PocketPoster</DeployDirSuffix>
-    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
-    <MyType>Empty</MyType>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <MyType>WindowsForms</MyType>
     <FormFactorID>
     </FormFactorID>
     <ApplicationIcon>Icon1.ico</ApplicationIcon>
@@ -51,10 +51,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.WindowsCE.Forms" />
-    <Reference Include="OpenNETCF, Version=1.4.50804.0, Culture=neutral, PublicKeyToken=30c767b29d52d6e6">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SDF14Assemblies\OpenNETCF.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />

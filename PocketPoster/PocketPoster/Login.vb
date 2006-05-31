@@ -17,6 +17,8 @@ Public Class Login
     Friend WithEvents MenuItem5 As System.Windows.Forms.MenuItem
     Friend WithEvents StatusBar1 As System.Windows.Forms.StatusBar
     Friend WithEvents MenuItem6 As System.Windows.Forms.MenuItem
+    Friend WithEvents MenuItem7 As System.Windows.Forms.MenuItem
+    Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -57,6 +59,9 @@ Public Class Login
         Me.Label4 = New System.Windows.Forms.Label
         Me.Button2 = New System.Windows.Forms.Button
         Me.StatusBar1 = New System.Windows.Forms.StatusBar
+        Me.MenuItem7 = New System.Windows.Forms.MenuItem
+        Me.Button3 = New System.Windows.Forms.Button
+        Me.SuspendLayout()
         '
         'MainMenu1
         '
@@ -67,6 +72,7 @@ Public Class Login
         Me.MenuItem1.MenuItems.Add(Me.MenuItem3)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem4)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem6)
+        Me.MenuItem1.MenuItems.Add(Me.MenuItem7)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem5)
         Me.MenuItem1.MenuItems.Add(Me.MenuItem2)
         Me.MenuItem1.Text = "Menu"
@@ -95,6 +101,7 @@ Public Class Login
         '
         Me.lblTitle.Font = New System.Drawing.Font("Tahoma", 16.0!, System.Drawing.FontStyle.Regular)
         Me.lblTitle.Location = New System.Drawing.Point(17, 0)
+        Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(201, 32)
         Me.lblTitle.Text = "PocketPoster v0.2"
         Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter
@@ -102,41 +109,52 @@ Public Class Login
         'Label2
         '
         Me.Label2.Location = New System.Drawing.Point(17, 55)
+        Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(75, 20)
         Me.Label2.Text = "Username:"
         '
         'Label3
         '
         Me.Label3.Location = New System.Drawing.Point(17, 79)
+        Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(75, 20)
         Me.Label3.Text = "Password:"
         '
         'txtUsername
         '
         Me.txtUsername.Location = New System.Drawing.Point(99, 55)
+        Me.txtUsername.Name = "txtUsername"
         Me.txtUsername.Size = New System.Drawing.Size(119, 21)
+        Me.txtUsername.TabIndex = 6
         '
         'txtPassword
         '
         Me.txtPassword.Location = New System.Drawing.Point(99, 79)
-        Me.txtPassword.PasswordChar = Microsoft.VisualBasic.ChrW(42)
+        Me.txtPassword.Name = "txtPassword"
+        Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(119, 21)
+        Me.txtPassword.TabIndex = 5
         '
         'Button1
         '
         Me.Button1.Location = New System.Drawing.Point(142, 133)
+        Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(76, 20)
+        Me.Button1.TabIndex = 4
         Me.Button1.Text = "Login"
         '
         'chkRemember
         '
         Me.chkRemember.Location = New System.Drawing.Point(79, 107)
+        Me.chkRemember.Name = "chkRemember"
         Me.chkRemember.Size = New System.Drawing.Size(139, 20)
+        Me.chkRemember.TabIndex = 3
         Me.chkRemember.Text = "Remember Details"
         '
         'Label4
         '
         Me.Label4.Location = New System.Drawing.Point(-1, 32)
+        Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(240, 20)
         Me.Label4.Text = "Copyright 2006 by Chris Wiegand"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.TopCenter
@@ -144,19 +162,36 @@ Public Class Login
         'Button2
         '
         Me.Button2.Location = New System.Drawing.Point(47, 133)
+        Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(89, 20)
+        Me.Button2.TabIndex = 1
         Me.Button2.Text = "Skip Login"
         '
         'StatusBar1
         '
         Me.StatusBar1.Location = New System.Drawing.Point(0, 246)
+        Me.StatusBar1.Name = "StatusBar1"
         Me.StatusBar1.Size = New System.Drawing.Size(240, 22)
         Me.StatusBar1.Visible = False
         '
+        'MenuItem7
+        '
+        Me.MenuItem7.Text = "Prefs"
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(47, 159)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(171, 20)
+        Me.Button3.TabIndex = 10
+        Me.Button3.Text = "Change Preferences"
+        '
         'Login
         '
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
         Me.ClientSize = New System.Drawing.Size(240, 268)
         Me.ControlBox = False
+        Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.StatusBar1)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Label4)
@@ -168,7 +203,9 @@ Public Class Login
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.lblTitle)
         Me.Menu = Me.MainMenu1
+        Me.Name = "Login"
         Me.Text = "PocketPoster"
+        Me.ResumeLayout(False)
 
     End Sub
 
@@ -263,5 +300,15 @@ Public Class Login
         Dim t As New UpdaterForm
         t.Show()
         If t.Run() = False Then MsgBox("You are up-to-date.")
+    End Sub
+
+    Private Sub MenuItem7_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem7.Click
+        Dim t As New Prefs
+        t.ShowDialog()
+    End Sub
+
+    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+        Dim t As New Prefs
+        t.ShowDialog()
     End Sub
 End Class

@@ -952,7 +952,7 @@ Public Class Post
     End Sub
 
     Private Sub MenuItem2_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem2.Click
-        OpenNETCF.Diagnostics.Process.Start("iexplore", Globals.GetSetting("LiveJournalServerURL") & "/~" & mySession.Username & "/friends")
+        Diagnostics.Process.Start("iexplore", Globals.GetSetting("LiveJournalServerURL") & "/~" & mySession.Username & "/friends")
     End Sub
 
     Private Sub MenuItem4_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem4.Click
