@@ -1,0 +1,83 @@
+Public Class Prefs
+    Inherits System.Windows.Forms.Form
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents txtLJURL As System.Windows.Forms.TextBox
+    Friend WithEvents chkForUpdates As System.Windows.Forms.CheckBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
+
+#Region " Windows Form Designer generated code "
+
+    Public Sub New()
+        MyBase.New()
+
+        'This call is required by the Windows Form Designer.
+        InitializeComponent()
+
+        'Add any initialization after the InitializeComponent() call
+
+    End Sub
+
+    'Form overrides dispose to clean up the component list.
+    Protected Overloads Overrides Sub Dispose(ByVal disposing As Boolean)
+        MyBase.Dispose(disposing)
+    End Sub
+
+    'NOTE: The following procedure is required by the Windows Form Designer
+    'It can be modified using the Windows Form Designer.  
+    'Do not modify it using the code editor.
+    Private Sub InitializeComponent()
+        Me.MainMenu1 = New System.Windows.Forms.MainMenu
+        Me.Label1 = New System.Windows.Forms.Label
+        Me.txtLJURL = New System.Windows.Forms.TextBox
+        Me.chkForUpdates = New System.Windows.Forms.CheckBox
+        Me.Label2 = New System.Windows.Forms.Label
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(3, 0)
+        Me.Label1.Size = New System.Drawing.Size(208, 20)
+        Me.Label1.Text = "LiveJournal server:"
+        '
+        'txtLJURL
+        '
+        Me.txtLJURL.Location = New System.Drawing.Point(45, 22)
+        Me.txtLJURL.Size = New System.Drawing.Size(187, 21)
+        '
+        'chkForUpdates
+        '
+        Me.chkForUpdates.Location = New System.Drawing.Point(3, 50)
+        Me.chkForUpdates.Size = New System.Drawing.Size(234, 20)
+        Me.chkForUpdates.Text = "Check for updates every login"
+        '
+        'Label2
+        '
+        Me.Label2.Location = New System.Drawing.Point(3, 23)
+        Me.Label2.Size = New System.Drawing.Size(41, 20)
+        Me.Label2.Text = "http://"
+        '
+        'Prefs
+        '
+        Me.ClientSize = New System.Drawing.Size(240, 268)
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.chkForUpdates)
+        Me.Controls.Add(Me.txtLJURL)
+        Me.Controls.Add(Me.Label1)
+        Me.Menu = Me.MainMenu1
+        Me.MinimizeBox = False
+        Me.Text = "Prefs"
+
+    End Sub
+
+#End Region
+
+    Private Sub Prefs_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+        Globals.SetSetting("LiveJournalServerURL", Me.txtLJURL.Text)
+        Globals.SetSetting("UpdateCheckOnLogin", IIf(Me.chkForUpdates.Checked, "true", "false"))
+    End Sub
+
+    Private Sub Prefs_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Me.txtLJURL.Text = Globals.GetSetting("LiveJournalServerURL")
+        Me.chkForUpdates.Checked = IIf(Globals.GetSetting("UpdateCheckOnLogin") = "true", True, False)
+    End Sub
+End Class
