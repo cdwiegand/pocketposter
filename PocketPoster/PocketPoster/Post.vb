@@ -655,15 +655,15 @@ Public Class Post
         Try
             Me.txtSubject.Text = ""
             Me.txtPost.Text = ""
-            Me.cmbSecurity.SelectedIndex = 0
+            If Me.cmbSecurity.Items.Count > 0 Then Me.cmbSecurity.SelectedIndex = 0
             Me.cmbMood.Text = ""
             Me.txtLocation.Text = ""
-            Me.cmbJournal.SelectedIndex = 0
-            Me.cmbPictureKeyword.SelectedIndex = 0
+            If Me.cmbJournal.Items.Count > 0 Then Me.cmbJournal.SelectedIndex = 0
+            If Me.cmbPictureKeyword.Items.Count > 0 Then Me.cmbPictureKeyword.SelectedIndex = 0
 
             Me.chkDontAutoformat.Checked = False
             Me.chkNoEmailComments.Checked = False
-            Me.cmbCommentScreening.SelectedIndex = 0 ' use default one
+            If Me.cmbCommentScreening.Items.Count > 0 Then Me.cmbCommentScreening.SelectedIndex = 0 ' use default one
             Me.chkBackdate.Checked = False
         Finally
             Me.LoadDraft(SaveType.defaultSave) ' load defaults from there, if possible/saved
@@ -813,7 +813,7 @@ Public Class Post
         For Each s In mySession.PictureKeywords
             Me.cmbPictureKeyword.Items.Add(s)
         Next
-        Me.cmbPictureKeyword.SelectedIndex = 0 ' clear and use the default for the user
+        If Me.cmbPictureKeyword.Items.Count > 0 Then Me.cmbPictureKeyword.SelectedIndex = 0 ' clear and use the default for the user
         ' End If
     End Sub
 

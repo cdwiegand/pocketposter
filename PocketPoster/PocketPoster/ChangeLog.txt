@@ -1,3 +1,7 @@
+0.95:
+Fixed a bug in the program which assumed that certain controls
+had a value value (thanks canisrufus to for the bug report!)
+
 0.93:
 Added current location to the post form and the LJPost class.
 Upgraded to .Net 2.0 to remove the dependancy on OpenNetCF.
