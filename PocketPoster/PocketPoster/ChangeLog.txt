@@ -1,3 +1,8 @@
+0.98:
+Got a new icon (free from http://www.ganato.com/free_icons/free_icons.php).
+Also updated the toolbar icons and added support for downloading 
+moods from the server. Also added scrollbars to post page.
+
 0.95:
 Fixed a bug in the program which assumed that certain controls
 had a value value (thanks canisrufus to for the bug report!)

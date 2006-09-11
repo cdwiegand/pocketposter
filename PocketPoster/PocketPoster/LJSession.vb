@@ -43,6 +43,7 @@ Public Class LJSession
     Private m_colJournals As New Collection
     Private m_colPictureKeywords As New Collection
     Private m_colFriends As New Data.DataTable
+    Private m_colMoods As New ArrayList
     Private m_colFriendGroups As New Specialized.NameValueCollection
 
     Public ReadOnly Property Username() As String
@@ -60,6 +61,12 @@ Public Class LJSession
     Public ReadOnly Property FriendGroups() As Specialized.NameValueCollection
         Get
             Return m_colFriendGroups
+        End Get
+    End Property
+
+    Public ReadOnly Property Moods() As ArrayList
+        Get
+            Return m_colMoods
         End Get
     End Property
 
@@ -104,6 +111,7 @@ Public Class LJSession
             items.Add("password", password)
             items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
             items.Add("getpickws", "1") ' get picture keywords now
+            items.Add("getmoods", "0") ' get moods now
             If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
             ret = mhc.SendHTTPRequest("login", items)
             If ret("Success") = "OK" Then
@@ -122,6 +130,18 @@ Public Class LJSession
                         LoadGroups(ret)
                     Catch ex As Exception
                         MsgBox("Unable to load your groups/journals. Posting only to your personal journal.")
+                    End Try
+                End If
+
+                ' save list of moods
+                sTmp = ret("mood_count")
+                ' try to load them...
+                If IsNumeric(sTmp) Then
+                    Try
+                        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (moods)...")
+                        LoadMoods(ret)
+                    Catch ex As Exception
+                        ' hmm... notify user ?? think about it. --cdw
                     End Try
                 End If
 
@@ -192,6 +212,13 @@ Public Class LJSession
             Me.m_colFriends.Rows.Add(dr)
         Next
 
+        ' moods we have
+        Me.m_colMoods = New ArrayList
+        xmlBranch = Globals.GetXMLBranch("moods")
+        For Each xmlLeaf In xmlBranch.GetElementsByTagName("mood")
+            Me.m_colMoods.Add(xmlLeaf.InnerText)
+        Next
+
         ' friend groups we have
         Me.m_colFriendGroups = New Specialized.NameValueCollection
         xmlBranch = Globals.GetXMLBranch("friendgroups")
@@ -235,6 +262,15 @@ Public Class LJSession
             xmlBranch.AppendChild(xmlLeaf)
         Next
 
+        ' moods we have defined
+        xmlBranch = Globals.GetXMLBranch("moods")
+        xmlBranch.RemoveAll() ' clean out
+        For Each s In Me.m_colMoods
+            xmlLeaf = xmlBranch.OwnerDocument.CreateElement("mood")
+            xmlLeaf.InnerText = s
+            xmlBranch.AppendChild(xmlLeaf)
+        Next
+
         ' friend groups we have defined
         xmlBranch = Globals.GetXMLBranch("friendgroups")
         xmlBranch.RemoveAll() ' clean out
@@ -269,8 +305,24 @@ Public Class LJSession
 
         For idx = 1 To iMax
             sTmp = items("access_" & idx)
-            m_colJournals.Add(sTmp)
+            If sTmp <> "" Then m_colJournals.Add(sTmp)
         Next
+    End Sub
+
+    Private Sub LoadMoods(ByRef items As Specialized.NameValueCollection)
+        ' load the moods for this user...
+        Dim iMax As Long = items("mood_count")
+        Dim idx As Long
+        Dim sTmp As String
+
+        ' clear existing ones
+        m_colMoods = New ArrayList
+
+        For idx = 1 To iMax
+            sTmp = items("mood_" & idx & "_name")
+            If sTmp <> "" Then m_colMoods.Add(sTmp)
+        Next
+        m_colMoods.Sort()
     End Sub
 
     Private Sub LoadPictureKeywords(ByRef items As Specialized.NameValueCollection)
@@ -283,7 +335,7 @@ Public Class LJSession
         m_colPictureKeywords = New Collection
         For idx = 1 To iMax
             sTmp = items("pickw_" & idx)
-            m_colPictureKeywords.Add(sTmp)
+            If sTmp <> "" Then m_colPictureKeywords.Add(sTmp)
         Next
     End Sub
 
