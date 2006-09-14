@@ -19,6 +19,7 @@ Public Class Login
     Friend WithEvents MenuItem6 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem7 As System.Windows.Forms.MenuItem
     Friend WithEvents Button3 As System.Windows.Forms.Button
+    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -42,11 +43,13 @@ Public Class Login
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Login))
         Me.MainMenu1 = New System.Windows.Forms.MainMenu
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
         Me.MenuItem3 = New System.Windows.Forms.MenuItem
         Me.MenuItem4 = New System.Windows.Forms.MenuItem
         Me.MenuItem6 = New System.Windows.Forms.MenuItem
+        Me.MenuItem7 = New System.Windows.Forms.MenuItem
         Me.MenuItem5 = New System.Windows.Forms.MenuItem
         Me.MenuItem2 = New System.Windows.Forms.MenuItem
         Me.lblTitle = New System.Windows.Forms.Label
@@ -59,8 +62,8 @@ Public Class Login
         Me.Label4 = New System.Windows.Forms.Label
         Me.Button2 = New System.Windows.Forms.Button
         Me.StatusBar1 = New System.Windows.Forms.StatusBar
-        Me.MenuItem7 = New System.Windows.Forms.MenuItem
         Me.Button3 = New System.Windows.Forms.Button
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -89,6 +92,10 @@ Public Class Login
         '
         Me.MenuItem6.Text = "Update..."
         '
+        'MenuItem7
+        '
+        Me.MenuItem7.Text = "Prefs"
+        '
         'MenuItem5
         '
         Me.MenuItem5.Text = "-"
@@ -100,9 +107,9 @@ Public Class Login
         'lblTitle
         '
         Me.lblTitle.Font = New System.Drawing.Font("Tahoma", 16.0!, System.Drawing.FontStyle.Regular)
-        Me.lblTitle.Location = New System.Drawing.Point(17, 0)
+        Me.lblTitle.Location = New System.Drawing.Point(41, 0)
         Me.lblTitle.Name = "lblTitle"
-        Me.lblTitle.Size = New System.Drawing.Size(201, 32)
+        Me.lblTitle.Size = New System.Drawing.Size(199, 32)
         Me.lblTitle.Text = "PocketPoster v0.2"
         Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
@@ -153,10 +160,10 @@ Public Class Login
         '
         'Label4
         '
-        Me.Label4.Location = New System.Drawing.Point(-1, 32)
+        Me.Label4.Location = New System.Drawing.Point(41, 32)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(240, 20)
-        Me.Label4.Text = "Copyright 2006 by Chris Wiegand"
+        Me.Label4.Size = New System.Drawing.Size(198, 20)
+        Me.Label4.Text = "Copyright 2006 by Chris Wiegand    "
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'Button2
@@ -174,10 +181,6 @@ Public Class Login
         Me.StatusBar1.Size = New System.Drawing.Size(240, 22)
         Me.StatusBar1.Visible = False
         '
-        'MenuItem7
-        '
-        Me.MenuItem7.Text = "Prefs"
-        '
         'Button3
         '
         Me.Button3.Location = New System.Drawing.Point(47, 159)
@@ -186,11 +189,19 @@ Public Class Login
         Me.Button3.TabIndex = 10
         Me.Button3.Text = "Change Preferences"
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(32, 32)
+        '
         'Login
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
         Me.ClientSize = New System.Drawing.Size(240, 268)
         Me.ControlBox = False
+        Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.StatusBar1)
         Me.Controls.Add(Me.Button2)

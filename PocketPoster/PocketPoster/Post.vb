@@ -372,7 +372,7 @@ Public Class Post
         Me.tabContent.Controls.Add(Me.txtPost)
         Me.tabContent.Location = New System.Drawing.Point(0, 0)
         Me.tabContent.Name = "tabContent"
-        Me.tabContent.Size = New System.Drawing.Size(240, 226)
+        Me.tabContent.Size = New System.Drawing.Size(232, 223)
         Me.tabContent.Text = "Content"
         '
         'txtPost
@@ -843,7 +843,7 @@ Public Class Post
     Private Sub ShowLogin()
         Dim t As New Login
         t.ShowDialog()
-
+        Me.Show()
         Me.ReloadProfile()
     End Sub
 

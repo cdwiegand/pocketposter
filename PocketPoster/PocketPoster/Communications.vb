@@ -31,23 +31,29 @@ Public Class Communications
         Me.MainMenu1 = New System.Windows.Forms.MainMenu
         Me.ListBox1 = New System.Windows.Forms.ListBox
         Me.InputPanel1 = New Microsoft.WindowsCE.Forms.InputPanel
+        Me.SuspendLayout()
         '
         'ListBox1
         '
         Me.ListBox1.Location = New System.Drawing.Point(0, 0)
+        Me.ListBox1.Name = "ListBox1"
         Me.ListBox1.Size = New System.Drawing.Size(240, 268)
+        Me.ListBox1.TabIndex = 0
         '
         'InputPanel1
         '
         '
         'Communications
         '
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
         Me.ClientSize = New System.Drawing.Size(240, 294)
         Me.ControlBox = False
         Me.Controls.Add(Me.ListBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.MinimizeBox = False
+        Me.Name = "Communications"
         Me.Text = "Communications"
+        Me.ResumeLayout(False)
 
     End Sub
 

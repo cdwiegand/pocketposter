@@ -28,27 +28,33 @@ Public Class Credits
         Me.MainMenu1 = New System.Windows.Forms.MainMenu
         Me.TextBox1 = New System.Windows.Forms.TextBox
         Me.lblRevision = New System.Windows.Forms.Label
+        Me.SuspendLayout()
         '
         'TextBox1
         '
         Me.TextBox1.Location = New System.Drawing.Point(0, 23)
         Me.TextBox1.Multiline = True
+        Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.Size = New System.Drawing.Size(240, 144)
-        Me.TextBox1.Text = "Written by Christopher Donald Wiegand of Aurora, CO, USA" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & "OpenNetCF framework f" & _
-            "rom www.opennetcf.org/sdf/" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10)
+        Me.TextBox1.TabIndex = 1
+        Me.TextBox1.Text = "Written by Christopher Donald Wiegand of Aurora, CO, USA" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Icon from wylddevil." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Bug reports: canisrufus, wylddevil." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
         '
         'lblRevision
         '
         Me.lblRevision.Location = New System.Drawing.Point(0, 0)
+        Me.lblRevision.Name = "lblRevision"
         Me.lblRevision.Size = New System.Drawing.Size(240, 20)
         '
         'Credits
         '
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
         Me.ClientSize = New System.Drawing.Size(240, 268)
         Me.Controls.Add(Me.lblRevision)
         Me.Controls.Add(Me.TextBox1)
         Me.Menu = Me.MainMenu1
+        Me.Name = "Credits"
         Me.Text = "Credits"
+        Me.ResumeLayout(False)
 
     End Sub
 
