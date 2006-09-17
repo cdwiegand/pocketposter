@@ -141,15 +141,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bold.ico" />
     <Content Include="ChangeLog.txt" />
-    <Content Include="Image.ico" />
-    <Content Include="Italic.ico" />
     <Content Include="License.txt" />
-    <Content Include="Link.ico" />
-    <Content Include="LJUser.ico" />
-    <Content Include="PocketPoster.ico" />
-    <Content Include="Underline.ico" />
   </ItemGroup>
   <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.VisualBasic.v1.targets" />
   <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.VisualBasic.targets" />

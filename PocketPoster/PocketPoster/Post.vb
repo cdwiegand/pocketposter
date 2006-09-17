@@ -140,10 +140,10 @@ Public Class Post
         Me.tbbLink = New System.Windows.Forms.ToolBarButton
         Me.tbbLJUser = New System.Windows.Forms.ToolBarButton
         Me.tbbImage = New System.Windows.Forms.ToolBarButton
+        Me.tbbPost = New System.Windows.Forms.ToolBarButton
         Me.timAutoSave = New System.Windows.Forms.Timer
         Me.ContextMenu1 = New System.Windows.Forms.ContextMenu
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
-        Me.tbbPost = New System.Windows.Forms.ToolBarButton
         Me.TabControl1.SuspendLayout()
         Me.tabContent.SuspendLayout()
         Me.tabOptions.SuspendLayout()
@@ -282,7 +282,7 @@ Public Class Post
         Me.tabOptions.Controls.Add(Me.Panel2)
         Me.tabOptions.Location = New System.Drawing.Point(0, 0)
         Me.tabOptions.Name = "tabOptions"
-        Me.tabOptions.Size = New System.Drawing.Size(312, 159)
+        Me.tabOptions.Size = New System.Drawing.Size(232, 242)
         Me.tabOptions.Text = "Options"
         '
         'Panel2
@@ -305,7 +305,7 @@ Public Class Post
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(312, 159)
+        Me.Panel2.Size = New System.Drawing.Size(232, 242)
         '
         'txtTags
         '
@@ -429,7 +429,7 @@ Public Class Post
         Me.tabAdvanced.Controls.Add(Me.chkDontAutoformat)
         Me.tabAdvanced.Location = New System.Drawing.Point(0, 0)
         Me.tabAdvanced.Name = "tabAdvanced"
-        Me.tabAdvanced.Size = New System.Drawing.Size(312, 159)
+        Me.tabAdvanced.Size = New System.Drawing.Size(232, 242)
         Me.tabAdvanced.Text = "Advanced"
         '
         'dateBackdate
@@ -487,12 +487,12 @@ Public Class Post
         Me.chkDontAutoformat.TabIndex = 4
         Me.chkDontAutoformat.Text = "Don't autoformat to HTML"
         Me.ImageList1.Images.Clear()
-        Me.ImageList1.Images.Add(CType(resources.GetObject("resource"), System.Drawing.Image))
-        Me.ImageList1.Images.Add(CType(resources.GetObject("resource1"), System.Drawing.Image))
-        Me.ImageList1.Images.Add(CType(resources.GetObject("resource2"), System.Drawing.Image))
-        Me.ImageList1.Images.Add(CType(resources.GetObject("resource3"), System.Drawing.Image))
-        Me.ImageList1.Images.Add(CType(resources.GetObject("resource4"), System.Drawing.Image))
-        Me.ImageList1.Images.Add(CType(resources.GetObject("resource5"), System.Drawing.Image))
+        Me.ImageList1.Images.Add(CType(resources.GetObject("resource"), System.Drawing.Icon))
+        Me.ImageList1.Images.Add(CType(resources.GetObject("resource1"), System.Drawing.Icon))
+        Me.ImageList1.Images.Add(CType(resources.GetObject("resource2"), System.Drawing.Icon))
+        Me.ImageList1.Images.Add(CType(resources.GetObject("resource3"), System.Drawing.Icon))
+        Me.ImageList1.Images.Add(CType(resources.GetObject("resource4"), System.Drawing.Icon))
+        Me.ImageList1.Images.Add(CType(resources.GetObject("resource5"), System.Drawing.Icon))
         Me.ImageList1.Images.Add(CType(resources.GetObject("resource6"), System.Drawing.Icon))
         '
         'InputPanel1
@@ -539,6 +539,10 @@ Public Class Post
         '
         Me.tbbImage.ImageIndex = 5
         '
+        'tbbPost
+        '
+        Me.tbbPost.ImageIndex = 6
+        '
         'timAutoSave
         '
         Me.timAutoSave.Interval = 30000
@@ -550,10 +554,6 @@ Public Class Post
         'MenuItem1
         '
         Me.MenuItem1.Text = "Edit"
-        '
-        'tbbPost
-        '
-        Me.tbbPost.ImageIndex = 6
         '
         'Post
         '
@@ -1050,7 +1050,8 @@ Public Class Post
             Me.txtPost.Text = sTmp
             ' reselect appropriate area
             Me.txtPost.Select(selStart, selLength + sTmp2.Length) ' <img src="...">
-
+        ElseIf e.Button.Equals(Me.tbbPost) Then
+            PostEntry()
         End If
     End Sub
 
