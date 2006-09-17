@@ -7,7 +7,6 @@ Public Class Login
     Friend WithEvents txtUsername As System.Windows.Forms.TextBox
     Friend WithEvents txtPassword As System.Windows.Forms.TextBox
     Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents chkRemember As System.Windows.Forms.CheckBox
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem2 As System.Windows.Forms.MenuItem
@@ -58,7 +57,6 @@ Public Class Login
         Me.txtUsername = New System.Windows.Forms.TextBox
         Me.txtPassword = New System.Windows.Forms.TextBox
         Me.Button1 = New System.Windows.Forms.Button
-        Me.chkRemember = New System.Windows.Forms.CheckBox
         Me.Label4 = New System.Windows.Forms.Label
         Me.Button2 = New System.Windows.Forms.Button
         Me.StatusBar1 = New System.Windows.Forms.StatusBar
@@ -144,19 +142,11 @@ Public Class Login
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(142, 133)
+        Me.Button1.Location = New System.Drawing.Point(142, 106)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(76, 20)
         Me.Button1.TabIndex = 4
         Me.Button1.Text = "Login"
-        '
-        'chkRemember
-        '
-        Me.chkRemember.Location = New System.Drawing.Point(79, 107)
-        Me.chkRemember.Name = "chkRemember"
-        Me.chkRemember.Size = New System.Drawing.Size(139, 20)
-        Me.chkRemember.TabIndex = 3
-        Me.chkRemember.Text = "Remember Details"
         '
         'Label4
         '
@@ -168,7 +158,7 @@ Public Class Login
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(47, 133)
+        Me.Button2.Location = New System.Drawing.Point(47, 106)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(89, 20)
         Me.Button2.TabIndex = 1
@@ -183,7 +173,7 @@ Public Class Login
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(47, 159)
+        Me.Button3.Location = New System.Drawing.Point(47, 132)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(171, 20)
         Me.Button3.TabIndex = 10
@@ -206,7 +196,6 @@ Public Class Login
         Me.Controls.Add(Me.StatusBar1)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.chkRemember)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.txtPassword)
         Me.Controls.Add(Me.txtUsername)
@@ -251,12 +240,7 @@ Public Class Login
         If ret("Success") = "OK" Then
             ' yay!
             mySession.Offline = False
-            ' if message, show first
-            If Me.chkRemember.Checked Then
-                mySession.SaveToConfigFile() ' for future offline use
-                Globals.SetSetting("username", Me.txtUsername.Text)
-                Globals.SetSetting("password", Me.txtPassword.Text)
-            End If
+            mySession.SaveToConfigFile() ' for future offline use
             If ret("Message") <> "" Then MsgBox(ret("Message"))
             Me.Close() ' return to our parent...
         Else
@@ -273,8 +257,6 @@ Public Class Login
         ' remember me?
         Me.txtUsername.Text = mySession.Username
         Me.txtPassword.Text = mySession.Password
-
-        If Me.txtUsername.Text <> "" Then Me.chkRemember.Checked = True
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click

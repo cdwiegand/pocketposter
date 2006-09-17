@@ -61,7 +61,6 @@ Public Class Post
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtTags As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents tbbPost As System.Windows.Forms.ToolBarButton
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -140,7 +139,6 @@ Public Class Post
         Me.tbbLink = New System.Windows.Forms.ToolBarButton
         Me.tbbLJUser = New System.Windows.Forms.ToolBarButton
         Me.tbbImage = New System.Windows.Forms.ToolBarButton
-        Me.tbbPost = New System.Windows.Forms.ToolBarButton
         Me.timAutoSave = New System.Windows.Forms.Timer
         Me.ContextMenu1 = New System.Windows.Forms.ContextMenu
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
@@ -154,6 +152,7 @@ Public Class Post
         'MainMenu1
         '
         Me.MainMenu1.MenuItems.Add(Me.menuMenu)
+        Me.MainMenu1.MenuItems.Add(Me.mnuPostNow)
         '
         'menuMenu
         '
@@ -164,7 +163,6 @@ Public Class Post
         Me.menuMenu.MenuItems.Add(Me.mnuSaveDraft)
         Me.menuMenu.MenuItems.Add(Me.MenuItem3)
         Me.menuMenu.MenuItems.Add(Me.MenuItem5)
-        Me.menuMenu.MenuItems.Add(Me.mnuPostNow)
         Me.menuMenu.MenuItems.Add(Me.mnuClear)
         Me.menuMenu.MenuItems.Add(Me.MenuItem2)
         Me.menuMenu.MenuItems.Add(Me.MenuItem4)
@@ -202,7 +200,7 @@ Public Class Post
         '
         'mnuPostNow
         '
-        Me.mnuPostNow.Text = "Post Now"
+        Me.mnuPostNow.Text = "Post"
         '
         'mnuClear
         '
@@ -238,6 +236,7 @@ Public Class Post
         Me.TabControl1.Controls.Add(Me.tabContent)
         Me.TabControl1.Controls.Add(Me.tabOptions)
         Me.TabControl1.Controls.Add(Me.tabAdvanced)
+        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
@@ -507,7 +506,6 @@ Public Class Post
         Me.ToolBar2.Buttons.Add(Me.tbbLink)
         Me.ToolBar2.Buttons.Add(Me.tbbLJUser)
         Me.ToolBar2.Buttons.Add(Me.tbbImage)
-        Me.ToolBar2.Buttons.Add(Me.tbbPost)
         Me.ToolBar2.ImageList = Me.ImageList1
         Me.ToolBar2.Name = "ToolBar2"
         '
@@ -538,10 +536,6 @@ Public Class Post
         'tbbImage
         '
         Me.tbbImage.ImageIndex = 5
-        '
-        'tbbPost
-        '
-        Me.tbbPost.ImageIndex = 6
         '
         'timAutoSave
         '
@@ -736,25 +730,31 @@ Public Class Post
         PostEntry()
     End Sub
 
-    Private Function CancelEntry() As Microsoft.VisualBasic.MsgBoxResult
+    Private Function CancelEntry(Optional ByVal autoSave As Boolean = False) As Microsoft.VisualBasic.MsgBoxResult
         ' If Me.txtPost.Text <> "" Or Me.txtSubject.Text <> "" Then
-        Select Case MsgBox("You may have started a post - do you want to save it as a draft?", MsgBoxStyle.YesNoCancel + MsgBoxStyle.Question)
-            Case MsgBoxResult.Cancel
-                Return MsgBoxResult.Cancel
-            Case MsgBoxResult.Yes
-                If Me.SaveDraft(SaveType.userSave) Then
-                    ResetForm()
-                    Return MsgBoxResult.Yes
-                Else
-                    Return MsgBoxResult.Cancel
-                End If
-            Case MsgBoxResult.No
+        If autoSave Then
+            If Me.SaveDraft(SaveType.autoSave) Then
                 ResetForm()
-                Return MsgBoxResult.No
-        End Select
-        ' Else
-        ' Return MsgBoxResult.Ignore ' there was nothing, so return that...
-        ' End If
+                Return MsgBoxResult.Yes
+            Else
+                Return MsgBoxResult.Cancel
+            End If
+        Else
+            Select Case MsgBox("You may have started a post - do you want to save it as a draft?", MsgBoxStyle.YesNoCancel + MsgBoxStyle.Question)
+                Case MsgBoxResult.Cancel
+                    Return MsgBoxResult.Cancel
+                Case MsgBoxResult.Yes
+                    If Me.SaveDraft(SaveType.userSave) Then
+                        ResetForm()
+                        Return MsgBoxResult.Yes
+                    Else
+                        Return MsgBoxResult.Cancel
+                    End If
+                Case MsgBoxResult.No
+                    ResetForm()
+                    Return MsgBoxResult.No
+            End Select
+        End If
     End Function
 
     Private Sub ResetForm()
@@ -844,6 +844,19 @@ Public Class Post
 
         Dim frmComm As New Communications
         frmComm.Show()
+
+        If Globals.GetSetting("UpdateCheckOnLogin") = "true" Then
+            Dim tUpdater As New UpdaterForm
+            frmComm.StatusUpdate("Checking for update...")
+            'tUpdater.Show()
+            ' hide it unless we actually download something
+            ' and it shows itself in that case
+            If tUpdater.Run() = True Then
+                SaveDraft(SaveType.autoSave)
+                Exit Sub ' do NOT post, going to update first!
+            End If
+        End If
+
         ret = mySession.Post(newPost, frmComm)
         frmComm.Hide()
         frmComm = Nothing ' get rid of it!
@@ -941,16 +954,17 @@ Public Class Post
 
     Private Sub Post_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         ' timAutoSave is still disabled
-        ' we don't know who they are? need to first login..
         mySession.LoadFromConfigFile()
+        ' we don't know who they are? need to first login..
         If mySession.Username = "" Then ShowLogin()
         ' resetForm enables timAutoSave
         Me.ResetForm()
+        Me.LoadDraft(SaveType.autoSave)
     End Sub
 
     Private Sub MenuItem9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuExit.Click
         Dim tmp As Microsoft.VisualBasic.MsgBoxResult
-        tmp = Me.CancelEntry()
+        tmp = Me.CancelEntry(True)
         If tmp = MsgBoxResult.Cancel Then Exit Sub
         Application.Exit()
     End Sub
@@ -1050,8 +1064,6 @@ Public Class Post
             Me.txtPost.Text = sTmp
             ' reselect appropriate area
             Me.txtPost.Select(selStart, selLength + sTmp2.Length) ' <img src="...">
-        ElseIf e.Button.Equals(Me.tbbPost) Then
-            PostEntry()
         End If
     End Sub
 

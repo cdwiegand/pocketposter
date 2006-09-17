@@ -32,32 +32,40 @@ Public Class Prefs
         Me.txtLJURL = New System.Windows.Forms.TextBox
         Me.chkForUpdates = New System.Windows.Forms.CheckBox
         Me.Label2 = New System.Windows.Forms.Label
+        Me.SuspendLayout()
         '
         'Label1
         '
         Me.Label1.Location = New System.Drawing.Point(3, 0)
+        Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(208, 20)
         Me.Label1.Text = "LiveJournal server:"
         '
         'txtLJURL
         '
         Me.txtLJURL.Location = New System.Drawing.Point(45, 22)
+        Me.txtLJURL.Name = "txtLJURL"
         Me.txtLJURL.Size = New System.Drawing.Size(187, 21)
+        Me.txtLJURL.TabIndex = 2
         '
         'chkForUpdates
         '
         Me.chkForUpdates.Location = New System.Drawing.Point(3, 50)
+        Me.chkForUpdates.Name = "chkForUpdates"
         Me.chkForUpdates.Size = New System.Drawing.Size(234, 20)
-        Me.chkForUpdates.Text = "Check for updates every login"
+        Me.chkForUpdates.TabIndex = 1
+        Me.chkForUpdates.Text = "Check for updates every login/post"
         '
         'Label2
         '
         Me.Label2.Location = New System.Drawing.Point(3, 23)
+        Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(41, 20)
         Me.Label2.Text = "http://"
         '
         'Prefs
         '
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
         Me.ClientSize = New System.Drawing.Size(240, 268)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.chkForUpdates)
@@ -65,7 +73,9 @@ Public Class Prefs
         Me.Controls.Add(Me.Label1)
         Me.Menu = Me.MainMenu1
         Me.MinimizeBox = False
+        Me.Name = "Prefs"
         Me.Text = "Prefs"
+        Me.ResumeLayout(False)
 
     End Sub
 
