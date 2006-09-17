@@ -271,18 +271,10 @@ Public Class Login
 
     Private Sub Splash_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         ' remember me?
-        Dim s As String
-        s = Globals.GetSetting("username")
-        If s <> "" Then
-            Me.txtUsername.Text = s
-            Me.chkRemember.Checked = True
-        End If
+        Me.txtUsername.Text = mySession.Username
+        Me.txtPassword.Text = mySession.Password
 
-        s = Globals.GetSetting("password")
-        If s <> "" Then
-            Me.txtPassword.Text = s
-            Me.chkRemember.Checked = True
-        End If
+        If Me.txtUsername.Text <> "" Then Me.chkRemember.Checked = True
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click

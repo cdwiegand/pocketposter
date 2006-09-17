@@ -1,0 +1,1 @@
+It doesn't have post previewing, remote friends administration or previous entry support yet

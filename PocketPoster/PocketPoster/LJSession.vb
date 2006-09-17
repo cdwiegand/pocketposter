@@ -6,11 +6,13 @@ Public Class LJPost
     Public content As String = ""
     Public securityValue As ViewSecurityType = ViewSecurityType.AllowAll
     Public mood As String = ""
+    Public music As String = ""
     Public postToJournal As String = ""
     Public TagList As String = ""
     Public dontAutoformatToHTML As Boolean = False
     Public dontEmailComments As Boolean = False
     Public backDate As Boolean = False
+    Public backDateDate As Date = Nothing
     Public screenComments As CommentScreeningType = CommentScreeningType.ScreenNone
     Public pictureKeyword As String = ""
     Public currentLocation As String = ""
@@ -46,10 +48,22 @@ Public Class LJSession
     Private m_colMoods As New ArrayList
     Private m_colFriendGroups As New Specialized.NameValueCollection
 
-    Public ReadOnly Property Username() As String
+    Public Property Username() As String
         Get
             Return m_Username
         End Get
+        Set(ByVal value As String)
+            m_Username = value
+        End Set
+    End Property
+
+    Public Property Password() As String
+        Get
+            Return m_Password
+        End Get
+        Set(ByVal value As String)
+            m_Password = value
+        End Set
     End Property
 
     Public ReadOnly Property Friends() As Data.DataTable
@@ -195,6 +209,19 @@ Public Class LJSession
 
         Globals.LoadConfig()
 
+        Me.m_Offline = True ' by default
+
+        xmlBranch = Globals.GetXMLBranch("username")
+        Me.m_Username = xmlBranch.InnerText
+        xmlBranch = Globals.GetXMLBranch("password")
+        Me.m_Password = xmlBranch.InnerText
+
+        ' pre v99 update: if no username, try loading from globals
+        If Me.m_Username = "" Then
+            Me.m_Username = Globals.GetSetting("username")
+            Me.m_Password = Globals.GetSetting("password")
+        End If
+
         ' journals we can post to...
         Me.m_colJournals = New Collection
         xmlBranch = Globals.GetXMLBranch("journals")
@@ -242,6 +269,11 @@ Public Class LJSession
         Dim xmlLeaf As Xml.XmlElement
 
         Globals.LoadConfig()
+
+        xmlBranch = Globals.GetXMLBranch("username")
+        xmlBranch.InnerText = Me.m_Username
+        xmlBranch = Globals.GetXMLBranch("password")
+        xmlBranch.InnerText = Me.m_Username
 
         ' journals we can post to...
         xmlBranch = Globals.GetXMLBranch("journals")
@@ -394,7 +426,21 @@ Public Class LJSession
             If thePost.TagList.Trim <> "" Then items.Add("prop_taglist", thePost.TagList)
             If thePost.pictureKeyword <> "" Then items.Add("prop_picture_keyword", thePost.pictureKeyword)
             If thePost.currentLocation <> "" Then items.Add("prop_current_location", thePost.currentLocation)
-            If thePost.backDate = True Then items.Add("prop_opt_backdated", "1")
+            If thePost.music <> "" Then items.Add("prop_current_music", thePost.music)
+            If thePost.backDate = True Then
+                items.Add("prop_opt_backdated", "1")
+                items.Add("year", thePost.backDateDate.Year)
+                items.Add("mon", thePost.backDateDate.Month)
+                items.Add("day", thePost.backDateDate.Day)
+                items.Add("hour", thePost.backDateDate.Hour)
+                items.Add("min", thePost.backDateDate.Minute)
+            Else
+                items.Add("year", DatePart(DateInterval.Year, Now()))
+                items.Add("mon", DatePart(DateInterval.Month, Now()))
+                items.Add("day", DatePart(DateInterval.Day, Now()))
+                items.Add("hour", DatePart(DateInterval.Hour, Now()))
+                items.Add("min", DatePart(DateInterval.Minute, Now()))
+            End If
             Select Case thePost.screenComments
                 Case LJPost.CommentScreeningType.ScreenNonFriends
                     items.Add("prop_opt_screening", "F")
@@ -406,11 +452,6 @@ Public Class LJSession
                 Case LJPost.CommentScreeningType.ScreenNone
                     items.Add("prop_opt_screening", "N")
             End Select
-            items.Add("year", DatePart(DateInterval.Year, Now()))
-            items.Add("mon", DatePart(DateInterval.Month, Now()))
-            items.Add("day", DatePart(DateInterval.Day, Now()))
-            items.Add("hour", DatePart(DateInterval.Hour, Now()))
-            items.Add("min", DatePart(DateInterval.Minute, Now()))
 
             If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
             ret = mhc.SendHTTPRequest("postevent", items)
