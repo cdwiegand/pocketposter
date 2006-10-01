@@ -105,7 +105,7 @@ Public Class Login
         'lblTitle
         '
         Me.lblTitle.Font = New System.Drawing.Font("Tahoma", 16.0!, System.Drawing.FontStyle.Regular)
-        Me.lblTitle.Location = New System.Drawing.Point(41, 0)
+        Me.lblTitle.Location = New System.Drawing.Point(41, 9)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(199, 32)
         Me.lblTitle.Text = "PocketPoster v0.2"
@@ -113,28 +113,28 @@ Public Class Login
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(17, 55)
+        Me.Label2.Location = New System.Drawing.Point(19, 64)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(75, 20)
         Me.Label2.Text = "Username:"
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(17, 79)
+        Me.Label3.Location = New System.Drawing.Point(19, 88)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(75, 20)
         Me.Label3.Text = "Password:"
         '
         'txtUsername
         '
-        Me.txtUsername.Location = New System.Drawing.Point(99, 55)
+        Me.txtUsername.Location = New System.Drawing.Point(101, 64)
         Me.txtUsername.Name = "txtUsername"
         Me.txtUsername.Size = New System.Drawing.Size(119, 21)
         Me.txtUsername.TabIndex = 6
         '
         'txtPassword
         '
-        Me.txtPassword.Location = New System.Drawing.Point(99, 79)
+        Me.txtPassword.Location = New System.Drawing.Point(101, 88)
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(119, 21)
@@ -142,7 +142,7 @@ Public Class Login
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(142, 106)
+        Me.Button1.Location = New System.Drawing.Point(144, 115)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(76, 20)
         Me.Button1.TabIndex = 4
@@ -150,7 +150,7 @@ Public Class Login
         '
         'Label4
         '
-        Me.Label4.Location = New System.Drawing.Point(41, 32)
+        Me.Label4.Location = New System.Drawing.Point(41, 41)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(198, 20)
         Me.Label4.Text = "Copyright 2006 by Chris Wiegand    "
@@ -158,7 +158,7 @@ Public Class Login
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(47, 106)
+        Me.Button2.Location = New System.Drawing.Point(49, 115)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(89, 20)
         Me.Button2.TabIndex = 1
@@ -173,7 +173,7 @@ Public Class Login
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(47, 132)
+        Me.Button3.Location = New System.Drawing.Point(49, 141)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(171, 20)
         Me.Button3.TabIndex = 10
@@ -182,7 +182,7 @@ Public Class Login
         'PictureBox1
         '
         Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.Location = New System.Drawing.Point(10, 8)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(32, 32)
         '

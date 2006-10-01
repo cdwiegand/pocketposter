@@ -93,12 +93,12 @@ Public Class Post
         Me.mnuSaveDraft = New System.Windows.Forms.MenuItem
         Me.MenuItem3 = New System.Windows.Forms.MenuItem
         Me.MenuItem5 = New System.Windows.Forms.MenuItem
-        Me.mnuPostNow = New System.Windows.Forms.MenuItem
         Me.mnuClear = New System.Windows.Forms.MenuItem
         Me.MenuItem2 = New System.Windows.Forms.MenuItem
         Me.MenuItem4 = New System.Windows.Forms.MenuItem
         Me.MenuItem8 = New System.Windows.Forms.MenuItem
         Me.mnuExit = New System.Windows.Forms.MenuItem
+        Me.mnuPostNow = New System.Windows.Forms.MenuItem
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog
         Me.TabControl1 = New System.Windows.Forms.TabControl
@@ -198,10 +198,6 @@ Public Class Post
         '
         Me.MenuItem5.Text = "-"
         '
-        'mnuPostNow
-        '
-        Me.mnuPostNow.Text = "Post"
-        '
         'mnuClear
         '
         Me.mnuClear.Text = "Clear Post"
@@ -221,6 +217,10 @@ Public Class Post
         'mnuExit
         '
         Me.mnuExit.Text = "Exit"
+        '
+        'mnuPostNow
+        '
+        Me.mnuPostNow.Text = "Post"
         '
         'OpenFileDialog1
         '
@@ -553,8 +553,8 @@ Public Class Post
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
         Me.ClientSize = New System.Drawing.Size(240, 268)
-        Me.Controls.Add(Me.ToolBar2)
         Me.Controls.Add(Me.TabControl1)
+        Me.Controls.Add(Me.ToolBar2)
         Me.Menu = Me.MainMenu1
         Me.Name = "Post"
         Me.Text = "PocketPoster"
