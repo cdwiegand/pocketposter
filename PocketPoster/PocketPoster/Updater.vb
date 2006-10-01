@@ -23,7 +23,7 @@ Public Class Updater
     Public Event UpdateComplete()
     ' thrown when either update downloaded complete or no update can be downloaded (invalid URL, etc..)
 
-    Public Function CheckForUpdates(Optional ByRef theWatcher As LJCommunicationWatcher = Nothing) As TriState
+    Public Function CheckForUpdates(Optional ByRef theWatcher As CommunicationWatcher = Nothing) As TriState
         ' throws UseDefault if error
         ' returns URL for update if any, blank or nothing if no update
         ' check for an updated version from the website
@@ -47,7 +47,7 @@ Public Class Updater
         Return TriState.False
     End Function
 
-    Public Sub GetUpdate(Optional ByRef theWatcher As LJCommunicationWatcher = Nothing)
+    Public Sub GetUpdate(Optional ByRef theWatcher As CommunicationWatcher = Nothing)
         If m_URL = "" Then Exit Sub
         If Not theWatcher Is Nothing Then theWatcher.StatusUpdate("Downloading update...")
         m_req = HttpWebRequest.Create(m_URL)

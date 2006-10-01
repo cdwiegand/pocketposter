@@ -802,18 +802,18 @@ Public Class Post
         Cursor.Current = Cursors.WaitCursor
         Me.Enabled = False
 
-        Dim newPost As New LJPost
+        Dim newPost As New BlogPost
         newPost.subject = Me.txtSubject.Text
         newPost.content = Me.txtPost.Text
         Select Case Me.cmbSecurity.Text
             Case "Private"
-                newPost.securityValue = LJPost.ViewSecurityType.AllowNone
+                newPost.securityValue = BlogPost.ViewSecurityType.AllowNone
             Case "Public"
-                newPost.securityValue = LJPost.ViewSecurityType.AllowAll
+                newPost.securityValue = BlogPost.ViewSecurityType.AllowAll
             Case "Friends Only"
-                newPost.securityValue = LJPost.ViewSecurityType.AllowFriends
+                newPost.securityValue = BlogPost.ViewSecurityType.AllowFriends
             Case "Friend Groups..."
-                newPost.securityValue = LJPost.ViewSecurityType.FriendGroupsOnly
+                newPost.securityValue = BlogPost.ViewSecurityType.FriendGroupsOnly
                 newPost.friendGroupsAllowed = Me.m_AllowedGroups
         End Select
         newPost.mood = Me.cmbMood.Text
@@ -823,23 +823,21 @@ Public Class Post
         newPost.dontAutoformatToHTML = Me.chkDontAutoformat.Checked
         newPost.dontEmailComments = Me.chkNoEmailComments.Checked
         If Me.chkBackdate.Checked Then
-            newPost.backDate = True
-            newPost.backDateDate = Me.dateBackdate.Value
+            newPost.BackDate = Me.dateBackdate.Value
         Else
-            newPost.backDate = False
-            newPost.backDateDate = Nothing
+            newPost.BackDate = Nothing
         End If
         newPost.currentLocation = Me.txtLocation.Text
         newPost.pictureKeyword = Me.cmbPictureKeyword.Text
         Select Case Me.cmbCommentScreening.Text
             Case "Block None"
-                newPost.screenComments = LJPost.CommentScreeningType.ScreenNone
+                newPost.screenComments = BlogPost.CommentScreeningType.ScreenNone
             Case "Block Anonymous Comments"
-                newPost.screenComments = LJPost.CommentScreeningType.ScreenAnonymous
+                newPost.screenComments = BlogPost.CommentScreeningType.ScreenAnonymous
             Case "Block Non-Friend's Comments"
-                newPost.screenComments = LJPost.CommentScreeningType.ScreenNonFriends
+                newPost.screenComments = BlogPost.CommentScreeningType.ScreenNonFriends
             Case "Block Everyone's Comments"
-                newPost.screenComments = LJPost.CommentScreeningType.ScreenEveryone
+                newPost.screenComments = BlogPost.CommentScreeningType.ScreenEveryone
         End Select
 
         Dim frmComm As New Communications

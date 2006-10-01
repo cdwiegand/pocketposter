@@ -1,11 +1,14 @@
 Imports System.net
 
-Module Globals
+Public Interface CommunicationWatcher
+    Sub StatusUpdate(ByVal status As String)
+End Interface
 
+Module Globals
     Public MyVersion As String = "1.0"
     Public MyRevision As Long = 101
 
-    Public mySession As New LJSession ' yeah, I'm cheating...
+    Public mySession As New Blog_LJ ' yeah, I'm cheating...
     Private m_SettingsXML As Xml.XmlDocument = Nothing
 
     Private Function ConfPath() As String
@@ -89,13 +92,6 @@ Module Globals
 
     Public Sub LoadConfig()
         Dim s As String
-
-        ' quick check for old settings file...
-        ' probably safe to remove by 1 July 2006
-        If IO.File.Exists("\pocketposter_conf.xml") Then
-            IO.File.Move("\pocketposter_conf.xml", ConfPath())
-        End If
-        ' end quick check
 
         If m_SettingsXML Is Nothing Then
             ' if not yet loaded, load/create

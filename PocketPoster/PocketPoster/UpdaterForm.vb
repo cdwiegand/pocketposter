@@ -1,6 +1,6 @@
 Public Class UpdaterForm
     Inherits System.Windows.Forms.Form
-    Implements LJCommunicationWatcher
+    Implements CommunicationWatcher
 
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents ProgressBar1 As System.Windows.Forms.ProgressBar
@@ -102,7 +102,7 @@ Public Class UpdaterForm
         Me.ProgressBar1.Value = progressPercent
     End Sub
 
-    Public Sub StatusUpdate(ByVal status As String) Implements LJCommunicationWatcher.StatusUpdate
+    Public Sub StatusUpdate(ByVal status As String) Implements CommunicationWatcher.StatusUpdate
         Me.Label1.Text = status
         Me.Refresh()
     End Sub

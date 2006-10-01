@@ -1,6 +1,6 @@
 Public Class Communications
     Inherits System.Windows.Forms.Form
-    Implements LJCommunicationWatcher
+    Implements CommunicationWatcher
 
     Friend WithEvents InputPanel1 As Microsoft.WindowsCE.Forms.InputPanel
     Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
@@ -111,7 +111,7 @@ Public Class Communications
 
     End Sub
 
-    Public Sub StatusUpdate(ByVal status As String) Implements LJCommunicationWatcher.StatusUpdate
+    Public Sub StatusUpdate(ByVal status As String) Implements CommunicationWatcher.StatusUpdate
         Me.ListBox1.Items.Add(status)
         Me.Refresh()
         Me.Focus()
