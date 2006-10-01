@@ -2,7 +2,7 @@ Imports System.net
 
 Module Globals
 
-    Public MyVersion As String = "1.00"
+    Public MyVersion As String = "1.0b1"
     Public MyRevision As Long = 100
 
     Public mySession As New LJSession ' yeah, I'm cheating...

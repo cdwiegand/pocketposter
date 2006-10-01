@@ -1,3 +1,7 @@
+1.0 Beta:
+Moved Post to be it's own toplevel menu item. Also added
+date to the backdate option, and reordered the tabs a little.
+
 0.98:
 Updated the toolbar icons and added support for downloading 
 moods from the server. Also added scrollbars to post page. And
