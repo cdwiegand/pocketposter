@@ -104,9 +104,9 @@ Public Class LJUser
 #End Region
 
     Private Sub Friends_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Dim dr As DataRow
-        For Each dr In mySession.Friends.Rows
-            Me.lstFriends.Items.Add(dr("username") & " - " & dr("Fullname"))
+        Dim s As String
+        For Each s In mySession.Friends.Keys
+            Me.lstFriends.Items.Add(s & " - " & mySession.Friends(s))
         Next
     End Sub
 

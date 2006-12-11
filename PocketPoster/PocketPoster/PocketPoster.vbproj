@@ -94,6 +94,12 @@
     <Compile Include="Login.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PostTags.Designer.vb">
+      <DependentUpon>PostTags.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PostTags.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Prefs.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -130,6 +136,10 @@
     <EmbeddedResource Include="Login.resx">
       <SubType>Designer</SubType>
       <DependentUpon>Login.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PostTags.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>PostTags.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Prefs.resx">
       <SubType>Designer</SubType>

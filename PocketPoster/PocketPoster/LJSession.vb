@@ -42,11 +42,16 @@ Public Class LJSession
     Private m_Username As String = ""
     Private m_Password As String = ""
     Private m_Offline As Boolean = True ' default until we log in
-    Private m_colJournals As New Collection
-    Private m_colPictureKeywords As New Collection
-    Private m_colFriends As New Data.DataTable
-    Private m_colMoods As New ArrayList
-    Private m_colFriendGroups As New Specialized.NameValueCollection
+    Private m_colJournals As New Collections.Generic.List(Of String)
+    Private m_colTags As New Collections.Generic.List(Of String)
+    Private m_colPictureKeywords As New Collections.Generic.List(Of String)
+    Private m_colMoods As New Collections.Generic.List(Of String)
+
+    Private m_colFriends As New Collections.Specialized.HybridDictionary
+    ' m_colFriends is a HybridDictionary to store the username (key) and full name (value) of each friend
+
+    Private m_colFriendGroups As New Collections.Specialized.NameValueCollection
+    ' m_colFriendGroups is a NameValueCollection to store the # (key) and name (value) of each friend group
 
     Public Property Username() As String
         Get
@@ -66,31 +71,37 @@ Public Class LJSession
         End Set
     End Property
 
-    Public ReadOnly Property Friends() As Data.DataTable
+    Public ReadOnly Property Friends() As Collections.Specialized.HybridDictionary
         Get
             Return m_colFriends
         End Get
     End Property
 
-    Public ReadOnly Property FriendGroups() As Specialized.NameValueCollection
+    Public ReadOnly Property FriendGroups() As Collections.Specialized.NameValueCollection
         Get
             Return m_colFriendGroups
         End Get
     End Property
 
-    Public ReadOnly Property Moods() As ArrayList
+    Public ReadOnly Property Tags() As Collections.Generic.List(Of String)
+        Get
+            Return m_coltags
+        End Get
+    End Property
+
+    Public ReadOnly Property Moods() As Collections.Generic.List(Of String)
         Get
             Return m_colMoods
         End Get
     End Property
 
-    Public ReadOnly Property PostingJournals() As Collection
+    Public ReadOnly Property PostingJournals() As Collections.Generic.List(Of String)
         Get
             Return m_colJournals
         End Get
     End Property
 
-    Public ReadOnly Property PictureKeywords() As Collection
+    Public ReadOnly Property PictureKeywords() As Collections.Generic.List(Of String)
         Get
             Return m_colPictureKeywords
         End Get
@@ -134,59 +145,47 @@ Public Class LJSession
                 Me.m_Username = username
                 Me.m_Password = password
 
-                ' save list of journals with posting ability
-                Dim sTmp As String
-                sTmp = ret("access_count")
-                ' try to load them...
-                If IsNumeric(sTmp) Then
-                    Try
-                        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (groups)...")
-                        LoadGroups(ret)
-                    Catch ex As Exception
-                        MsgBox("Unable to load your groups/journals. Posting only to your personal journal.")
-                    End Try
-                End If
+                Try
+                    If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (groups)...")
+                    LoadGroups(ret)
+                Catch ex As Exception
+                    MsgBox("Unable to load your groups/journals. Posting only to your personal journal.")
+                End Try
 
-                ' save list of moods
-                sTmp = ret("mood_count")
-                ' try to load them...
-                If IsNumeric(sTmp) Then
-                    Try
-                        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (moods)...")
-                        LoadMoods(ret)
-                    Catch ex As Exception
-                        ' hmm... notify user ?? think about it. --cdw
-                    End Try
-                End If
+                Try
+                    If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (moods)...")
+                    LoadMoods(ret)
+                Catch ex As Exception
+                    ' hmm... notify user ?? think about it. --cdw
+                End Try
 
-                ' save list of picture keywords
-                sTmp = ret("pickw_count")
-                ' try to load them...
-                If IsNumeric(sTmp) Then
-                    Try
-                        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (pictures)...")
-                        LoadPictureKeywords(ret)
-                    Catch ex As Exception
-                        ' hmm... notify user ?? think about it. --cdw
-                    End Try
-                End If
+                Try
+                    If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (pictures)...")
+                    LoadPictureKeywords(ret)
+                Catch ex As Exception
+                    ' hmm... notify user ?? think about it. --cdw
+                End Try
 
-                ' load friends
-                If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (friends)...")
-                Me.GetFriends()
+                Try
+                    If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (friends)...")
+                    LoadFriends()
+                Catch ex As Exception
+                    ' hmm... notify user ?? think about it. --cdw
+                End Try
 
-                ' load friend groups
-                sTmp = ret("frgrp_maxnum")
-                ' try to load them...
-                ' NOTE: maxnum is the MAXIMUM, not the count!! might be missing holes!!
-                If IsNumeric(sTmp) Then
-                    Try
-                        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (friend groups)...")
-                        LoadFriendGroups(ret)
-                    Catch ex As Exception
-                        ' hmm... notify user ?? think about it. --cdw
-                    End Try
-                End If
+                Try
+                    If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (tags)...")
+                    LoadTags()
+                Catch ex As Exception
+                    ' hmm... notify user ?? think about it. --cdw
+                End Try
+
+                Try
+                    If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (friend groups)...")
+                    LoadFriendGroups(ret)
+                Catch ex As Exception
+                    ' hmm... notify user ?? think about it. --cdw
+                End Try
 
                 ' hey, save this to the configuration, in case we're offline next time...
                 If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Saving offline information...")
@@ -203,7 +202,6 @@ Public Class LJSession
 
     Public Sub LoadFromConfigFile()
         ' load some offline-useful stuff from the config file...
-        Dim dr As Data.DataRow
         Dim xmlBranch As Xml.XmlElement
         Dim xmlLeaf As Xml.XmlElement
 
@@ -223,27 +221,31 @@ Public Class LJSession
         End If
 
         ' journals we can post to...
-        Me.m_colJournals = New Collection
+        Me.m_colJournals = New Collections.Generic.List(Of String)
         xmlBranch = Globals.GetXMLBranch("journals")
         For Each xmlLeaf In xmlBranch.GetElementsByTagName("journal")
             Me.m_colJournals.Add(xmlLeaf.InnerText)
         Next
 
         ' friends we have
-        InitializeFriendsTable()
+        Me.m_colFriends = New Collections.Specialized.HybridDictionary()
         xmlBranch = Globals.GetXMLBranch("friends")
         For Each xmlLeaf In xmlBranch.GetElementsByTagName("friend")
-            dr = Me.m_colFriends.NewRow
-            dr("UserName") = xmlLeaf.GetAttribute("UserName")
-            dr("FullName") = xmlLeaf.InnerText
-            Me.m_colFriends.Rows.Add(dr)
+            Me.m_colFriends.Add(xmlLeaf.GetAttribute("UserName"), xmlLeaf.InnerText)
         Next
 
         ' moods we have
-        Me.m_colMoods = New ArrayList
+        Me.m_colMoods = New Collections.Generic.List(Of String)
         xmlBranch = Globals.GetXMLBranch("moods")
         For Each xmlLeaf In xmlBranch.GetElementsByTagName("mood")
             Me.m_colMoods.Add(xmlLeaf.InnerText)
+        Next
+
+        ' tags we have
+        Me.m_colTags = New Collections.Generic.List(Of String)
+        xmlBranch = Globals.GetXMLBranch("tags")
+        For Each xmlLeaf In xmlBranch.GetElementsByTagName("tag")
+            Me.m_colTags.Add(xmlLeaf.InnerText)
         Next
 
         ' friend groups we have
@@ -254,7 +256,7 @@ Public Class LJSession
         Next
 
         ' picture keywords we have
-        Me.m_colPictureKeywords = New Collection
+        Me.m_colPictureKeywords = New Collections.Generic.List(Of String)
         xmlBranch = Globals.GetXMLBranch("picturekeywords")
         For Each xmlLeaf In xmlBranch.GetElementsByTagName("picturekeyword")
             Me.m_colPictureKeywords.Add(xmlLeaf.InnerText)
@@ -264,7 +266,6 @@ Public Class LJSession
     Public Sub SaveToConfigFile()
         ' save some offline-useful stuff to the config file...
         Dim s As String
-        Dim dr As Data.DataRow
         Dim xmlBranch As Xml.XmlElement
         Dim xmlLeaf As Xml.XmlElement
 
@@ -287,10 +288,19 @@ Public Class LJSession
         ' friends we have
         xmlBranch = Globals.GetXMLBranch("friends")
         xmlBranch.RemoveAll() ' clean out
-        For Each dr In Me.m_colFriends.Rows
+        For Each s In Me.m_colFriends.Keys
             xmlLeaf = xmlBranch.OwnerDocument.CreateElement("friend")
-            xmlLeaf.InnerText = dr("FullName")
-            xmlLeaf.SetAttribute("UserName", dr("UserName"))
+            xmlLeaf.InnerText = Me.m_colFriends(s)
+            xmlLeaf.SetAttribute("UserName", s)
+            xmlBranch.AppendChild(xmlLeaf)
+        Next
+
+        ' tags
+        xmlBranch = Globals.GetXMLBranch("tags")
+        xmlBranch.RemoveAll() ' clean out
+        For Each s In Me.m_colTags
+            xmlLeaf = xmlBranch.OwnerDocument.CreateElement("tag")
+            xmlLeaf.InnerText = s
             xmlBranch.AppendChild(xmlLeaf)
         Next
 
@@ -322,7 +332,7 @@ Public Class LJSession
             xmlBranch.AppendChild(xmlLeaf)
         Next
 
-        Globals.saveconfig()
+        Globals.SaveConfig()
     End Sub
 
     Private Sub LoadGroups(ByRef items As Specialized.NameValueCollection)
@@ -332,7 +342,7 @@ Public Class LJSession
         Dim sTmp As String
 
         ' clear existing ones
-        m_colJournals = New Collection
+        m_colJournals = New Collections.Generic.List(Of String)
         Me.m_colJournals.Add(m_Username) ' add user's own journal
 
         For idx = 1 To iMax
@@ -348,7 +358,7 @@ Public Class LJSession
         Dim sTmp As String
 
         ' clear existing ones
-        m_colMoods = New ArrayList
+        m_colMoods = New Collections.Generic.List(Of String)
 
         For idx = 1 To iMax
             sTmp = items("mood_" & idx & "_name")
@@ -364,7 +374,7 @@ Public Class LJSession
         Dim sTmp As String
 
         ' clear existing ones!!
-        m_colPictureKeywords = New Collection
+        m_colPictureKeywords = New Collections.Generic.List(Of String)
         For idx = 1 To iMax
             sTmp = items("pickw_" & idx)
             If sTmp <> "" Then m_colPictureKeywords.Add(sTmp)
@@ -560,7 +570,7 @@ Public Class LJSession
         Return ret
     End Function
 
-    Private Function GetFriends(Optional ByRef commWatcher As LJCommunicationWatcher = Nothing) As Specialized.NameValueCollection
+    Private Function LoadFriends(Optional ByRef commWatcher As LJCommunicationWatcher = Nothing) As Specialized.NameValueCollection
         ' attempts to get friends from the LJ server
         ' returns: nameValueCollection - see CSP from LiveJournal for details
         ' it MUST contain: Success (FAIL|OK)
@@ -572,9 +582,7 @@ Public Class LJSession
         Dim ret As New Specialized.NameValueCollection
         Dim friendCount As Long
         Dim idx As Long
-        Dim dr As DataRow
 
-        Me.InitializeFriendsTable()
         If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
         Try
             ' now generate MD5 and send back
@@ -589,12 +597,9 @@ Public Class LJSession
 
             friendCount = ret("friend_count")
             If friendCount > 0 Then
+                Me.m_colFriends = New Collections.Specialized.HybridDictionary
                 For idx = 1 To friendCount
-                    dr = Me.m_colFriends.NewRow
-                    Me.m_colFriends.Rows.Add(dr)
-                    dr("LJ_Tmp_Number") = idx
-                    dr("UserName") = ret("friend_" & idx & "_user")
-                    dr("FullName") = ret("friend_" & idx & "_name")
+                    Me.m_colFriends.Add(ret("friend_" & idx & "_user"), ret("friend_" & idx & "_name"))
                 Next
             End If
         Catch e As Exception
@@ -606,17 +611,46 @@ Public Class LJSession
         Return ret
     End Function
 
-    Private Sub InitializeFriendsTable()
-        m_colFriends = New Data.DataTable
-        m_colFriends.Columns.Add("LJ_Tmp_Number", Type.GetType("System.String")) ' used in the friend_X_name where this field is X
-        m_colFriends.Columns.Add("UserName", Type.GetType("System.String"))
-        m_colFriends.Columns.Add("FullName", Type.GetType("System.String"))
-    End Sub
+    Private Function LoadTags(Optional ByRef commWatcher As LJCommunicationWatcher = Nothing) As Specialized.NameValueCollection
+        ' attempts to get user's tags from the LJ server
+        ' returns: nameValueCollection - see CSP from LiveJournal for details
+        ' it MUST contain: Success (FAIL|OK)
+        ' it MAY contain: Tag list
 
-    Public Sub New()
-        ' initialize m_colFriends
-        InitializeFriendsTable()
-    End Sub
+        Dim mhc As New LJHTTPWebClient
+        Dim items As Specialized.NameValueCollection
+        ' Dim challenge As String
+        Dim ret As New Specialized.NameValueCollection
+        Dim tagCount As Long
+        Dim idx As Long
+
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
+        Try
+            ' now generate MD5 and send back
+            items = New Specialized.NameValueCollection
+            items.Add("auth_method", "clear") ' FIXME
+            items.Add("user", Me.m_Username)
+            items.Add("password", Me.m_Password)
+            items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
+            ret = mhc.SendHTTPRequest("getusertags", items)
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response...")
+
+            tagCount = ret("friend_count")
+            If tagCount > 0 Then
+                Me.m_colFriends = New Collections.Specialized.HybridDictionary
+                For idx = 1 To tagCount
+                    Me.m_colTags.Add(ret("tag_" & idx & "_name"))
+                Next
+            End If
+        Catch e As Exception
+            ret.Add("Success", "FAIL")
+            ret.Add("errmsg", ".Net error: " & e.Message)
+        End Try
+
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("")
+        Return ret
+    End Function
 End Class
 
 Public Class LJHTTPWebClient

@@ -38,49 +38,62 @@ Public Class FriendsGroups
         Me.lstAllow = New System.Windows.Forms.ListBox
         Me.lblAllow = New System.Windows.Forms.Label
         Me.lblBlock = New System.Windows.Forms.Label
+        Me.SuspendLayout()
         '
         'lstBlock
         '
         Me.lstBlock.Location = New System.Drawing.Point(125, 55)
+        Me.lstBlock.Name = "lstBlock"
         Me.lstBlock.Size = New System.Drawing.Size(112, 184)
+        Me.lstBlock.TabIndex = 6
         '
         'Label1
         '
         Me.Label1.Location = New System.Drawing.Point(4, 0)
+        Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(233, 32)
         Me.Label1.Text = "Select the friends groups that you want to allow to access to this posting."
         '
         'btnAllow
         '
         Me.btnAllow.Location = New System.Drawing.Point(125, 245)
+        Me.btnAllow.Name = "btnAllow"
         Me.btnAllow.Size = New System.Drawing.Size(72, 20)
-        Me.btnAllow.Text = "<-- Allow"
+        Me.btnAllow.TabIndex = 4
+        Me.btnAllow.Text = "<-- Add"
         '
         'btnBlock
         '
-        Me.btnBlock.Location = New System.Drawing.Point(47, 245)
-        Me.btnBlock.Size = New System.Drawing.Size(72, 20)
-        Me.btnBlock.Text = "Block -->"
+        Me.btnBlock.Location = New System.Drawing.Point(33, 245)
+        Me.btnBlock.Name = "btnBlock"
+        Me.btnBlock.Size = New System.Drawing.Size(86, 20)
+        Me.btnBlock.TabIndex = 3
+        Me.btnBlock.Text = "Remove -->"
         '
         'lstAllow
         '
         Me.lstAllow.Location = New System.Drawing.Point(4, 55)
+        Me.lstAllow.Name = "lstAllow"
         Me.lstAllow.Size = New System.Drawing.Size(115, 184)
+        Me.lstAllow.TabIndex = 2
         '
         'lblAllow
         '
         Me.lblAllow.Location = New System.Drawing.Point(4, 32)
+        Me.lblAllow.Name = "lblAllow"
         Me.lblAllow.Size = New System.Drawing.Size(100, 20)
         Me.lblAllow.Text = "Allowed Groups"
         '
         'lblBlock
         '
         Me.lblBlock.Location = New System.Drawing.Point(137, 32)
+        Me.lblBlock.Name = "lblBlock"
         Me.lblBlock.Size = New System.Drawing.Size(100, 20)
-        Me.lblBlock.Text = "Blocked Groups"
+        Me.lblBlock.Text = "Available Groups"
         '
         'FriendsGroups
         '
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
         Me.ClientSize = New System.Drawing.Size(240, 268)
         Me.Controls.Add(Me.lblBlock)
         Me.Controls.Add(Me.lblAllow)
@@ -91,7 +104,9 @@ Public Class FriendsGroups
         Me.Controls.Add(Me.lstBlock)
         Me.Menu = Me.MainMenu1
         Me.MinimizeBox = False
+        Me.Name = "FriendsGroups"
         Me.Text = "FriendsGroups"
+        Me.ResumeLayout(False)
 
     End Sub
 

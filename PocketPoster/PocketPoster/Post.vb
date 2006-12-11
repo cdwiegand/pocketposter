@@ -3,6 +3,7 @@ Public Class Post
 
     Private m_DraftFilePath As String = "" ' if we load from a draft we put the path here
     Private m_AllowedGroups As New Collection
+    Private m_Tags As String = ""
 
     Friend WithEvents menuMenu As System.Windows.Forms.MenuItem
     Friend WithEvents mnuLoadDraft As System.Windows.Forms.MenuItem
@@ -59,8 +60,8 @@ Public Class Post
     Friend WithEvents txtPost As System.Windows.Forms.TextBox
     Friend WithEvents txtSubject As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents txtTags As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents cmdSetTags As System.Windows.Forms.Button
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -108,7 +109,6 @@ Public Class Post
         Me.Label1 = New System.Windows.Forms.Label
         Me.tabOptions = New System.Windows.Forms.TabPage
         Me.Panel2 = New System.Windows.Forms.Panel
-        Me.txtTags = New System.Windows.Forms.TextBox
         Me.Label8 = New System.Windows.Forms.Label
         Me.txtLocation = New System.Windows.Forms.TextBox
         Me.Label7 = New System.Windows.Forms.Label
@@ -142,6 +142,7 @@ Public Class Post
         Me.timAutoSave = New System.Windows.Forms.Timer
         Me.ContextMenu1 = New System.Windows.Forms.ContextMenu
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
+        Me.cmdSetTags = New System.Windows.Forms.Button
         Me.TabControl1.SuspendLayout()
         Me.tabContent.SuspendLayout()
         Me.tabOptions.SuspendLayout()
@@ -281,13 +282,13 @@ Public Class Post
         Me.tabOptions.Controls.Add(Me.Panel2)
         Me.tabOptions.Location = New System.Drawing.Point(0, 0)
         Me.tabOptions.Name = "tabOptions"
-        Me.tabOptions.Size = New System.Drawing.Size(232, 242)
+        Me.tabOptions.Size = New System.Drawing.Size(240, 245)
         Me.tabOptions.Text = "Options"
         '
         'Panel2
         '
         Me.Panel2.AutoScroll = True
-        Me.Panel2.Controls.Add(Me.txtTags)
+        Me.Panel2.Controls.Add(Me.cmdSetTags)
         Me.Panel2.Controls.Add(Me.Label8)
         Me.Panel2.Controls.Add(Me.txtLocation)
         Me.Panel2.Controls.Add(Me.Label7)
@@ -304,15 +305,7 @@ Public Class Post
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(232, 242)
-        '
-        'txtTags
-        '
-        Me.txtTags.Location = New System.Drawing.Point(57, 113)
-        Me.txtTags.Multiline = True
-        Me.txtTags.Name = "txtTags"
-        Me.txtTags.Size = New System.Drawing.Size(180, 20)
-        Me.txtTags.TabIndex = 25
+        Me.Panel2.Size = New System.Drawing.Size(240, 245)
         '
         'Label8
         '
@@ -549,6 +542,14 @@ Public Class Post
         '
         Me.MenuItem1.Text = "Edit"
         '
+        'cmdSetTags
+        '
+        Me.cmdSetTags.Location = New System.Drawing.Point(57, 113)
+        Me.cmdSetTags.Name = "cmdSetTags"
+        Me.cmdSetTags.Size = New System.Drawing.Size(180, 20)
+        Me.cmdSetTags.TabIndex = 33
+        Me.cmdSetTags.Text = "Click to set/change tags"
+        '
         'Post
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
@@ -595,6 +596,8 @@ Public Class Post
                         Me.cmbJournal.Text = xmlElem.InnerText
                     Case "mood"
                         Me.cmbMood.Text = xmlElem.InnerText
+                    Case "tags"
+                        Me.txtTags.Text = xmlElem.InnerText
                     Case "music"
                         Me.txtMusic.Text = xmlElem.InnerText
                     Case "content"
@@ -665,6 +668,10 @@ Public Class Post
 
             xmlElem = xmlDoc.CreateElement("mood")
             xmlElem.InnerText = Me.cmbMood.Text
+            xmlDoc.FirstChild.AppendChild(xmlElem)
+
+            xmlElem = xmlDoc.CreateElement("tags")
+            xmlElem.InnerText = Me.txtTags.Text
             xmlDoc.FirstChild.AppendChild(xmlElem)
 
             xmlElem = xmlDoc.CreateElement("music")
@@ -942,6 +949,13 @@ Public Class Post
         ' will always happen, but just in case that changes..
         If Me.cmbMood.Items.Count > 0 Then Me.cmbMood.SelectedIndex = 0 ' pre-select first one (user's private journal)
 
+        '' okay, if we logged in, populate list of tags...
+        Me.cmbTag.Items.Clear()
+        For Each s In mySession.Tags
+            Me.cmbTag.Items.Add(s)
+        Next
+        ' no needs to preselect, only used to add to the txtTags field
+
         ' okay, if we logged in, populate list of userpics...
         Me.cmbPictureKeyword.Items.Clear()
         Me.cmbPictureKeyword.Items.Add("") ' for "default"
@@ -1072,7 +1086,7 @@ Public Class Post
         SaveDraft(SaveType.autoSave) ' marks it as an autosave
     End Sub
 
-    Private Sub cmbSecurity_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub cmbSecurity_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbSecurity.SelectedIndexChanged
         If Me.cmbSecurity.Text = "Friend Groups..." Then
             'MsgBox("Sorry, this functionality isn't quite working right at this time.")
             'Exit Sub
@@ -1099,5 +1113,12 @@ Public Class Post
 
     Private Sub chkBackdate_CheckStateChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkBackdate.CheckStateChanged
         If Me.chkBackdate.Checked And Me.dateBackdate.Value = #1/1/1980# Then Me.dateBackdate.Value = Now
+    End Sub
+
+    Private Sub cmdSetTags_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdSetTags.Click
+        Dim t As New PostTags
+        t.Tags = Me.m_Tags
+        t.ShowDialog()
+        Me.m_Tags = t.Tags
     End Sub
 End Class
