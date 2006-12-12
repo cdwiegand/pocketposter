@@ -3,9 +3,9 @@ Public Class Communications
     Implements LJCommunicationWatcher
 
     Friend WithEvents InputPanel1 As Microsoft.WindowsCE.Forms.InputPanel
-    Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents lblTitle As System.Windows.Forms.Label
+    Friend WithEvents lblStatus As System.Windows.Forms.Label
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 
@@ -32,18 +32,11 @@ Public Class Communications
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Communications))
         Me.MainMenu1 = New System.Windows.Forms.MainMenu
-        Me.ListBox1 = New System.Windows.Forms.ListBox
         Me.InputPanel1 = New Microsoft.WindowsCE.Forms.InputPanel
         Me.PictureBox1 = New System.Windows.Forms.PictureBox
         Me.lblTitle = New System.Windows.Forms.Label
+        Me.lblStatus = New System.Windows.Forms.Label
         Me.SuspendLayout()
-        '
-        'ListBox1
-        '
-        Me.ListBox1.Location = New System.Drawing.Point(0, 42)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(240, 226)
-        Me.ListBox1.TabIndex = 0
         '
         'InputPanel1
         '
@@ -51,7 +44,7 @@ Public Class Communications
         'PictureBox1
         '
         Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(0, 3)
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(32, 32)
         '
@@ -62,16 +55,21 @@ Public Class Communications
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(199, 32)
         Me.lblTitle.Text = "PocketPoster v0.2"
-        Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        '
+        'lblStatus
+        '
+        Me.lblStatus.Location = New System.Drawing.Point(3, 96)
+        Me.lblStatus.Name = "lblStatus"
+        Me.lblStatus.Size = New System.Drawing.Size(234, 20)
         '
         'Communications
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
         Me.ClientSize = New System.Drawing.Size(240, 294)
         Me.ControlBox = False
+        Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.lblTitle)
-        Me.Controls.Add(Me.ListBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.MinimizeBox = False
         Me.Name = "Communications"
@@ -98,21 +96,24 @@ Public Class Communications
 
     Private Sub MyResize()
         ' shift things around...
-        If Me.InputPanel1.VisibleDesktop.Height > Me.Height Then
-            Me.ListBox1.Height = Me.Height
-        Else
-            Me.ListBox1.Height = Me.InputPanel1.VisibleDesktop.Height
-        End If
-        If Me.InputPanel1.VisibleDesktop.Width > Me.Width Then
-            Me.ListBox1.Width = Me.Width
-        Else
-            Me.ListBox1.Width = Me.InputPanel1.VisibleDesktop.Width
-        End If
+        'If Me.InputPanel1.VisibleDesktop.Height > Me.Height Then
+        '    Me.ListBox1.Height = Me.Height
+        'Else
+        '    Me.ListBox1.Height = Me.InputPanel1.VisibleDesktop.Height
+        'End If
+        'If Me.InputPanel1.VisibleDesktop.Width > Me.Width Then
+        '    Me.ListBox1.Width = Me.Width
+        'Else
+        '    Me.ListBox1.Width = Me.InputPanel1.VisibleDesktop.Width
+        'End If
 
     End Sub
 
     Public Sub StatusUpdate(ByVal status As String) Implements LJCommunicationWatcher.StatusUpdate
-        Me.ListBox1.Items.Add(status)
+        If status <> "" Then
+            Me.lblStatus.Text = status
+        End If
+        'Me.ListBox1.Items.Add(status)
         Me.Refresh()
         Me.Focus()
     End Sub

@@ -108,7 +108,7 @@ Public Class Login
         Me.lblTitle.Location = New System.Drawing.Point(41, 9)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(199, 32)
-        Me.lblTitle.Text = "PocketPoster v0.2"
+        Me.lblTitle.Text = "PocketPoster v1.0"
         Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'Label2

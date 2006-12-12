@@ -109,6 +109,7 @@ Public Class Post
         Me.Label1 = New System.Windows.Forms.Label
         Me.tabOptions = New System.Windows.Forms.TabPage
         Me.Panel2 = New System.Windows.Forms.Panel
+        Me.cmdSetTags = New System.Windows.Forms.Button
         Me.Label8 = New System.Windows.Forms.Label
         Me.txtLocation = New System.Windows.Forms.TextBox
         Me.Label7 = New System.Windows.Forms.Label
@@ -142,7 +143,6 @@ Public Class Post
         Me.timAutoSave = New System.Windows.Forms.Timer
         Me.ContextMenu1 = New System.Windows.Forms.ContextMenu
         Me.MenuItem1 = New System.Windows.Forms.MenuItem
-        Me.cmdSetTags = New System.Windows.Forms.Button
         Me.TabControl1.SuspendLayout()
         Me.tabContent.SuspendLayout()
         Me.tabOptions.SuspendLayout()
@@ -282,7 +282,7 @@ Public Class Post
         Me.tabOptions.Controls.Add(Me.Panel2)
         Me.tabOptions.Location = New System.Drawing.Point(0, 0)
         Me.tabOptions.Name = "tabOptions"
-        Me.tabOptions.Size = New System.Drawing.Size(240, 245)
+        Me.tabOptions.Size = New System.Drawing.Size(232, 242)
         Me.tabOptions.Text = "Options"
         '
         'Panel2
@@ -305,7 +305,15 @@ Public Class Post
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(240, 245)
+        Me.Panel2.Size = New System.Drawing.Size(232, 242)
+        '
+        'cmdSetTags
+        '
+        Me.cmdSetTags.Location = New System.Drawing.Point(57, 113)
+        Me.cmdSetTags.Name = "cmdSetTags"
+        Me.cmdSetTags.Size = New System.Drawing.Size(180, 20)
+        Me.cmdSetTags.TabIndex = 33
+        Me.cmdSetTags.Text = "Click to set/change tags"
         '
         'Label8
         '
@@ -542,14 +550,6 @@ Public Class Post
         '
         Me.MenuItem1.Text = "Edit"
         '
-        'cmdSetTags
-        '
-        Me.cmdSetTags.Location = New System.Drawing.Point(57, 113)
-        Me.cmdSetTags.Name = "cmdSetTags"
-        Me.cmdSetTags.Size = New System.Drawing.Size(180, 20)
-        Me.cmdSetTags.TabIndex = 33
-        Me.cmdSetTags.Text = "Click to set/change tags"
-        '
         'Post
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
@@ -597,7 +597,7 @@ Public Class Post
                     Case "mood"
                         Me.cmbMood.Text = xmlElem.InnerText
                     Case "tags"
-                        Me.txtTags.Text = xmlElem.InnerText
+                        m_Tags = xmlElem.InnerText
                     Case "music"
                         Me.txtMusic.Text = xmlElem.InnerText
                     Case "content"
@@ -671,7 +671,7 @@ Public Class Post
             xmlDoc.FirstChild.AppendChild(xmlElem)
 
             xmlElem = xmlDoc.CreateElement("tags")
-            xmlElem.InnerText = Me.txtTags.Text
+            xmlElem.InnerText = m_Tags
             xmlDoc.FirstChild.AppendChild(xmlElem)
 
             xmlElem = xmlDoc.CreateElement("music")
@@ -775,7 +775,7 @@ Public Class Post
             If Me.cmbSecurity.Items.Count > 0 Then Me.cmbSecurity.SelectedIndex = 0
             Me.cmbMood.Text = ""
             Me.txtMusic.Text = ""
-            Me.txtTags.Text = ""
+            m_Tags = ""
             Me.txtLocation.Text = ""
             If Me.cmbJournal.Items.Count > 0 Then Me.cmbJournal.SelectedIndex = 0
             If Me.cmbPictureKeyword.Items.Count > 0 Then Me.cmbPictureKeyword.SelectedIndex = 0
@@ -825,7 +825,7 @@ Public Class Post
         End Select
         newPost.mood = Me.cmbMood.Text
         newPost.postToJournal = Me.cmbJournal.Text
-        newPost.TagList = Me.txtTags.Text
+        newPost.TagList = Me.m_Tags
         newPost.music = Me.txtMusic.Text
         newPost.dontAutoformatToHTML = Me.chkDontAutoformat.Checked
         newPost.dontEmailComments = Me.chkNoEmailComments.Checked
@@ -948,13 +948,6 @@ Public Class Post
         Next
         ' will always happen, but just in case that changes..
         If Me.cmbMood.Items.Count > 0 Then Me.cmbMood.SelectedIndex = 0 ' pre-select first one (user's private journal)
-
-        '' okay, if we logged in, populate list of tags...
-        Me.cmbTag.Items.Clear()
-        For Each s In mySession.Tags
-            Me.cmbTag.Items.Add(s)
-        Next
-        ' no needs to preselect, only used to add to the txtTags field
 
         ' okay, if we logged in, populate list of userpics...
         Me.cmbPictureKeyword.Items.Clear()
@@ -1103,7 +1096,7 @@ Public Class Post
     End Sub
 
     Private Sub MenuItem2_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem2.Click
-        Diagnostics.Process.Start("iexplore", Globals.GetSetting("LiveJournalServerURL") & "/~" & mySession.Username & "/friends")
+        Globals.LaunchWeb(Globals.GetSetting("LiveJournalServerURL") & "/~" & mySession.Username & "/friends")
     End Sub
 
     Private Sub MenuItem4_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem4.Click

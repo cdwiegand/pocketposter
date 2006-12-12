@@ -8,6 +8,10 @@ Module Globals
     Public mySession As New LJSession ' yeah, I'm cheating...
     Private m_SettingsXML As Xml.XmlDocument = Nothing
 
+    Friend Sub LaunchWeb(ByVal url As String)
+        System.Diagnostics.Process.Start(Globals.GetSetting("BrowserPath"), url)
+    End Sub
+
     Private Function ConfPath() As String
         Return System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase + ".config"
     End Function

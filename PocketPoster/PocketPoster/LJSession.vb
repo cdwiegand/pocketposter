@@ -126,7 +126,7 @@ Public Class LJSession
         Dim items As Specialized.NameValueCollection
         ' Dim challenge As String
         Dim ret As New Specialized.NameValueCollection
-        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request (login)...")
 
         Try
             ' now generate MD5 and send back
@@ -137,10 +137,10 @@ Public Class LJSession
             items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
             items.Add("getpickws", "1") ' get picture keywords now
             items.Add("getmoods", "0") ' get moods now
-            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request (login)...")
             ret = mhc.SendHTTPRequest("login", items)
             If ret("Success") = "OK" Then
-                If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response...")
+                If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (login)...")
 
                 Me.m_Username = username
                 Me.m_Password = password
@@ -167,15 +167,15 @@ Public Class LJSession
                 End Try
 
                 Try
-                    If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (friends)...")
-                    LoadFriends()
+                    ' If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (friends)...")
+                    LoadFriends(commWatcher)
                 Catch ex As Exception
                     ' hmm... notify user ?? think about it. --cdw
                 End Try
 
                 Try
-                    If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (tags)...")
-                    LoadTags()
+                    ' If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (tags)...")
+                    LoadTags(commWatcher)
                 Catch ex As Exception
                     ' hmm... notify user ?? think about it. --cdw
                 End Try
@@ -406,7 +406,7 @@ Public Class LJSession
         ' Dim challenge As String
         Dim ret As New Specialized.NameValueCollection
 
-        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request (post)...")
         Try
             items = New Specialized.NameValueCollection
             items.Add("auth_method", "clear")
@@ -463,7 +463,7 @@ Public Class LJSession
                     items.Add("prop_opt_screening", "N")
             End Select
 
-            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request (post)...")
             ret = mhc.SendHTTPRequest("postevent", items)
         Catch e As Exception
             ret.Add("Success", "FAIL")
@@ -487,7 +487,7 @@ Public Class LJSession
         Dim sTmp2 As String
         Dim sTmp3 As String
 
-        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request (postlist)...")
         Try
             ' now generate MD5 and send back
             items = New Specialized.NameValueCollection
@@ -498,10 +498,10 @@ Public Class LJSession
             items.Add("howmany", 20)
             items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
             If journalToUse <> "" Then items.Add("usejournal", journalToUse) ' journal to edit
-            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request (postlist)...")
             ret = mhc.SendHTTPRequest("login", items)
             If ret("Success") = "OK" Then
-                If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response...")
+                If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (postlist)...")
                 ' load list
                 sTmp = ret("events_count")
                 ' try to load them...
@@ -546,19 +546,22 @@ Public Class LJSession
         ' returns a "bit" string for each allowed group based on the LJ GetFriendsGroup list and functionality
         ' (also see PostEvent)
         ' quick way to generate 32 0s
-        Dim ret As String = Space(32).Replace(Space(1), "0")
+        Dim sTmp As String = Space(32).Replace(Space(1), "0")
         Dim sFriendGroupID As String
         Dim sAllowedFriendGroupName As String
         Dim bThisOneAllowed As Boolean
+        Dim iRet32 As Int32
         For Each sFriendGroupID In Me.m_colFriendGroups.Keys
             bThisOneAllowed = False
             For Each sAllowedFriendGroupName In colAllowedGroups
                 If sAllowedFriendGroupName = Me.m_colFriendGroups(sFriendGroupID) Then bThisOneAllowed = True
             Next
-            'ret = ret.Substring(0, sFriendGroupID - 1) & IIf(bThisOneAllowed, "1", "0") & ret.Substring(sFriendGroupID + 1)
-            ret = SetCharInString(ret, sFriendGroupID, IIf(bThisOneAllowed, "1", "0"))
+            If bThisOneAllowed Then
+                iRet32 += 2 ^ sFriendGroupID ' set the appropriate bit
+            End If
+            ' sTmp = SetCharInString(sTmp, sFriendGroupID, IIf(bThisOneAllowed, "1", "0"))
         Next
-        Return ret
+        Return iRet32
     End Function
 
     Private Shared Function SetCharInString(ByVal origString As String, ByVal index As Integer, ByVal replaceWithChar As String) As String
@@ -583,7 +586,7 @@ Public Class LJSession
         Dim friendCount As Long
         Dim idx As Long
 
-        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request (friends)...")
         Try
             ' now generate MD5 and send back
             items = New Specialized.NameValueCollection
@@ -591,9 +594,9 @@ Public Class LJSession
             items.Add("user", Me.m_Username)
             items.Add("password", Me.m_Password)
             items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
-            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request (friends)...")
             ret = mhc.SendHTTPRequest("getfriends", items)
-            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response...")
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (friends)...")
 
             friendCount = ret("friend_count")
             If friendCount > 0 Then
@@ -624,7 +627,7 @@ Public Class LJSession
         Dim tagCount As Long
         Dim idx As Long
 
-        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request...")
+        If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Generating request (tags)...")
         Try
             ' now generate MD5 and send back
             items = New Specialized.NameValueCollection
@@ -632,9 +635,9 @@ Public Class LJSession
             items.Add("user", Me.m_Username)
             items.Add("password", Me.m_Password)
             items.Add("clientversion", "WinCE-PocketPoster/" & MyVersion)
-            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request...")
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Sending request (tags)...")
             ret = mhc.SendHTTPRequest("getusertags", items)
-            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response...")
+            If Not commWatcher Is Nothing Then commWatcher.StatusUpdate("Parsing response (tags)...")
 
             tagCount = ret("friend_count")
             If tagCount > 0 Then
