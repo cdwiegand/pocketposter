@@ -1,3 +1,6 @@
+1.04: Fixed friend group security, tagging. Also added support
+for alternate browsers.
+
 1.0:
 Moved Post to be it's own toplevel menu item. Also added
 date to the backdate option, and reordered the tabs a little.

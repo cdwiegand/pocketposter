@@ -9,7 +9,21 @@ Module Globals
     Private m_SettingsXML As Xml.XmlDocument = Nothing
 
     Friend Sub LaunchWeb(ByVal url As String)
-        System.Diagnostics.Process.Start(Globals.GetSetting("BrowserPath"), url)
+        If url.StartsWith("http://") Or url.StartsWith("https://") Then
+        Else
+            url = "http://" & url
+        End If
+        System.Diagnostics.Process.Start("iexplore.exe", url)
+        Exit Sub
+
+        Select Case Globals.GetSetting("BrowserPath")
+            Case "", "Internet Explorer", "iexplore.exe"
+                System.Diagnostics.Process.Start("iexplore.exe", url)
+            Case "Minimo", "minimo.exe"
+                System.Diagnostics.Process.Start("/Program Files/Minimo/minimo.exe", url)
+            Case Else
+                System.Diagnostics.Process.Start(Globals.GetSetting("BrowserPath"), url)
+        End Select
     End Sub
 
     Private Function ConfPath() As String

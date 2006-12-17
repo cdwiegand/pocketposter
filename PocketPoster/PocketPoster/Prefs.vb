@@ -5,9 +5,7 @@ Public Class Prefs
     Friend WithEvents chkForUpdates As System.Windows.Forms.CheckBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents OpenFileDialog1 As System.Windows.Forms.OpenFileDialog
-    Friend WithEvents txtBrowserPath As System.Windows.Forms.TextBox
-    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents cmbBrowser As System.Windows.Forms.ComboBox
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -37,9 +35,7 @@ Public Class Prefs
         Me.chkForUpdates = New System.Windows.Forms.CheckBox
         Me.Label2 = New System.Windows.Forms.Label
         Me.Label3 = New System.Windows.Forms.Label
-        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
-        Me.txtBrowserPath = New System.Windows.Forms.TextBox
-        Me.Button1 = New System.Windows.Forms.Button
+        Me.cmbBrowser = New System.Windows.Forms.ComboBox
         Me.SuspendLayout()
         '
         'Label1
@@ -78,31 +74,21 @@ Public Class Prefs
         Me.Label3.Size = New System.Drawing.Size(100, 20)
         Me.Label3.Text = "Web Browser:"
         '
-        'OpenFileDialog1
+        'cmbBrowser
         '
-        Me.OpenFileDialog1.InitialDirectory = "/"
-        '
-        'txtBrowserPath
-        '
-        Me.txtBrowserPath.Location = New System.Drawing.Point(4, 101)
-        Me.txtBrowserPath.Name = "txtBrowserPath"
-        Me.txtBrowserPath.Size = New System.Drawing.Size(195, 21)
-        Me.txtBrowserPath.TabIndex = 5
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(205, 101)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(26, 20)
-        Me.Button1.TabIndex = 6
-        Me.Button1.Text = "..."
+        Me.cmbBrowser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown
+        Me.cmbBrowser.Items.Add("Internet Explorer")
+        Me.cmbBrowser.Items.Add("Minimo")
+        Me.cmbBrowser.Location = New System.Drawing.Point(4, 101)
+        Me.cmbBrowser.Name = "cmbBrowser"
+        Me.cmbBrowser.Size = New System.Drawing.Size(228, 22)
+        Me.cmbBrowser.TabIndex = 10
         '
         'Prefs
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
         Me.ClientSize = New System.Drawing.Size(240, 268)
-        Me.Controls.Add(Me.Button1)
-        Me.Controls.Add(Me.txtBrowserPath)
+        Me.Controls.Add(Me.cmbBrowser)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.chkForUpdates)
@@ -120,22 +106,15 @@ Public Class Prefs
 
     Private Sub Prefs_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
         Globals.SetSetting("LiveJournalServerURL", Me.txtLJURL.Text)
-        Globals.SetSetting("BrowserPath", Me.txtBrowserPath.Text)
+        Globals.SetSetting("BrowserPath", Me.cmbBrowser.Text)
         Globals.SetSetting("UpdateCheckOnLogin", IIf(Me.chkForUpdates.Checked, "true", "false"))
     End Sub
 
     Private Sub Prefs_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.txtLJURL.Text = Globals.GetSetting("LiveJournalServerURL")
         If Me.txtLJURL.Text = "" Then Me.txtLJURL.Text = "http://www.livejournal.com"
-        Me.txtBrowserPath.Text = Globals.GetSetting("BrowserPath")
-        If Me.txtBrowserPath.Text = "" Then Me.txtBrowserPath.Text = "iexplore.exe"
+        Me.cmbBrowser.Text = Globals.GetSetting("BrowserPath")
+        If Me.cmbBrowser.Text = "" Then Me.cmbBrowser.Text = "Internet Explorer"
         Me.chkForUpdates.Checked = IIf(Globals.GetSetting("UpdateCheckOnLogin") = "true", True, False)
-    End Sub
-
-    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
-        Me.OpenFileDialog1.Filter = "*.exe|Applications"
-        If Me.OpenFileDialog1.ShowDialog() = Windows.Forms.DialogResult.OK Then
-            Me.txtBrowserPath.Text = Me.OpenFileDialog1.FileName
-        End If
     End Sub
 End Class
