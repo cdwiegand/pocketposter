@@ -1,0 +1,16 @@
+bin\Release\PocketPoster.exe
+bin\Release\PocketPoster.pdb
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\PocketPoster.Communications.resources
+obj\Release\PocketPoster.Credits.resources
+obj\Release\PocketPoster.FriendsGroups.resources
+obj\Release\PocketPoster.LJUser.resources
+obj\Release\PocketPoster.Resources.resources
+obj\Release\PocketPoster.Post.resources
+obj\Release\PocketPoster.Login.resources
+obj\Release\PocketPoster.Prefs.resources
+obj\Release\PocketPoster.UpdaterForm.resources
+obj\Release\PocketPoster.vbproj.GenerateResource.Cache
+obj\Release\PocketPoster.exe
+obj\Release\PocketPoster.pdb
+obj\Release\PocketPoster.PostTags.resources
