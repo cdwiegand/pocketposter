@@ -106,14 +106,14 @@ Public Class Prefs
 
     Private Sub Prefs_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
         Globals.SetSetting("LiveJournalServerURL", Me.txtLJURL.Text)
-        Globals.SetSetting("BrowserPath", Me.cmbBrowser.Text)
+        Globals.SetSetting("BrowserName", Me.cmbBrowser.Text)
         Globals.SetSetting("UpdateCheckOnLogin", IIf(Me.chkForUpdates.Checked, "true", "false"))
     End Sub
 
     Private Sub Prefs_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.txtLJURL.Text = Globals.GetSetting("LiveJournalServerURL")
         If Me.txtLJURL.Text = "" Then Me.txtLJURL.Text = "http://www.livejournal.com"
-        Me.cmbBrowser.Text = Globals.GetSetting("BrowserPath")
+        Me.cmbBrowser.Text = Globals.GetSetting("BrowserName")
         If Me.cmbBrowser.Text = "" Then Me.cmbBrowser.Text = "Internet Explorer"
         Me.chkForUpdates.Checked = IIf(Globals.GetSetting("UpdateCheckOnLogin") = "true", True, False)
     End Sub

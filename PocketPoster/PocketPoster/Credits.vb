@@ -61,6 +61,6 @@ Public Class Credits
 #End Region
 
     Private Sub Credits_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-
+        Me.lblRevision.Text = "Build " & System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build
     End Sub
 End Class

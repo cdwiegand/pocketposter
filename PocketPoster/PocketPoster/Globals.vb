@@ -13,16 +13,14 @@ Module Globals
         Else
             url = "http://" & url
         End If
-        System.Diagnostics.Process.Start("iexplore.exe", url)
-        Exit Sub
 
-        Select Case Globals.GetSetting("BrowserPath")
-            Case "", "Internet Explorer", "iexplore.exe"
+        Select Case Globals.GetSetting("BrowserName")
+            Case "", "Internet Explorer"
                 System.Diagnostics.Process.Start("iexplore.exe", url)
-            Case "Minimo", "minimo.exe"
+            Case "Minimo"
                 System.Diagnostics.Process.Start("/Program Files/Minimo/minimo.exe", url)
             Case Else
-                System.Diagnostics.Process.Start(Globals.GetSetting("BrowserPath"), url)
+                System.Diagnostics.Process.Start(Globals.GetSetting("BrowserName"), url)
         End Select
     End Sub
 
