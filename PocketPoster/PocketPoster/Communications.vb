@@ -38,11 +38,6 @@ Public Class Communications
         Me.lblStatus = New System.Windows.Forms.Label
         Me.SuspendLayout()
         '
-        Me.ListBox1.Location = New System.Drawing.Point(0, 49)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(240, 240)
-        Me.ListBox1.TabIndex = 0
-        '
         'InputPanel1
         '
         '

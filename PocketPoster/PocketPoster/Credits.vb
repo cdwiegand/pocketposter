@@ -56,6 +56,5 @@ Public Class Credits
     Private Sub Credits_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         ' prepend the revision string
         Me.TextBox1.Text = "PocketPoster revision " & Globals.MyRevision & vbCrLf & vbCrLf & Me.TextBox1.Text
-        Me.lblRevision.Text = "Build " & System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build
     End Sub
 End Class

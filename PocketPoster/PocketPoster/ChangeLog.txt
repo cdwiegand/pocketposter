@@ -1,3 +1,5 @@
+1.05: Fixed some code that wasn't properly done in Subversion.
+
 1.03: Updated forms to work on VGA size devices. Fixed screen
 refresh bug on login. Fixed friend group security, tagging. Also 
 added support for alternate browsers.
