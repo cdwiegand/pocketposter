@@ -38,6 +38,11 @@ Public Class Communications
         Me.lblStatus = New System.Windows.Forms.Label
         Me.SuspendLayout()
         '
+        Me.ListBox1.Location = New System.Drawing.Point(0, 49)
+        Me.ListBox1.Name = "ListBox1"
+        Me.ListBox1.Size = New System.Drawing.Size(240, 240)
+        Me.ListBox1.TabIndex = 0
+        '
         'InputPanel1
         '
         '
@@ -46,14 +51,14 @@ Public Class Communications
         Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
         Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(32, 32)
+        Me.PictureBox1.Size = New System.Drawing.Size(32, 34)
         '
         'lblTitle
         '
         Me.lblTitle.Font = New System.Drawing.Font("Tahoma", 16.0!, System.Drawing.FontStyle.Regular)
-        Me.lblTitle.Location = New System.Drawing.Point(38, 3)
+        Me.lblTitle.Location = New System.Drawing.Point(41, 3)
         Me.lblTitle.Name = "lblTitle"
-        Me.lblTitle.Size = New System.Drawing.Size(199, 32)
+        Me.lblTitle.Size = New System.Drawing.Size(199, 34)
         Me.lblTitle.Text = "PocketPoster v0.2"
         '
         'lblStatus
@@ -64,7 +69,8 @@ Public Class Communications
         '
         'Communications
         '
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.ClientSize = New System.Drawing.Size(240, 294)
         Me.ControlBox = False
         Me.Controls.Add(Me.lblStatus)

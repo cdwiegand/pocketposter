@@ -1,5 +1,6 @@
-1.04: Fixed friend group security, tagging. Also added support
-for alternate browsers.
+1.03: Updated forms to work on VGA size devices. Fixed screen
+refresh bug on login. Fixed friend group security, tagging. Also 
+added support for alternate browsers.
 
 1.0:
 Moved Post to be it's own toplevel menu item. Also added

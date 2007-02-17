@@ -87,7 +87,8 @@ Public Class LJUser
         '
         'LJUser
         '
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.ClientSize = New System.Drawing.Size(240, 294)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button1)

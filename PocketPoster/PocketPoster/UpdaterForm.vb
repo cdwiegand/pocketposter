@@ -32,25 +32,32 @@ Public Class UpdaterForm
         Me.MainMenu1 = New System.Windows.Forms.MainMenu
         Me.Label1 = New System.Windows.Forms.Label
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar
+        Me.SuspendLayout()
         '
         'Label1
         '
         Me.Label1.Location = New System.Drawing.Point(33, 48)
+        Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(164, 20)
         Me.Label1.Text = "Downloading update..."
         '
         'ProgressBar1
         '
         Me.ProgressBar1.Location = New System.Drawing.Point(33, 71)
+        Me.ProgressBar1.Name = "ProgressBar1"
         Me.ProgressBar1.Size = New System.Drawing.Size(164, 20)
         '
         'UpdaterForm
         '
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.ClientSize = New System.Drawing.Size(240, 268)
         Me.Controls.Add(Me.ProgressBar1)
         Me.Controls.Add(Me.Label1)
         Me.Menu = Me.MainMenu1
+        Me.Name = "UpdaterForm"
         Me.Text = "UpdaterForm"
+        Me.ResumeLayout(False)
 
     End Sub
 

@@ -552,7 +552,8 @@ Public Class Post
         '
         'Post
         '
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.ClientSize = New System.Drawing.Size(240, 268)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.ToolBar2)
@@ -924,8 +925,8 @@ Public Class Post
 
     Private Sub ShowLogin()
         Dim t As New Login
+        Me.Show() ' to prevent the screen refreshing back to the Today screen.
         t.ShowDialog()
-        Me.Show()
         Me.ReloadProfile()
     End Sub
 

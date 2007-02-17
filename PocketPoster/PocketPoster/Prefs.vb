@@ -86,7 +86,8 @@ Public Class Prefs
         '
         'Prefs
         '
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.ClientSize = New System.Drawing.Size(240, 268)
         Me.Controls.Add(Me.cmbBrowser)
         Me.Controls.Add(Me.Label3)
