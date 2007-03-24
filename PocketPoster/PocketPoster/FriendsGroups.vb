@@ -45,7 +45,7 @@ Public Class FriendsGroups
         Me.lstBlock.Location = New System.Drawing.Point(125, 55)
         Me.lstBlock.Name = "lstBlock"
         Me.lstBlock.Size = New System.Drawing.Size(112, 184)
-        Me.lstBlock.TabIndex = 6
+        Me.lstBlock.TabIndex = 1
         '
         'Label1
         '

@@ -53,7 +53,7 @@ Public Class LJUser
         Me.lstFriends.Location = New System.Drawing.Point(4, 70)
         Me.lstFriends.Name = "lstFriends"
         Me.lstFriends.Size = New System.Drawing.Size(233, 100)
-        Me.lstFriends.TabIndex = 4
+        Me.lstFriends.TabIndex = 2
         '
         'Label1
         '
@@ -67,14 +67,14 @@ Public Class LJUser
         Me.txtLJUser.Location = New System.Drawing.Point(4, 43)
         Me.txtLJUser.Name = "txtLJUser"
         Me.txtLJUser.Size = New System.Drawing.Size(233, 21)
-        Me.txtLJUser.TabIndex = 2
+        Me.txtLJUser.TabIndex = 1
         '
         'Button1
         '
         Me.Button1.Location = New System.Drawing.Point(87, 176)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(72, 20)
-        Me.Button1.TabIndex = 1
+        Me.Button1.TabIndex = 4
         Me.Button1.Text = "Cancel"
         '
         'Button2
@@ -82,7 +82,7 @@ Public Class LJUser
         Me.Button2.Location = New System.Drawing.Point(165, 176)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(72, 20)
-        Me.Button2.TabIndex = 0
+        Me.Button2.TabIndex = 3
         Me.Button2.Text = "OK"
         '
         'LJUser

@@ -1,3 +1,6 @@
+1.06: Changed tab order (thanks to sarahemm for the patch!), 
+added clipboard support and ability to load txt files as drafts.
+
 1.05: Fixed some code that wasn't properly done in Subversion.
 
 1.03: Updated forms to work on VGA size devices. Fixed screen

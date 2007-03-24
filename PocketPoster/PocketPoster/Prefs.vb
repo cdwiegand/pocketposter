@@ -50,14 +50,14 @@ Public Class Prefs
         Me.txtLJURL.Location = New System.Drawing.Point(45, 22)
         Me.txtLJURL.Name = "txtLJURL"
         Me.txtLJURL.Size = New System.Drawing.Size(187, 21)
-        Me.txtLJURL.TabIndex = 2
+        Me.txtLJURL.TabIndex = 1
         '
         'chkForUpdates
         '
         Me.chkForUpdates.Location = New System.Drawing.Point(3, 50)
         Me.chkForUpdates.Name = "chkForUpdates"
         Me.chkForUpdates.Size = New System.Drawing.Size(234, 20)
-        Me.chkForUpdates.TabIndex = 1
+        Me.chkForUpdates.TabIndex = 2
         Me.chkForUpdates.Text = "Check for updates every login/post"
         '
         'Label2

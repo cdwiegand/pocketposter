@@ -130,7 +130,7 @@ Public Class Login
         Me.txtUsername.Location = New System.Drawing.Point(101, 64)
         Me.txtUsername.Name = "txtUsername"
         Me.txtUsername.Size = New System.Drawing.Size(119, 21)
-        Me.txtUsername.TabIndex = 6
+        Me.txtUsername.TabIndex = 1
         '
         'txtPassword
         '
@@ -138,14 +138,14 @@ Public Class Login
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(119, 21)
-        Me.txtPassword.TabIndex = 5
+        Me.txtPassword.TabIndex = 2
         '
         'Button1
         '
         Me.Button1.Location = New System.Drawing.Point(144, 115)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(76, 20)
-        Me.Button1.TabIndex = 4
+        Me.Button1.TabIndex = 3
         Me.Button1.Text = "Login"
         '
         'Label4
@@ -161,7 +161,7 @@ Public Class Login
         Me.Button2.Location = New System.Drawing.Point(49, 115)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(89, 20)
-        Me.Button2.TabIndex = 1
+        Me.Button2.TabIndex = 4
         Me.Button2.Text = "Skip Login"
         '
         'StatusBar1
@@ -176,7 +176,7 @@ Public Class Login
         Me.Button3.Location = New System.Drawing.Point(49, 141)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(171, 20)
-        Me.Button3.TabIndex = 10
+        Me.Button3.TabIndex = 5
         Me.Button3.Text = "Change Preferences"
         '
         'PictureBox1

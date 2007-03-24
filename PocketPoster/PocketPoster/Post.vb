@@ -62,6 +62,9 @@ Public Class Post
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents cmdSetTags As System.Windows.Forms.Button
+    Friend WithEvents MenuItem10 As System.Windows.Forms.MenuItem
+    Friend WithEvents MenuItem12 As System.Windows.Forms.MenuItem
+    Friend WithEvents MenuItem13 As System.Windows.Forms.MenuItem
     Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
 
 #Region " Windows Form Designer generated code "
@@ -105,6 +108,11 @@ Public Class Post
         Me.TabControl1 = New System.Windows.Forms.TabControl
         Me.tabContent = New System.Windows.Forms.TabPage
         Me.txtPost = New System.Windows.Forms.TextBox
+        Me.ContextMenu1 = New System.Windows.Forms.ContextMenu
+        Me.MenuItem1 = New System.Windows.Forms.MenuItem
+        Me.MenuItem10 = New System.Windows.Forms.MenuItem
+        Me.MenuItem12 = New System.Windows.Forms.MenuItem
+        Me.MenuItem13 = New System.Windows.Forms.MenuItem
         Me.txtSubject = New System.Windows.Forms.TextBox
         Me.Label1 = New System.Windows.Forms.Label
         Me.tabOptions = New System.Windows.Forms.TabPage
@@ -141,8 +149,6 @@ Public Class Post
         Me.tbbLJUser = New System.Windows.Forms.ToolBarButton
         Me.tbbImage = New System.Windows.Forms.ToolBarButton
         Me.timAutoSave = New System.Windows.Forms.Timer
-        Me.ContextMenu1 = New System.Windows.Forms.ContextMenu
-        Me.MenuItem1 = New System.Windows.Forms.MenuItem
         Me.TabControl1.SuspendLayout()
         Me.tabContent.SuspendLayout()
         Me.tabOptions.SuspendLayout()
@@ -242,7 +248,7 @@ Public Class Post
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
         Me.TabControl1.Size = New System.Drawing.Size(240, 268)
-        Me.TabControl1.TabIndex = 2
+        Me.TabControl1.TabIndex = 3
         '
         'tabContent
         '
@@ -256,19 +262,44 @@ Public Class Post
         '
         'txtPost
         '
+        Me.txtPost.ContextMenu = Me.ContextMenu1
         Me.txtPost.Location = New System.Drawing.Point(4, 26)
         Me.txtPost.Multiline = True
         Me.txtPost.Name = "txtPost"
         Me.txtPost.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtPost.Size = New System.Drawing.Size(233, 159)
-        Me.txtPost.TabIndex = 19
+        Me.txtPost.TabIndex = 2
+        '
+        'ContextMenu1
+        '
+        Me.ContextMenu1.MenuItems.Add(Me.MenuItem1)
+        Me.ContextMenu1.MenuItems.Add(Me.MenuItem10)
+        Me.ContextMenu1.MenuItems.Add(Me.MenuItem12)
+        Me.ContextMenu1.MenuItems.Add(Me.MenuItem13)
+        '
+        'MenuItem1
+        '
+        Me.MenuItem1.Text = "Cut"
+        '
+        'MenuItem10
+        '
+        Me.MenuItem10.Text = "Copy"
+        '
+        'MenuItem12
+        '
+        Me.MenuItem12.Text = "Paste"
+        '
+        'MenuItem13
+        '
+        Me.MenuItem13.Text = "Delete"
         '
         'txtSubject
         '
+        Me.txtSubject.ContextMenu = Me.ContextMenu1
         Me.txtSubject.Location = New System.Drawing.Point(57, 3)
         Me.txtSubject.Name = "txtSubject"
         Me.txtSubject.Size = New System.Drawing.Size(180, 21)
-        Me.txtSubject.TabIndex = 18
+        Me.txtSubject.TabIndex = 1
         '
         'Label1
         '
@@ -282,7 +313,7 @@ Public Class Post
         Me.tabOptions.Controls.Add(Me.Panel2)
         Me.tabOptions.Location = New System.Drawing.Point(0, 0)
         Me.tabOptions.Name = "tabOptions"
-        Me.tabOptions.Size = New System.Drawing.Size(232, 242)
+        Me.tabOptions.Size = New System.Drawing.Size(240, 245)
         Me.tabOptions.Text = "Options"
         '
         'Panel2
@@ -305,14 +336,14 @@ Public Class Post
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(232, 242)
+        Me.Panel2.Size = New System.Drawing.Size(240, 245)
         '
         'cmdSetTags
         '
         Me.cmdSetTags.Location = New System.Drawing.Point(57, 113)
         Me.cmdSetTags.Name = "cmdSetTags"
         Me.cmdSetTags.Size = New System.Drawing.Size(180, 20)
-        Me.cmdSetTags.TabIndex = 33
+        Me.cmdSetTags.TabIndex = 8
         Me.cmdSetTags.Text = "Click to set/change tags"
         '
         'Label8
@@ -324,10 +355,11 @@ Public Class Post
         '
         'txtLocation
         '
+        Me.txtLocation.ContextMenu = Me.ContextMenu1
         Me.txtLocation.Location = New System.Drawing.Point(57, 86)
         Me.txtLocation.Name = "txtLocation"
         Me.txtLocation.Size = New System.Drawing.Size(180, 21)
-        Me.txtLocation.TabIndex = 12
+        Me.txtLocation.TabIndex = 7
         '
         'Label7
         '
@@ -341,7 +373,7 @@ Public Class Post
         Me.cmbPictureKeyword.Location = New System.Drawing.Point(57, 58)
         Me.cmbPictureKeyword.Name = "cmbPictureKeyword"
         Me.cmbPictureKeyword.Size = New System.Drawing.Size(180, 22)
-        Me.cmbPictureKeyword.TabIndex = 14
+        Me.cmbPictureKeyword.TabIndex = 6
         '
         'lblPicture
         '
@@ -352,11 +384,12 @@ Public Class Post
         '
         'txtMusic
         '
+        Me.txtMusic.ContextMenu = Me.ContextMenu1
         Me.txtMusic.Location = New System.Drawing.Point(57, 32)
         Me.txtMusic.Multiline = True
         Me.txtMusic.Name = "txtMusic"
         Me.txtMusic.Size = New System.Drawing.Size(180, 20)
-        Me.txtMusic.TabIndex = 16
+        Me.txtMusic.TabIndex = 5
         '
         'Label5
         '
@@ -378,7 +411,7 @@ Public Class Post
         Me.cmbMood.Location = New System.Drawing.Point(57, 3)
         Me.cmbMood.Name = "cmbMood"
         Me.cmbMood.Size = New System.Drawing.Size(180, 22)
-        Me.cmbMood.TabIndex = 18
+        Me.cmbMood.TabIndex = 4
         '
         'Label4
         '
@@ -392,7 +425,7 @@ Public Class Post
         Me.cmbJournal.Location = New System.Drawing.Point(57, 167)
         Me.cmbJournal.Name = "cmbJournal"
         Me.cmbJournal.Size = New System.Drawing.Size(180, 22)
-        Me.cmbJournal.TabIndex = 20
+        Me.cmbJournal.TabIndex = 10
         '
         'Label3
         '
@@ -410,7 +443,7 @@ Public Class Post
         Me.cmbSecurity.Location = New System.Drawing.Point(57, 139)
         Me.cmbSecurity.Name = "cmbSecurity"
         Me.cmbSecurity.Size = New System.Drawing.Size(180, 22)
-        Me.cmbSecurity.TabIndex = 22
+        Me.cmbSecurity.TabIndex = 9
         '
         'Label2
         '
@@ -441,7 +474,7 @@ Public Class Post
         Me.dateBackdate.MinDate = New Date(2000, 1, 1, 0, 0, 0, 0)
         Me.dateBackdate.Name = "dateBackdate"
         Me.dateBackdate.Size = New System.Drawing.Size(211, 22)
-        Me.dateBackdate.TabIndex = 5
+        Me.dateBackdate.TabIndex = 15
         Me.dateBackdate.Value = New Date(2000, 1, 1, 0, 0, 0, 0)
         '
         'chkBackdate
@@ -449,7 +482,7 @@ Public Class Post
         Me.chkBackdate.Location = New System.Drawing.Point(3, 103)
         Me.chkBackdate.Name = "chkBackdate"
         Me.chkBackdate.Size = New System.Drawing.Size(234, 20)
-        Me.chkBackdate.TabIndex = 0
+        Me.chkBackdate.TabIndex = 14
         Me.chkBackdate.Text = "Mark entry as backdated"
         '
         'cmbCommentScreening
@@ -462,7 +495,7 @@ Public Class Post
         Me.cmbCommentScreening.Location = New System.Drawing.Point(7, 75)
         Me.cmbCommentScreening.Name = "cmbCommentScreening"
         Me.cmbCommentScreening.Size = New System.Drawing.Size(230, 22)
-        Me.cmbCommentScreening.TabIndex = 1
+        Me.cmbCommentScreening.TabIndex = 13
         '
         'Label6
         '
@@ -476,7 +509,7 @@ Public Class Post
         Me.chkNoEmailComments.Location = New System.Drawing.Point(3, 29)
         Me.chkNoEmailComments.Name = "chkNoEmailComments"
         Me.chkNoEmailComments.Size = New System.Drawing.Size(233, 20)
-        Me.chkNoEmailComments.TabIndex = 3
+        Me.chkNoEmailComments.TabIndex = 12
         Me.chkNoEmailComments.Text = "Don't email comments"
         '
         'chkDontAutoformat
@@ -484,7 +517,7 @@ Public Class Post
         Me.chkDontAutoformat.Location = New System.Drawing.Point(3, 3)
         Me.chkDontAutoformat.Name = "chkDontAutoformat"
         Me.chkDontAutoformat.Size = New System.Drawing.Size(234, 20)
-        Me.chkDontAutoformat.TabIndex = 4
+        Me.chkDontAutoformat.TabIndex = 11
         Me.chkDontAutoformat.Text = "Don't autoformat to HTML"
         Me.ImageList1.Images.Clear()
         Me.ImageList1.Images.Add(CType(resources.GetObject("resource"), System.Drawing.Icon))
@@ -542,14 +575,6 @@ Public Class Post
         '
         Me.timAutoSave.Interval = 30000
         '
-        'ContextMenu1
-        '
-        Me.ContextMenu1.MenuItems.Add(Me.MenuItem1)
-        '
-        'MenuItem1
-        '
-        Me.MenuItem1.Text = "Edit"
-        '
         'Post
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -570,6 +595,10 @@ Public Class Post
     End Sub
 
 #End Region
+
+    Public Sub Keydown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
+        If e.Control = True And e.KeyCode = Keys.Q Then QuitApp()
+    End Sub
 
     Public Sub LoadDraft(ByVal requestedLoadType As SaveType)
         Select Case requestedLoadType
@@ -626,6 +655,11 @@ Public Class Post
                         End If
                 End Select
             Next
+        Catch e3 As System.Xml.XmlException
+            ' was unable to load XML - load as txt file
+            Dim tR As IO.StreamReader = System.IO.File.OpenText(m_DraftFilePath)
+            Me.txtPost.Text = tR.ReadToEnd()
+            tR.Close()
         Catch e3 As Exception
             If requestedLoadType = SaveType.userSave Then MsgBox(e3.Message)
         End Try
@@ -853,18 +887,6 @@ Public Class Post
         Dim frmComm As New Communications
         frmComm.Show()
 
-        If Globals.GetSetting("UpdateCheckOnLogin") = "true" Then
-            Dim tUpdater As New UpdaterForm
-            frmComm.StatusUpdate("Checking for update...")
-            'tUpdater.Show()
-            ' hide it unless we actually download something
-            ' and it shows itself in that case
-            If tUpdater.Run() = True Then
-                SaveDraft(SaveType.autoSave)
-                Exit Sub ' do NOT post, going to update first!
-            End If
-        End If
-
         ret = mySession.Post(newPost, frmComm)
         frmComm.Hide()
         frmComm = Nothing ' get rid of it!
@@ -971,6 +993,9 @@ Public Class Post
     End Sub
 
     Private Sub MenuItem9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuExit.Click
+        QuitApp()
+    End Sub
+    Private Sub QuitApp()
         Dim tmp As Microsoft.VisualBasic.MsgBoxResult
         tmp = Me.CancelEntry(True)
         If tmp = MsgBoxResult.Cancel Then Exit Sub
@@ -1114,5 +1139,63 @@ Public Class Post
         t.Tags = Me.m_Tags
         t.ShowDialog()
         Me.m_Tags = t.Tags
+    End Sub
+
+    Private Sub MenuItem1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem1.Click
+        Dim t As TextBox = Nothing
+        If Me.txtPost.Focused Then t = Me.txtPost
+        If Me.txtLocation.Focused Then t = Me.txtLocation
+        If Me.txtMusic.Focused Then t = Me.txtMusic
+        If Me.txtSubject.Focused Then t = Me.txtSubject
+        If t IsNot Nothing Then Clipboard_Cut(t)
+    End Sub
+
+    Private Sub MenuItem10_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem10.Click
+        Dim t As TextBox = Nothing
+        If Me.txtPost.Focused Then t = Me.txtPost
+        If Me.txtLocation.Focused Then t = Me.txtLocation
+        If Me.txtMusic.Focused Then t = Me.txtMusic
+        If Me.txtSubject.Focused Then t = Me.txtSubject
+        If t IsNot Nothing Then Clipboard_Copy(t)
+    End Sub
+
+    Private Sub MenuItem12_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem12.Click
+        Dim t As TextBox = Nothing
+        If Me.txtPost.Focused Then t = Me.txtPost
+        If Me.txtLocation.Focused Then t = Me.txtLocation
+        If Me.txtMusic.Focused Then t = Me.txtMusic
+        If Me.txtSubject.Focused Then t = Me.txtSubject
+        If t IsNot Nothing Then Clipboard_Paste(t)
+    End Sub
+
+    Private Sub MenuItem13_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem13.Click
+        Dim t As TextBox = Nothing
+        If Me.txtPost.Focused Then t = Me.txtPost
+        If Me.txtLocation.Focused Then t = Me.txtLocation
+        If Me.txtMusic.Focused Then t = Me.txtMusic
+        If Me.txtSubject.Focused Then t = Me.txtSubject
+        If t IsNot Nothing Then Clipboard_Delete(t)
+    End Sub
+
+    Private Sub Clipboard_Cut(ByRef txtBox As TextBox)
+        Clipboard_Copy(txtBox)
+        Clipboard_Delete(txtBox)
+    End Sub
+    Private Sub Clipboard_Copy(ByRef txtBox As TextBox)
+        If (Me.txtPost.SelectionLength > 0) Then
+            Windows.Forms.Clipboard.SetDataObject(Me.txtPost.SelectedText)
+        Else
+            Windows.Forms.Clipboard.SetDataObject(Me.txtPost.Text)
+        End If
+    End Sub
+    Private Sub Clipboard_Paste(ByRef txtBox As TextBox)
+        Me.txtPost.SelectedText = Convert.ToString(Windows.Forms.Clipboard.GetDataObject().GetData(String.Empty.GetType()))
+    End Sub
+    Private Sub Clipboard_Delete(ByRef txtBox As TextBox)
+        If txtBox.SelectionLength > 0 Then
+            txtBox.SelectedText = ""
+        Else
+            txtBox.Text = ""
+        End If
     End Sub
 End Class
