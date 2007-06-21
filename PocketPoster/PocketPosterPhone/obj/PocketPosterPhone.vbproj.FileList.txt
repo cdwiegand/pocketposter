@@ -1,0 +1,10 @@
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\PocketPosterPhone.Resources.resources
+obj\Debug\PocketPosterPhone.vbproj.GenerateResource.Cache
+bin\Debug\PocketPosterPhone.exe
+bin\Debug\PocketPosterPhone.pdb
+obj\Debug\PocketPosterPhone.exe
+obj\Debug\PocketPosterPhone.pdb
+obj\Debug\PocketPosterPhone.Credits.resources
+obj\Debug\PocketPosterPhone.Login.resources
+obj\Debug\PocketPosterPhone.Post.resources

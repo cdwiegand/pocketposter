@@ -1,0 +1,75 @@
+1.06: Changed tab order (thanks to sarahemm for the patch!), 
+added clipboard support and ability to load txt files as drafts.
+
+1.05: Fixed some code that wasn't properly done in Subversion.
+
+1.03: Updated forms to work on VGA size devices. Fixed screen
+refresh bug on login. Fixed friend group security, tagging. Also 
+added support for alternate browsers.
+
+1.0:
+Moved Post to be it's own toplevel menu item. Also added
+date to the backdate option, and reordered the tabs a little.
+
+0.98:
+Updated the toolbar icons and added support for downloading 
+moods from the server. Also added scrollbars to post page. And
+used a new icon from wylddevil.
+
+0.95:
+Fixed a bug in the program which assumed that certain controls
+had a value value (thanks canisrufus to for the bug report!)
+
+0.93:
+Added current location to the post form and the LJPost class.
+Upgraded to .Net 2.0 to remove the dependancy on OpenNetCF.
+
+0.9: 
+Added an auto-updater. Also added Friends Page menu link.
+Also added prefs pane to set if update on login check should
+occur, as well as allowing users to change server URL.
+
+0.8: 3 April 2006
+Added strikethrough to toolbar. Added list of friends to the
+LJ User toolbar button. Added offline user information (list
+of friends, journals, picture keywords and friend groups) to
+the XML configuration (to reload if working offline). Added 
+non-working ability to restrict posting to friend group
+visibility (ACLs, basically). Also, clear friends, groups,
+journals and posting pictures when we get those back when
+the user logs in (useful if another person uses your client
+and then you find their stuff in your profile). Changed
+default extension from .txt to .jrnl as it's XML, not text.
+Also added a Communications form to show the user what's 
+happening when we talk to the server.
+
+0.7: 16 Feb 2006
+Added advanced tab with options like "Mark entry as backdated", 
+"Don't email comments", "Don't autoformat to HTML", and 
+"Screen comments". Also added grabbing and using the list of 
+picture keywords (although at this time I'm not able to load the 
+pictures themselves). Also, a basic toolbar with bold, italic, 
+underline, link, image and LJUser buttons were added. Resize 
+according to the input panel.
+
+0.6: Skipped
+
+0.5: 9 Feb 2006
+Fixed the bug where posting would disable the form permanently 
+(until the program was forcibly quit'ed). Fixed the bug where 
+hitting cancel on the save draft file dialog would still clear 
+the screen.
+
+0.4: 7 Feb 2006
+Added support for moods. Added support for tags.
+Added (theoretical) support for posting to alternate/group journals.
+Changed draft format to XML (was plain text).
+
+0.3: Skipped
+
+0.2: 7 Feb 2006
+Initial release on SourceForge. Cleaned up UI and code, ability to 
+login as someone other than initial programmer added.
+
+0.1: 2 Feb 2006
+Initial version.
