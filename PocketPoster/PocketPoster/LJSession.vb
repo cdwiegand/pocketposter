@@ -274,7 +274,7 @@ Public Class LJSession
         xmlBranch = Globals.GetXMLBranch("username")
         xmlBranch.InnerText = Me.m_Username
         xmlBranch = Globals.GetXMLBranch("password")
-        xmlBranch.InnerText = Me.m_Username
+        xmlBranch.InnerText = Me.m_Password
 
         ' journals we can post to...
         xmlBranch = Globals.GetXMLBranch("journals")

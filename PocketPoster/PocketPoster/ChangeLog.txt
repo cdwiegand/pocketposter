@@ -1,3 +1,5 @@
+1.07: Fixed a bug with saving the password on initial login.
+
 1.06: Changed tab order (thanks to sarahemm for the patch!), 
 added clipboard support and ability to load txt files as drafts.
 
